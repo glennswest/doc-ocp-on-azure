@@ -1,7 +1,3 @@
-[[refarch_detail]
-
-<<<
-
 ===  Azure Virtual Network (VNet)
 
 An `Azure VNet` provides the ability to set up custom virtual networking which includes subnets, and

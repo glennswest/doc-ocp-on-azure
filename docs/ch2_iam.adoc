@@ -1,4 +1,3 @@
-[[refarch_detail]
 ====  Identity and Access Management
 
 For this reference account, an Azure Account is required. Ideally this is either a pay-as-you-go

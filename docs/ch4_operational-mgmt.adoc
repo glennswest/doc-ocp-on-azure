@@ -1,4 +1,4 @@
-[[Operational-Management]
+[Operational-Management]
 
 == Operational Management
 

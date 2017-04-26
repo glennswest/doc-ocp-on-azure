@@ -1,4 +1,3 @@
-[[refarch_detail]
 === Registry
 
 OpenShift can build Docker images from your source code, deploy them, and

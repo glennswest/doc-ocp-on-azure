@@ -1,4 +1,3 @@
-[[refarch_detail]
 === Nodes
 Nodes are `Azure` instances that serve a specific purpose for OpenShift. OpenShift masters are also considered nodes. Nodes deployed on `Azure`
 can be vertically scaled before or after the OpenShift installation using the `Azure` dashboard.  There are three types of nodes as described below.

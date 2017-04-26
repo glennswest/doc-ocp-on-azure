@@ -1,4 +1,3 @@
-[[refarch_detail]
 ====  Azure Load Balancer
 
 `Azure` provides an Azure Load Balancer `ALBs` service which enables distribution of traffic

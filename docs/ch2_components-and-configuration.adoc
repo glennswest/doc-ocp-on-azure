@@ -1,4 +1,3 @@
-[[refarch_detail]
 
 == Components and Configuration
 

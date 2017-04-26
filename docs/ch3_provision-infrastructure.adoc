@@ -1,5 +1,3 @@
-[[refarch_detail]
-
 == Provisioning the Infrastructure
 
 This chapter focuses on Phase 1 of the process. The prerequisites defined below
