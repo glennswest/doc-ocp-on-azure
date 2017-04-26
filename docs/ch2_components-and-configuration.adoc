@@ -1,4 +1,4 @@
-[[refarch_details]]
+[[refarch_detail]
 
 == Components and Configuration
 
@@ -26,7 +26,7 @@ The OpenShift Console, and API may be accessed directly via the automatically cr
 DNS entry. The application access must be accessed from a externally created domain, that
 uses a C record to forward traffic to the application traffic manager.
 
-image::images/OSE-on-Azure.jpg[]
+image::images/OSE-on-Azure.jpg
 
 This reference architecture breaks down the deployment into three separate phases.
 
@@ -165,7 +165,7 @@ If you have not created .ssh keys for your account:
 ==== RHEL SSH
 Generate an RSA key pair by typing the following at a shell prompt:
 
-[source,bash]
+[source,bas
 ----
 ~]$ ssh-keygen -t rsa
 Generating public/private rsa key pair.
@@ -177,7 +177,7 @@ Press Enter again for the passphrase.
 
 After this, you will be presented with a message similar to this:
 
-[source,bash]
+[source,bas
 ----
 Your identification has been saved in /home/USER/.ssh/id_rsa.
 Your public key has been saved in /home/USER/.ssh/id_rsa.pub.
@@ -209,7 +209,7 @@ must be supplied to the template.
 using a system that currently has a valid subscription to Red Hat products, you can
 find the pool_id by using subscription-manager.
 
-[source,bash]
+[source,bas
 ----
 root# subscription-manager list --available
 

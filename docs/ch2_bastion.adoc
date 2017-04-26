@@ -1,4 +1,4 @@
-[[refarch_details]]
+[[refarch_detail]
 === Bastion
 
 The Bastion server implements two distinct functions. One is that of a secure way to

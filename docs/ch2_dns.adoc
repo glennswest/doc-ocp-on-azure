@@ -1,4 +1,4 @@
-[[refarch_details]]
+[[refarch_detail]
 === Microsoft Azure DNS
 `DNS` is an integral part of a successful OpenShift Compute Platform deployment/environment. `Azure` has a `DNS` service, per Microsoft;
 "The Microsoft global network of name servers has the scale and redundancy to ensure ultra-high availability for your domains.

@@ -1,4 +1,4 @@
-[[refarch_details]]
+[[refarch_detail]
 
 ===  Authentication
 There are several options when it comes to authentication of users in OpenShift Container Platform.

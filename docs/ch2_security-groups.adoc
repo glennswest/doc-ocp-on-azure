@@ -1,4 +1,4 @@
-[[refarch_details]]
+[[refarch_detail]
 
 ===  Security Groups
 

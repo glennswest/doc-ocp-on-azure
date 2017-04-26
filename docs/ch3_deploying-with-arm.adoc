@@ -1,4 +1,4 @@
-[[Provision-Ansible]]
+[[Provision-Ansibl]
 
 === Provisioning the Infrastructure with Ansible
 The script and playbooks provided within the git repository deploys
@@ -24,19 +24,19 @@ This task is performed locally, on the machine that will run the ARM template. I
 the private key is coverted to base64 encoding, and placed on the clipboard.
 
 For OsX:
-[subs=+quotes]
+[subs=+quote
 ----
 cat ~/.ssh/id_rsa | base64 | pbcopy
 ----
 
 For RHEL/Centos:
-[subs=+quotes]
+[subs=+quote
 ----
 cat ~/.ssh/id_rsa | base64 | xclip -selection clipboard
 ----
 
 For Windows:
-[subs=+quotes]
+[subs=+quote
 ----
 Use a Base 64 Encoder app or website to perform the conversion
 ----

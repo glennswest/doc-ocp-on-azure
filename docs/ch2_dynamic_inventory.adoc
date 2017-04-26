@@ -1,4 +1,4 @@
-[[refarch_details]]
+[[refarch_detail]
 
 <<<
 
@@ -11,7 +11,7 @@ a bastion.sh script generates the inventory file in /etc/ansible/hosts.
 
 [[app-listing]]
 .Dynamic Inventory Script within bastion.sh
-[source,bash]
+[source,bas
 ----
 
 cat <<EOF > /etc/ansible/hosts
@@ -20,7 +20,7 @@ masters
 etcd
 nodes
 
-[OSEv3:vars]
+[OSEv3:var
 debug_level=2
 console_port=8443
 openshift_node_debug_level="{{ node_debug_level | default(debug_level, true) }}"
@@ -63,17 +63,17 @@ openshift_master_cluster_public_hostname=${RESOURCEGROUP}.trafficmanager.net
 # glusterfs plugin dependencies will be installed, if available.
 osn_storage_plugin_deps=['Azure VHD']
 
-[masters]
+[master
 master1.${domain} openshift_node_labels="{'role': 'master'}"
 master2.${domain} openshift_node_labels="{'role': 'master'}"
 master3.${domain}  openshift_node_labels="{'role': 'master'}"
 
-[etcd]
+[etc
 master1.${domain}
 master2.${domain}
 master3.${domain}
 
-[nodes]
+[node
 master1.${domain} openshift_node_labels="{'role':'master','zone':'default'}"
 master2.${domain} openshift_node_labels="{'role':'master','zone':'default'}"
 master3.${domain} openshift_node_labels="{'role':'master','zone':'default'}"

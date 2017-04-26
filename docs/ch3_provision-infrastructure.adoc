@@ -1,4 +1,4 @@
-[[refarch_details]]
+[[refarch_detail]
 
 == Provisioning the Infrastructure
 
@@ -29,6 +29,6 @@ First, gather the required information needed, for the provisioning and installa
 With the above information ready, go to https://github.com/openshift/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible
 and click the "Deploy To Azure" button near the bottom of the page. This will then show the form, to allow you to start deployment.
 
-[arm-template-image]]
+[arm-template-imag]
 .Arm Template
 image::images/AzureOCPEmptyTemplate.png["ARM Template",align="center"]
