@@ -1,0 +1,21 @@
+[[refarch_details]]
+====  Azure Load Balancer
+
+`Azure` provides an Azure Load Balancer `ALBs` service which enables distribution of traffic
+across multiple instances in the `Azure` cloud.  Two `ALBs` are used in the deployment of
+OpenShift one for the router, and one for
+external master communication.  There are clear advantages to doing this:
+
+* Keeps applications highly available.
+* It is secure, it works with the `Azure` cloud to leverage features such as separation of public / private cloud traffic
+and health monitoring.
+
+Azure Load Balancer itself is fully-fault tolerant, and designed for implementing native azure highly-available applications.
+
+For more information see https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-overview
+
+`Azure Load Balancer` implements parts of the <<Routing Layer>>.
+
+
+
+// vim: set syntax=asciidoc:

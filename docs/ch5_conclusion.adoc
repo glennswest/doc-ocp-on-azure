@@ -1,0 +1,22 @@
+[[refarch_details]]
+== Conclusion
+
+Red Hat solutions involving the OpenShift Container Platform are created to deliver a production-ready foundation that simplifies the deployment process, shares the latest best practices, and provides a stable highly available environment on which to run your production applications.
+
+This reference architecture covered the following topics:
+
+* A completely provisioned infrastructure in `Azure`
+* Infrastructure nodes in Router and Registry pods scaled accordingly
+* Native integration with `Azure` services.
+** `Azure Load Balancer` load balancing for the Master instances and for the Infrastructure instances
+** `Azure` VHD storage for persistent storage of container images
+** `Azure Premium Storage` for /var/lib/docker on each node
+** `Azure Blob Storage` for registry to increase scaling
+** `Azure Availability Zones` to increase reliability
+* Creation of applications
+* Validating the environment
+* Testing failover
+
+For any questions or concerns, please email refarch-feedback@redhat.com and ensure to visit the http://red.ht/1IEYbQT[Red Hat Reference Architecture] page to find about all of our Red Hat solution offerings.
+
+// vim: set syntax=asciidoc:

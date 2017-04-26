@@ -1,0 +1,82 @@
+[[Provision-Ansible]]
+
+=== Provisioning the Infrastructure with Ansible
+The script and playbooks provided within the git repository deploys
+infrastructure, installs and configures OpenShift, and performs post installation
+tasks such as scaling the router and registry. The playbooks create specific
+roles, policies, and users required for cloud provider configuration in OpenShift, as well as
+storage accounts on Azure.
+
+==== Authentication Prerequisite
+The templates creates an administrative user, as specified in the ARM template when creating
+the infrastructure. This user will be the cluster administrator for the reference architecture.
+The template uses the supplied values in admin username, and admin password. They're implemented using
+Openshift htpasswd identity provider.
+
+==== SSH Prerequisite
+
+===== SSH Configuration
+Before beginning the deployment of the `Azure` infrastucture and the deployment of OpenShift, the ssh
+private key must be converted into a base64 string. Otherwise, the Azure infrastructure cannot be configured
+manually or automatically.
+
+This task is performed locally, on the machine that will run the ARM template. In this example,
+the private key is coverted to base64 encoding, and placed on the clipboard.
+
+For OsX:
+[subs=+quotes]
+----
+cat ~/.ssh/id_rsa | base64 | pbcopy
+----
+
+For RHEL/Centos:
+[subs=+quotes]
+----
+cat ~/.ssh/id_rsa | base64 | xclip -selection clipboard
+----
+
+For Windows:
+[subs=+quotes]
+----
+Use a Base 64 Encoder app or website to perform the conversion
+----
+
+==== Red Hat Subscription Prerequisite
+The installation of OCP requires a valid Red Hat subscription. For the installation of
+`OCP` on `Azure` the following items are required:
+
+
+Red Hat Subscription Manager User: rhsm-se
+
+Red Hat Subscription Manager Password: SecretPass
+
+Subscription Name or Pool ID: Red Hat OpenShift Container Platform, Standard, 2-Core
+
+The items above are examples and should reflect subscriptions relevant to the account
+performing the installation. There are a few different variants of the OpenShift Subscription Name. It is advised to visit
+https://access.redhat.com/management/subscriptions to find the specific Pool ID and Subscription Name as the values will
+be used below during the deployment.
+
+
+==== Deploying the Environment
+In order to deploy Openshift on Azure, an ARM template has been created. The ARM
+template takes the basic information, admin user name, password, rhn username and password,
+ssh public and private keys, as well as offering the ability to size the virtual machines.
+
+
+===== Introduction to azure-ansible Template
+Azure Resource Manager templates consist of json files. The main template file is azuredeploy.json.
+This file is the main ARM template that launches all the other templates under azure-ansible.
+There are 5 types of Virtual Machines created by the template. These are bastion, master, infranode,
+node, and store. For each of these types there is a additional json file, that defines each VM type.
+The ARM template for each type, automatically starts a bash shell script, that does part of the initial setup.
+The most important shell script is that of the bastion host, which is bastion.sh. The bastion script handles the generation
+of ansible host inventory, as well as the setup and running of ansible across all the hosts. The bastion host also functions to
+provide isolation of all the hosts in the resource group from the public internet for the purpose of ssh access.
+
+
+===== Post Ansible Deployment
+Once the playbooks have successfully completed the next steps will be to perform the steps defined in <<Operational-Management>>.
+In the event that OpenShift failed to install, follow the steps in Appendix C: <<Installation-Failure>> to restart the installation of OpenShift.
+
+// vim: set syntax=asciidoc:
