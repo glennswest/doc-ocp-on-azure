@@ -145,7 +145,7 @@ provide isolation of all the hosts in the resource group from the public interne
 
 
 ===== Post Ansible Deployment
-Once the playbooks have successfully completed the next steps will be to perform the steps defined in <<Operational-Management>>.
+Once the playbooks have successfully completed the next steps will be to perform the steps defined in [[Operational-Management]].
 In the event that OpenShift failed to install, follow the steps in Appendix C: <<Installation-Failure>> to restart the installation of OpenShift.
 
 // vim: set syntax=asciidoc:
