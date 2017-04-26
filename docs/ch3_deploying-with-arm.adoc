@@ -24,19 +24,19 @@ This task is performed locally, on the machine that will run the ARM template. I
 the private key is coverted to base64 encoding, and placed on the clipboard.
 
 For OsX:
-[subs=+quote
+[subs=+quotes]
 ----
 cat ~/.ssh/id_rsa | base64 | pbcopy
 ----
 
 For RHEL/Centos:
-[subs=+quote
+[subs=+quotes]
 ----
 cat ~/.ssh/id_rsa | base64 | xclip -selection clipboard
 ----
 
 For Windows:
-[subs=+quote
+[subs=+quotes]
 ----
 Use a Base 64 Encoder app or website to perform the conversion
 ----
@@ -63,6 +63,75 @@ In order to deploy Openshift on Azure, an ARM template has been created. The ARM
 template takes the basic information, admin user name, password, rhn username and password,
 ssh public and private keys, as well as offering the ability to size the virtual machines.
 
+==== Azure Active Directory Credentials
+In order to create the AAD client id, and password, the nodejs azure cli is required.
+
+1. Install nodejs on your Platform.
+2. Install the azure cli:
+   a. On Linux Or Mac: sudo npm install -g azure-cli
+   b. On Windows: npm install -g azure-cli
+   c. Login to azure:
+      azure login
+   d. Create a service princple:
+      azure ad sp create -n \<friendly name\> -p \<password\><br/>
+      Example: `azure ad sp create -n openshiftcloudprovider -p Pass@word1`
+   e. Show the azure account data:
+      Example: `azure account show`
+      azure account show
+   f. Grant the service princple the access level of contributer to allow openshift to create/delete resources.
+      The objectID comes from the "azure ad sp create", and is labeled 'Object ID' on the output of that command.
+      The subscription number must come from the "azure account show" command, and is labeled 'ID'
+      provided by the azure account show.
+   Example: `azure role assignment create --objectId 00419334-174b-41e8-9b83-9b5011d8d352 -o contributor -c /subscriptions/77ece336-c110-470d-a446-757a69cb9485/`
+
+The following is a walk thru of creating the service principle.  
+
+```
+info:    Executing command ad sp create
++ Creating application openshift demo cloud provider
++ Creating service principal for application 198c4803-1236-4c3f-ad90-46e5f3b4cd2a
+data:    Object Id:               00419334-174b-41e8-9b83-9b5011d8d352
+data:    Display Name:            openshiftcloudprovider
+data:    Service Principal Names:
+data:                             198c4803-1236-4c3f-ad90-46e5f3b4cd2a
+data:                             http://myhomepage
+info:    ad sp create command OK
+```
+Save the Object Id and the GUID in the Service Principal Names section.  This GUID is the Application ID / Client ID (aadClientId parameter).
+The password you entered as part of the CLI command is the input the aadClientSecret paramter.
+
+```
+info:    Executing command account show
+data:    Name                        : Microsoft Azure Sponsorship
+data:    ID                          : 2581564b-56b4-4512-a140-012d49dfc02c
+data:    State                       : Enabled
+data:    Tenant ID                   : 77ece336-c110-470d-a446-757a69cb9485
+data:    Is Default                  : true
+data:    Environment                 : AzureCloud
+data:    Has Certificate             : Yes
+data:    Has Access Token            : Yes
+data:    User name                   : ssysone@something.com
+data:
+info:    account show command OK
+```
+
+Save the ID of the account show for the role assignment.
+
+```
+info:    Executing command role assignment create
++ Finding role with specified name
+/data:    RoleAssignmentId     : /subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/providers/Microsoft.Authorization/roleAssignments/490c9dd5-0bfa-4b4c-bbc0-aa9af130dd06
+data:    RoleDefinitionName   : Contributor
+data:    RoleDefinitionId     : b24988ac-6180-42a0-ab88-20f7382dd24c
+data:    Scope                : /subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c
+data:    Display Name         : openshiftcloudprovider
+data:    SignInName           : undefined
+data:    ObjectId             : 00419334-174b-41e8-9b83-9b5011d8d352
+data:    ObjectType           : ServicePrincipal
+data:
++
+info:    role assignment create command OK
+```
 
 ===== Introduction to azure-ansible Template
 Azure Resource Manager templates consist of json files. The main template file is azuredeploy.json.
@@ -76,7 +145,7 @@ provide isolation of all the hosts in the resource group from the public interne
 
 
 ===== Post Ansible Deployment
-Once the playbooks have successfully completed the next steps will be to perform the steps defined in [[Operational-Management]].
+Once the playbooks have successfully completed the next steps will be to perform the steps defined in <<Operational-Management>>.
 In the event that OpenShift failed to install, follow the steps in Appendix C: <<Installation-Failure>> to restart the installation of OpenShift.
 
 // vim: set syntax=asciidoc:

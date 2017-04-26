@@ -1,5 +1,3 @@
-[Operational-Management]
-
 == Operational Management
 
 With the successful deployment of OpenShift, the following section demonstrates how to confirm proper functionality of the Red Hat OpenShift Container Platform.
@@ -12,8 +10,6 @@ The playbook will perform the following steps:
 
 *Environment Validation*
 
-* Validate the public OpenShift Traffic Manager address from the installation system
-* Validate the public OpenShift Traffic Manager address from the master nodes
 * Validate the internal OpenShift  address from the master nodes
 * Validate the master local master address
 * Validate the health of the `ETCD` cluster to ensure all `ETCD` nodes are healthy
@@ -24,16 +20,6 @@ The playbook will perform the following steps:
 * Delete the validation project
 
 
-NOTE: Ensure the URLs below and the tag variables match the variables used during deployment.
-
-[subs=+quote
-----
-FIXME
-$ *cd /home/<user>/git/openshift-ansible-contrib/reference-architecture/Azure-ansible*
-$ *ansible-playbook -i inventory/Azure/hosts/ -e 'public_hosted_zone=sysdeseng.com wildcard_zone=apps.sysdeseng.com console_port=443' playbooks/validation.yaml*
-----
-
-<<<
 
 === Gathering hostnames
 With all of the steps that occur during the installation of OpenShift it is possible to lose track of the names of the instances in the recently deployed environment. One option to get these hostnames is to browse to the `Azure Resource Group` dashboard and select `Overview`. The filter shows all instances relating to the reference architecture deployment.
@@ -58,7 +44,7 @@ Perform the following steps from the first master node.
 
 To run diagnostics, `SSH` into the  master node (master1), via the bastion host.
 
-[subs=+quote
+[subs=+quotes]
 ----
 $ *ssh username@resourcegroupb
 $ *ssh username@master1
@@ -69,15 +55,15 @@ $ *sudo -i*
 
 Connectivity to the first master node (master1.region.cloudapp.azure.com) as the `root` user should have been established. Run the diagnostics that are included as part of the install.
 
-[subs=+quote
+[subs=+quotes]
 ----
 # *oadm diagnostics*
-[Not Determining if client configuration exists for client/cluster diagnostics
+[Note] Determining if client configuration exists for client/cluster diagnostics
 Info:  Successfully read a client config file at '/root/.kube/config'
 Info:  Using context for cluster-admin access: 'default/gswthuv1500-trafficmanager-net:8443/system:admin'
-[Not Performing systemd discovery
+[Note] Performing systemd discovery
 
-[Not Running diagnostic: ConfigContexts[default/gswthuv1500-trafficmanager-net:8443/system:admin]
+[Note] Running diagnostic: ConfigContexts[default/gswthuv1500-trafficmanager-net:8443/system:admin]
        Description: Validate client config context is complete and has connectivity
 
 Info:  The current client config context is 'default/gswthuv1500-trafficmanager-net:8443/system:admin':
@@ -85,25 +71,25 @@ Info:  The current client config context is 'default/gswthuv1500-trafficmanager-
        The user authentication is 'system:admin/gswthuv1500-trafficmanager-net:8443'
        The current project is 'default'
        Successfully requested project list; has access to project(s):
-         [openshift openshift-infra test2 test3 kube-system logging management-infra sso test1 defaul
+         [openshift openshift-infra test2 test3 kube-system logging management-infra sso test1 default]
 
-[Not Running diagnostic: DiagnosticPod
+[Note] Running diagnostic: DiagnosticPod
        Description: Create a pod to run diagnostics from the application standpoint
 
 Info:  Output from the diagnostic pod (image openshift3/ose-deployer:v3.4.0.1):
-       [Not Running diagnostic: PodCheckAuth
+       [Note] Running diagnostic: PodCheckAuth
               Description: Check that service account credentials authenticate as expected
 
        Info:  Service account token successfully authenticated to master
        Info:  Service account token was authenticated by the integrated registry.
 
-       [Not Running diagnostic: PodCheckDns
+       [Note] Running diagnostic: PodCheckDns
               Description: Check that DNS within a pod works as expected
 
-       [Not Summary of diagnostics execution (version v3.4.0.1):
-       [Not Completed with no errors or warnings seen.
+       [Note] Summary of diagnostics execution (version v3.4.0.1):
+       [Note] Completed with no errors or warnings seen.
 
-[Not Running diagnostic: ClusterRegistry
+[Note] Running diagnostic: ClusterRegistry
        Description: Check that there is a working Docker registry
 
 WARN:  [DClu1012 from diagnostic ClusterRegistry@openshift/origin/pkg/diagnostics/cluster/registry.go:300]
@@ -130,7 +116,7 @@ WARN:  [DClu1012 from diagnostic ClusterRegistry@openshift/origin/pkg/diagnostic
        time="2016-10-13T04:57:23.365903534-04:00" level=error msg="error authorizing context: authorization header required" go.version=go1.6.2 http.request.host="172.30.231.201:5000" http.request.id=1857ebce-6dae-4d84-936a-07b402e6c402 http.request.method=GET http.request.remoteaddr="10.1.2.1:56350" http.request.uri="/v2/" http.request.useragent="docker/1.10.3 go/go1.6.2 git-commit/5206701-unsupported kernel/3.10.0-327.36.1.el7.x86_64 os/linux arch/amd64" instance.id=47cc9eaa-8140-44c3-af83-42ae74ada4a2
        time="2016-10-13T04:57:26.696691184-04:00" level=error msg="error authorizing context: authorization header required" go.version=go1.6.2 http.request.host="172.30.231.201:5000" http.request.id=eb54b808-1ff0-48fb-be8c-cb55d08e3c7b http.request.method=GET http.request.remoteaddr="10.1.0.1:59808" http.request.uri="/v2/" http.request.useragent="docker/1.10.3 go/go1.6.2 git-commit/5206701-unsupported kernel/3.10.0-327.36.1.el7.x86_64 os/linux arch/amd64" instance.id=47cc9eaa-8140-44c3-af83-42ae74ada4a2
 
-[Not Running diagnostic: ClusterRoleBindings
+[Note] Running diagnostic: ClusterRoleBindings
        Description: Check that the default ClusterRoleBindings are present and contain the expected subjects
 
 Info:  clusterrolebinding/cluster-readers has more subjects than expected.
@@ -139,13 +125,13 @@ Info:  clusterrolebinding/cluster-readers has more subjects than expected.
 
 Info:  clusterrolebinding/cluster-readers has extra subject {ServiceAccount management-infra management-admin    }.
 
-[Not Running diagnostic: ClusterRoles
+[Note] Running diagnostic: ClusterRoles
        Description: Check that the default ClusterRoles are present and contain the expected permissions
 
-[Not Running diagnostic: ClusterRouterName
+[Note] Running diagnostic: ClusterRouterName
        Description: Check there is a working router
 
-[Not Running diagnostic: MasterNode
+[Note] Running diagnostic: MasterNode
        Description: Check if master is also running node (for Open vSwitch)
 
 WARN:  [DClu3004 from diagnostic MasterNode@openshift/origin/pkg/diagnostics/cluster/master_node.go:175]
@@ -153,12 +139,12 @@ WARN:  [DClu3004 from diagnostic MasterNode@openshift/origin/pkg/diagnostics/clu
        This may indicate the master is not also running a node, and is unable
        to proxy to pods over the Open vSwitch SDN.
 
-[Not Skipping diagnostic: MetricsApiProxy
+[Note] Skipping diagnostic: MetricsApiProxy
        Description: Check the integrated heapster metrics can be reached via the API proxy
        Because: The heapster service does not exist in the openshift-infra project at this time,
        so it is not available for the Horizontal Pod Autoscaler to use as a source of metrics.
 
-[Not Running diagnostic: NodeDefinitions
+[Note] Running diagnostic: NodeDefinitions
        Description: Check node records on master
 
 WARN:  [DClu0003 from diagnostic NodeDefinition@openshift/origin/pkg/diagnostics/cluster/node_definitions.go:112]
@@ -191,16 +177,16 @@ WARN:  [DClu0003 from diagnostic NodeDefinition@openshift/origin/pkg/diagnostics
        Existing pods will continue to run until completed or evacuated (see
        other options for 'oadm manage-node').
 
-[Not Running diagnostic: ServiceExternalIPs
+[Note] Running diagnostic: ServiceExternalIPs
        Description: Check for existing services with ExternalIPs that are disallowed by master config
 
-[Not Running diagnostic: AnalyzeLogs
+[Note] Running diagnostic: AnalyzeLogs
        Description: Check for recent problems in systemd service logs
 
 Info:  Checking journalctl logs for 'atomic-openshift-node' service
 Info:  Checking journalctl logs for 'docker' service
 
-[Not Running diagnostic: MasterConfigCheck
+[Note] Running diagnostic: MasterConfigCheck
        Description: Check the master config file
 
 WARN:  [DH0005 from diagnostic MasterConfigCheck@openshift/origin/pkg/diagnostics/host/check_master_config.go:52]
@@ -208,17 +194,17 @@ WARN:  [DH0005 from diagnostic MasterConfigCheck@openshift/origin/pkg/diagnostic
        assetConfig.loggingPublicURL: Invalid value: "": required to view aggregated container logs in the console
        assetConfig.metricsPublicURL: Invalid value: "": required to view cluster metrics in the console
 
-[Not Running diagnostic: NodeConfigCheck
+[Note] Running diagnostic: NodeConfigCheck
        Description: Check the node config file
 
 Info:  Found a node config file: /etc/origin/node/node-config.yaml
 
-[Not Running diagnostic: UnitStatus
+[Note] Running diagnostic: UnitStatus
        Description: Check status for related systemd units
 
-[Not Summary of diagnostics execution (version v3.3.0.34):
-[Not Warnings seen: 6
-[root@master1 glennswes#
+[Note] Summary of diagnostics execution (version v3.3.0.34):
+[Note] Warnings seen: 6
+[root@master1 glennswest]#
 
 ----
 
@@ -233,14 +219,14 @@ This section focuses on the `ETCD` cluster. It describes the different commands 
 `SSH` into the first master node (master1). This must be done via bastion host _RESOURCEGROUPNAME_b@regionname.cloudapp.azure.com
 Using the output of the command `hostname` issue the `etcdctl` command to confirm that the cluster is healthy.
 
-[subs=+quote
+[subs=+quotes]
 ----
 $ *ssh azure-user@master01.southeastasia.cloudapp.azure.com*
 $ *sudo -i*
 ----
 
 
-[subs=+quote
+[subs=+quotes]
 ----
 # *hostname*
 ip-10-20-1-106.azure.internal
@@ -257,7 +243,7 @@ As explained in section 2.12.4 node labels are an important part of the OpenShif
 
 `SSH` into the first master node (master1) to verify the `defaultNodeSelector` is defined.
 
-[subs=+quote
+[subs=+quotes]
 ----
 # *vi /etc/origin/master/master-config.yaml*
 ...omitted...
@@ -280,7 +266,7 @@ At launch time user-data creates a xfs partition on the `/dev/xvdc` block device
 
 `SSH` into the first infrastructure node (ose-infra-node01.sysdeseng.com) to verify the entry exists within fstab.
 
-[subs=+quote
+[subs=+quotes]
 ----
 # *vi /etc/fstab*
 /dev/xvdc /var/lib/origin/openshift.local.volumes xfs gquota 0 0
@@ -292,7 +278,7 @@ The docker-storage-setup file is created at luanch time by user-data. This file 
 
 `SSH` into the first infrastructure node (infranode1) to verify `/etc/sysconfig/docker-storage-setup` matches the information below.
 
-[subs=+quote
+[subs=+quotes]
 ----
 # vi /etc/sysconfig/docker-storage-setup
 DEVS=/dev/xvdb
@@ -307,7 +293,7 @@ The role openshift-emptydir-quota sets a parameter within the node configuration
 
 `SSH` into the first infrastructure node (ose-infra-node01.sysdeseng.com) to verify `/etc/origin/node/node-config.yml` matches the information below.
 
-[subs=+quote
+[subs=+quotes]
 ----
 # *vi /etc/origin/node/node-config.yml*
 ...omitted...
@@ -349,11 +335,11 @@ To deploy an application, click on the `New Project` button. Provide a `Name` an
 
 Perform the following steps from your local workstation.
 
-Install the `oc client` by visiting the public URL of the OpenShift deployment. For example, https://resourcegroupname.region.cloudapp.azure.com/console/command-line and click latest release. When directed to https://access.redhat.com, login with the valid Red Hat customer credentials and download the client relevant to the current workstation. Follow the instructions located on the production documentation site for https://docs.openshift.com/container-platform/3.3/cli_reference/get_started_cli.html[getting started with the cl.
+Install the `oc client` by visiting the public URL of the OpenShift deployment. For example, https://resourcegroupname.region.cloudapp.azure.com/console/command-line and click latest release. When directed to https://access.redhat.com, login with the valid Red Hat customer credentials and download the client relevant to the current workstation. Follow the instructions located on the production documentation site for https://docs.openshift.com/container-platform/3.3/cli_reference/get_started_cli.html[getting started with the cli].
 
 A token is required to login using GitHub OAuth and OpenShift. The token is presented on the https://resourcegroupname.region.cloudapp.azure.com/console/command-line page. Click the click to show token hyperlink and perform the following on the workstation in which the oc client was installed.
 
-[subs=+quote
+[subs=+quotes]
 ----
 $ *oc login https://resourcegroupname.region.cloudapp.azure.com --token=fEAjn7LnZE6v5SOocCSRVmUWGBNIIEKbjD9h-Fv7p09*
 ----
@@ -362,7 +348,7 @@ $ *oc login https://resourcegroupname.region.cloudapp.azure.com --token=fEAjn7Ln
 <<<
 After the oc client is configured, create a new project and deploy an application.
 
-[subs=+quote
+[subs=+quotes]
 ----
 $ *oc new-project test-app*
 
@@ -400,7 +386,7 @@ route "php" exposed
 
 Display the status of the application.
 
-[subs=+quote
+[subs=+quotes]
 ----
 $ *oc status*
 In project test-app on server https://resourcegroupname.region.cloudapp.azure.com
@@ -420,7 +406,7 @@ Access the application by accessing the URL provided by `oc status`.  The CakePH
 
 If you try to run the following command, it should fail.
 
-[subs=+quote
+[subs=+quotes]
 ----
 # *oc get nodes --show-labels*
 Error from server: User "user@redhat.com" cannot list all nodes in the cluster
@@ -428,14 +414,14 @@ Error from server: User "user@redhat.com" cannot list all nodes in the cluster
 
 The reason it is failing is because the permissions for that user are incorrect. Get the username and configure the permissions.
 
-[subs=+quote
+[subs=+quotes]
 ----
 $ *oc whoAVMI*
 ----
 
 Once the username has been established, log back into a master node and enable the appropriate permissions for your user. Perform the following step from the first master (ose-master01.sysdeseng.com).
 
-[subs=+quote
+[subs=+quotes]
 ----
 # *oadm policy add-cluster-role-to-user cluster-admin user@redhat.com*
 ----
@@ -444,7 +430,7 @@ Once the username has been established, log back into a master node and enable t
 
 Attempt to list the nodes again and show the labels.
 
-[subs=+quote
+[subs=+quotes]
 ----
 # *oc get nodes --show-labels*
 NAME          STATUS                     AGE
@@ -466,7 +452,7 @@ List the router and registry by changing to the `default` project.
 
 NOTE: Perform the following steps from your the workstation.
 
-[subs=+quote
+[subs=+quotes]
 ----
 # *oc project default*
 # *oc get all*
@@ -497,7 +483,7 @@ The OpenShift Ansible playbooks configure two infrastructure nodes that have two
 
 NOTE: Perform the following steps from your the workstation.
 
-[subs=+quote
+[subs=+quotes]
 ----
 $ *oc describe svc/docker-registry*
 Name:			docker-registry
@@ -518,7 +504,7 @@ Notice that the registry has two `endpoints` listed. Each of those `endpoints` r
 
 The `oc` client allows similar functionality to the `docker` command. To find out more information about the registry storage perform the following.
 
-[subs=+quote
+[subs=+quotes]
 ----
 # *oc get pods*
 NAME                      READY     STATUS    RESTARTS   AGE
@@ -526,7 +512,7 @@ docker-registry-2-8b7c6   1/1       Running   0          2h
 docker-registry-2-drhgz   1/1       Running   0          2h
 ----
 
-[subs=+quote
+[subs=+quotes]
 ----
 # oc exec docker-registry-2-8b7c6 cat /etc/registryconfig/config.yml
 version: 0.1
@@ -563,7 +549,7 @@ This section will explore the Docker storage on an infrastructure node.
 The example below can be performed on any node but for this example the infrastructure node(ose-infra-node01.sysdeseng.com) is used.
 
 The output below verifies docker storage is not using a loop back device.
-[subs=+quote
+[subs=+quotes]
 ----
 $ *docker info*
 Containers: 2
@@ -614,7 +600,7 @@ Verify 3 disks are attached to the instance. The disk `/dev/xvda` is used for th
  `/dev/xvdb` is used for docker storage, and `/dev/xvdc` is used for emptyDir storage for containers
 that do not use a persistent volume.
 
-[subs=+quote
+[subs=+quotes]
 ----
 $ *fdisk -l*
 WARNING: fdisk GPT support is currently new, and therefore in an experimental phase. Use at your own discretion.
@@ -718,7 +704,7 @@ second paremeter is the count of volumes you want to create, followed by the siz
 exported by Azure VHD, and attached via creating yml definition, and registered via oc command to a master automatically.
 
 
-[subs=+quote
+[subs=+quotes]
 ----
 $ *ssh bastion*
 $ *ssh store1*
@@ -731,7 +717,7 @@ $ ose_pv_create vg1 1 1
 The `persistent volume claim` will change the pod from using `EmptyDir` non-persistent storage to storage backed by a persistent volume. To claim space from the `persistent volume` a database server will be used
 to demonstrate a `persistent volume claim`.
 
-[subs=+quote
+[subs=+quotes]
 ----
 $ *oc new-app --docker-image registry.access.redhat.com/openshift3/mysql-55-rhel7 --name=db -e 'MYSQL_USER=rcook,MYSQL_PASSWORD=d0nth@x,MYSQL_DATABASE=persistent'*
 
@@ -796,14 +782,14 @@ Ensure the console can still be accessed by opening a browser and accessing open
 
 `SSH` into the first master node (master1) from the bastion. Using the output of the command `hostname` issue the `etcdctl` command to confirm that the cluster is healthy.
 
-[subs=+quote
+[subs=+quotes]
 ----
 $ *ssh user@master1*
 $ *sudo -i*
 ----
 
 
-[subs=+quote
+[subs=+quotes]
 ----
 # *hostname*
 ip-10-20-1-106.azure.internal
@@ -827,7 +813,7 @@ NOTE: Perform the following steps from the browser on a local workstation.
 
 Before bringing down an infrastructure node, check behavior and ensure things are working as expected. The goal of testing an infrastructure node outage is to see how the OpenShift routers and registries behave. Confirm the simple application deployed from before is still functional. If it is not, deploy a new version. Access the application to confirm connectivity. As a reminder, to find the required information the ensure the application is still running, list the projects, change to the project that the application is deployed in, get the status of the application which including the URL and access the application via that URL.
 
-[subs=+quote
+[subs=+quotes]
 ----
 $ *oc get projects*
 NAME               DISPLAY NAME   STATUS
@@ -862,7 +848,7 @@ NOTE: Perform the following steps from a CLI on a local workstation and ensure t
 
 A token is needed so that the Docker registry can be logged into.
 
-[subs=+quote
+[subs=+quotes]
 ----
 # *oc whoAVMI -t*
 feAeAgL139uFFF_72bcJlboTv7gi_bo373kf1byaAT8
@@ -870,7 +856,7 @@ feAeAgL139uFFF_72bcJlboTv7gi_bo373kf1byaAT8
 
 Pull a new docker image for the purposes of test pushing.
 
-[subs=+quote
+[subs=+quotes]
 ----
 # *docker pull fedora/apache*
 # *docker images*
@@ -878,7 +864,7 @@ Pull a new docker image for the purposes of test pushing.
 
 Capture the registry endpoint. The `svc/docker-registry` shows the endpoint.
 
-[subs=+quote
+[subs=+quotes]
 ----
 # *oc status*
 In project default on server https://openshift-master.sysdeseng.com
@@ -899,14 +885,14 @@ View details with 'oc describe <resource>/<name>' or list everything with 'oc ge
 
 Tag the docker image with the endpoint from the previous step.
 
-[subs=+quote
+[subs=+quotes]
 ----
 # *docker tag docker.io/fedora/apache 172.30.110.31:5000/openshift/prodapache*
 ----
 
 Check the images and ensure the newly tagged image is available.
 
-[subs=+quote
+[subs=+quotes]
 ----
 # *docker images*
 ----
@@ -915,12 +901,12 @@ Check the images and ensure the newly tagged image is available.
 
 Issue a Docker login.
 
-[subs=+quote
+[subs=+quotes]
 ----
 # *docker login -u prod@redhat.com -e prod@redhat.com -p _7yJcnXfeRtAbJVEaQwPwXreEhlV56TkgDwZ6UEUDWw 172.30.110.31:5000*
 ----
 
-[subs=+quote
+[subs=+quotes]
 ----
 # *oadm policy add-role-to-user admin prod@redhat.com -n openshift*
 # *oadm policy add-role-to-user system:registry prod@redhat.com*
@@ -929,10 +915,10 @@ Issue a Docker login.
 
 Push the image to the OpenShift registry now.
 
-[subs=+quote
+[subs=+quotes]
 ----
 # *docker push 172.30.110.222:5000/openshift/prodapache*
-The push refers to a repository [172.30.110.222:5000/openshift/prodapach
+The push refers to a repository [172.30.110.222:5000/openshift/prodapache]
 389eb3601e55: Layer already exists
 c56d9d429ea9: Layer already exists
 2a6c028a91ff: Layer already exists
@@ -949,7 +935,7 @@ NOTE: Perform the following steps from the CLI of a local workstation.
 
 Change to the default OpenShift project and check the router and registry pod locations.
 
-[subs=+quote
+[subs=+quotes]
 ----
 $ *oc project default*
 Now using project "default" on server "https://openshift-master.sysdeseng.com".
@@ -979,7 +965,7 @@ Log into the `Azure` console.  On the dashboard, click on the `Resource Group`.
 Locate your running infra01 instance, select it, right click and change the state to `stopped`.
 Wait a minute or two for the registry and pod to migrate over to infra01. Check the registry locations and confirm that they are on the same node.
 
-[subs=+quote
+[subs=+quotes]
 ----
 $ *oc describe pod docker-registry-2-fw1et | grep -i node*
 Node:		ip-10-30-2-208.azure.internal/10.30.2.208

@@ -16,17 +16,18 @@ First, gather the required information needed, for the provisioning and installa
 6. Wildcard Zone - DNS subdomain for applications in the OpenShift Cluster.
 7. Number of Nodes - The template supports the creation of 3 to 30 nodes during greenfield creation of a cluster. Note that the quota of your Azure account must support the number chosen.
 8. Image - The template supports RHEL (Red Hat Enterprise Linux) 7.3 or later. The image will be upgraded during the installation process to the latest release.
-9. Master VM Size - Standard_DS3 - The default value gives 4 CPU Cores and 14 Gigabytes of memory, with 28 GB of local disk. This is used for OpenShift Master Nodes, as well as the Bastion host. This VM Size uses premium storage. Generally recommended to use premium storage for OpenShift on Azure.
-10. Infranode VM Size - Standard_DS2 - The default value gives 2 CPU Cores and 7 Gigabytes of memory. Infranodes run the OpenShift Router Containers, and the OpenShift Registry. As the infranode provide the ingress for all applications, its recommended that DS2 be the smallest node used for the Infranodes.
-11. Node VM Size - Standard DS12 - This default value gives 4 CPU Cores and 28 Gigabytes of memory. Nodes run your application containers. The number and size of the applications have an impact on node size. Larger container sizes may warrant using Standard_DS13(56Gig of Memory) or Standard_DS14(112Gig of Memory).
+9. Master VM Size - Standard_DS4_v2 - The default value gives 8 CPU Cores and 28 Gigabytes of memory, with 56 GB of local disk. This is used for OpenShift Master Nodes, as well as the Bastion host. This VM Size uses premium storage. Generally recommended to use premium storage for OpenShift on Azure.
+10. Infranode VM Size - Standard_D4_v2 - The default value gives 8 CPU Cores and 28 Gigabytes of memory. Infranodes run the OpenShift Router Containers, and the OpenShift Registry. As the infranode provide the ingress for all applications, its recommended that DS2 be the smallest node used for the Infranodes.
+11. Node VM Size - Standard DS4_v2 - This default value gives 8 CPU Cores and 28 Gigabytes of memory. Nodes run your application containers. The number and size of the applications have an impact on node size. Larger container sizes may warrant using Standard_DS13(56Gig of Memory) or Standard_DS14(112Gig of Memory).
 12. RHN Username - This should be the username used for your Red Hat Subscription Account that has OpenShift Container Platform entitlements.
 13. RHN Password - This should be the password for your Red Hat Subscription Account.
 14. Subscription Pool ID - This is a number sequence that uniquely identifies the subscriptions that are to be used for the OpenShift intstall.
-15. Store VM Size - Standard_DS3_v2 is the default size which gives 4 CPU Cores and 14 Gigabytes of memory, with 28 GB of local disk. The larger Standard_DS12_v2 size gives 4 CPU Cores and 28 Gigabytes of memory, with 56 GB of local disk
+15. AAD Client Id - This gives Openshift the Active Directory ID, needed to be able to create, move and delete persistent volumes.
+16. AAD Client Secret - The Active Directory Password to match the AAD Client ID. Require for Openshift Cloud Provider.
 
 With the above information ready, go to https://github.com/openshift/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible
 and click the "Deploy To Azure" button near the bottom of the page. This will then show the form, to allow you to start deployment.
 
-[arm-template-imag]
+[arm-template-image]]
 .Arm Template
 image::images/AzureOCPEmptyTemplate.png["ARM Template",align="center"]
