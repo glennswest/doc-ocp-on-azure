@@ -1,0 +1,29 @@
+=== Microsoft Azure DNS
+`DNS` is an integral part of a successful OpenShift Compute Platform deployment/environment. `Azure` has a `DNS` service, per Microsoft;
+"The Microsoft global network of name servers has the scale and redundancy to ensure ultra-high availability for your domains.
+With Azure DNS, you can be sure that your DNS will always be available."
+
+Azure provides the DNS for public zone, as well as internal host resolution. These are configured automatically
+during the execution of the reference architecture scripts.
+O
+For more information see https://azure.microsoft.com/en-us/services/dns/
+
+==== Public Zone
+
+
+When the reference architecture is deployed, azure supplied domains are used. The domains consists of:
+hostname.{region}.cloudapp.azure.com. For example, in the southeasasia zone, the full domain of the bastion
+host would be bastion.southeastasia.cloudapp.azure.com.
+
+For each Openshift Cluster on Azure, there are three created domain names:
+{resroucegroup}.{region}.cloudapp.azure.com - The API and Openshift Console Load Balancer
+{resourcegroup}b.{region}.cloudapp.azure.com - The Bastion Host for ssh access
+{wildcardzone}.{region}.cloudapp.azure.com - the dns/ip of the Application Load Balancer.
+
+In initial deployment, a nip dns name is generated to point to the Application load balancer,
+to allow immediate usage of the deployed openshift. A Wildcard C name should be created to anothername of
+choice.
+
+NOTE: A subdomain can also be used. The same steps listed above are applicable when using a subdomain.
+
+// vim: set syntax=asciidoc:

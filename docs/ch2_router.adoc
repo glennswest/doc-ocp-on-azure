@@ -1,0 +1,25 @@
+=== Router
+
+Pods inside of an OpenShift cluster are only reachable via their IP addresses on
+the cluster network. An edge load balancer can be used to accept traffic from
+outside networks and proxy the traffic to pods inside the OpenShift cluster.
+
+An OpenShift administrator can deploy routers in an OpenShift cluster. These
+enable routes created by developers to be used by external clients.
+
+OpenShift routers provide external hostname mapping and load balancing to
+services over protocols that pass distinguishing information directly to the
+router; the hostname must be present in the protocol in order for the router
+to determine where to send it. Routers support the following protocols:
+
+* HTTP
+* HTTPS (with SNI)
+* WebSockets
+* TLS with SNI
+
+The router utilizes the wildcard zone specified during the installation and configuration
+of OpenShift. This wildcard zone is used by the router to create routes for a service running within the
+OpenShift environment to a publically accessible URL. The wildcard zone itself is a wildcard entry
+in `Azure DNS` which is linked using a CNAME to an `Azure Load Balancer` which performs a health check
+and forwards traffic to router pods on port 80 and 443.
+// vim: set syntax=asciidoc:

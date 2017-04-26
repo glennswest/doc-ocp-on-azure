@@ -1,0 +1,978 @@
+== Operational Management
+
+With the successful deployment of OpenShift, the following section demonstrates how to confirm proper functionality of the Red Hat OpenShift Container Platform.
+
+=== Validate the Deployment
+
+With the successful deployment of OpenShift, the following section demonstrates how to confirm proper functionality of the OpenShift environment. An Ansible script in the git repository will allow for an application to be deployed which will test the functionality of the master, nodes, registry, and router. The playbook will test the deployment and clean up any projects and pods created during the validation run.
+
+The playbook will perform the following steps:
+
+*Environment Validation*
+
+* Validate the internal OpenShift  address from the master nodes
+* Validate the master local master address
+* Validate the health of the `ETCD` cluster to ensure all `ETCD` nodes are healthy
+* Create a project in OpenShift called validate
+* Create an OpenShift Application
+* Add a route for the Application
+* Validate the URL returns a status code of 200 or healthy
+* Delete the validation project
+
+
+
+=== Gathering hostnames
+With all of the steps that occur during the installation of OpenShift it is possible to lose track of the names of the instances in the recently deployed environment. One option to get these hostnames is to browse to the `Azure Resource Group` dashboard and select `Overview`. The filter shows all instances relating to the reference architecture deployment.
+
+To help facilitate the `Operational Management` Chapter the following hostnames will be used.
+
+
+* master1
+* master2
+* master3
+* infranode1
+* infranode2
+* infranode3
+* node01
+* node02
+* node03
+
+
+=== Running Diagnostics
+
+Perform the following steps from the first master node.
+
+To run diagnostics, `SSH` into the  master node (master1), via the bastion host.
+
+[subs=+quotes]
+----
+$ *ssh username@resourcegroupb
+$ *ssh username@master1
+$ *sudo -i*
+----
+
+<<<
+
+Connectivity to the first master node (master1.region.cloudapp.azure.com) as the `root` user should have been established. Run the diagnostics that are included as part of the install.
+
+[subs=+quotes]
+----
+# *oadm diagnostics*
+[Note] Determining if client configuration exists for client/cluster diagnostics
+Info:  Successfully read a client config file at '/root/.kube/config'
+Info:  Using context for cluster-admin access: 'default/gswthuv1500-trafficmanager-net:8443/system:admin'
+[Note] Performing systemd discovery
+
+[Note] Running diagnostic: ConfigContexts[default/gswthuv1500-trafficmanager-net:8443/system:admin]
+       Description: Validate client config context is complete and has connectivity
+
+Info:  The current client config context is 'default/gswthuv1500-trafficmanager-net:8443/system:admin':
+       The server URL is 'https://gswthuv1500.trafficmanager.net:8443'
+       The user authentication is 'system:admin/gswthuv1500-trafficmanager-net:8443'
+       The current project is 'default'
+       Successfully requested project list; has access to project(s):
+         [openshift openshift-infra test2 test3 kube-system logging management-infra sso test1 default]
+
+[Note] Running diagnostic: DiagnosticPod
+       Description: Create a pod to run diagnostics from the application standpoint
+
+Info:  Output from the diagnostic pod (image openshift3/ose-deployer:v3.4.0.1):
+       [Note] Running diagnostic: PodCheckAuth
+              Description: Check that service account credentials authenticate as expected
+
+       Info:  Service account token successfully authenticated to master
+       Info:  Service account token was authenticated by the integrated registry.
+
+       [Note] Running diagnostic: PodCheckDns
+              Description: Check that DNS within a pod works as expected
+
+       [Note] Summary of diagnostics execution (version v3.4.0.1):
+       [Note] Completed with no errors or warnings seen.
+
+[Note] Running diagnostic: ClusterRegistry
+       Description: Check that there is a working Docker registry
+
+WARN:  [DClu1012 from diagnostic ClusterRegistry@openshift/origin/pkg/diagnostics/cluster/registry.go:300]
+       The pod logs for the "docker-registry-1-u20su" pod belonging to
+       the "docker-registry" service indicated unknown errors.
+       This could result in problems with builds or deployments.
+       Please examine the log entries to determine if there might be
+       any related problems:
+
+       time="2016-10-13T04:55:01.74968536-04:00" level=error msg="error authorizing context: authorization header required" go.version=go1.6.2 http.request.host="172.30.231.201:5000" http.request.id=1f814b0c-86ec-4030-a6d6-637f8b2a8c76 http.request.method=GET http.request.remoteaddr="10.1.1.1:40236" http.request.uri="/v2/" http.request.useragent="docker/1.10.3 go/go1.6.2 git-commit/5206701-unsupported kernel/3.10.0-327.36.1.el7.x86_64 os/linux arch/amd64" instance.id=47cc9eaa-8140-44c3-af83-42ae74ada4a2
+       time="2016-10-13T04:55:01.824823281-04:00" level=error msg="response completed with error" err.code="blob unknown" err.detail=sha256:99dd41655d8a45c2fb74f9eeb73e327b3ad4796f0ff0d602c575e32e9804baed err.message="blob unknown to registry" go.version=go1.6.2 http.request.host="172.30.231.201:5000" http.request.id=1853a0e8-057e-4dd7-a7ae-56f1bdac06c9 http.request.method=HEAD http.request.remoteaddr="10.1.1.1:40246" http.request.uri="/v2/test2/nodejs-mongodb-example/blobs/sha256:99dd41655d8a45c2fb74f9eeb73e327b3ad4796f0ff0d602c575e32e9804baed" http.request.useragent="docker/1.10.3 go/go1.6.2 git-commit/5206701-unsupported kernel/3.10.0-327.36.1.el7.x86_64 os/linux arch/amd64" http.response.contenttype="application/json; charset=utf-8" http.response.duration=47.997785ms http.response.status=404 http.response.written=157 instance.id=47cc9eaa-8140-44c3-af83-42ae74ada4a2 vars.digest="sha256:99dd41655d8a45c2fb74f9eeb73e327b3ad4796f0ff0d602c575e32e9804baed" vars.name="test2/nodejs-mongodb-example"
+       time="2016-10-13T04:55:01.833422572-04:00" level=error msg="response completed with error" err.code="blob unknown" err.detail=sha256:2772ae0d9360d210b6349b96f9e340ec6cb6dafb813a87814f991f2119d4c862 err.message="blob unknown to registry" go.version=go1.6.2 http.request.host="172.30.231.201:5000" http.request.id=b3a065dc-f08d-42aa-9e17-4fb09fb56f67 http.request.method=HEAD http.request.remoteaddr="10.1.1.1:40244" http.request.uri="/v2/test2/nodejs-mongodb-example/blobs/sha256:2772ae0d9360d210b6349b96f9e340ec6cb6dafb813a87814f991f2119d4c862" http.request.useragent="docker/1.10.3 go/go1.6.2 git-commit/5206701-unsupported kernel/3.10.0-327.36.1.el7.x86_64 os/linux arch/amd64" http.response.contenttype="application/json; charset=utf-8" http.response.duration=53.702745ms http.response.status=404 http.response.written=157 instance.id=47cc9eaa-8140-44c3-af83-42ae74ada4a2 vars.digest="sha256:2772ae0d9360d210b6349b96f9e340ec6cb6dafb813a87814f991f2119d4c862" vars.name="test2/nodejs-mongodb-example"
+       time="2016-10-13T04:55:01.836061992-04:00" level=error msg="response completed with error" err.code="blob unknown" err.detail=sha256:b970655b400177439b664c70d61f99182c0b5d4f1e848c1e4a2d2b525cb8c215 err.message="blob unknown to registry" go.version=go1.6.2 http.request.host="172.30.231.201:5000" http.request.id=cfada58e-9d54-4383-bb9a-67a1c8e0a086 http.request.method=HEAD http.request.remoteaddr="10.1.1.1:40242" http.request.uri="/v2/test2/nodejs-mongodb-example/blobs/sha256:b970655b400177439b664c70d61f99182c0b5d4f1e848c1e4a2d2b525cb8c215" http.request.useragent="docker/1.10.3 go/go1.6.2 git-commit/5206701-unsupported kernel/3.10.0-327.36.1.el7.x86_64 os/linux arch/amd64" http.response.contenttype="application/json; charset=utf-8" http.response.duration=47.66087ms http.response.status=404 http.response.written=157 instance.id=47cc9eaa-8140-44c3-af83-42ae74ada4a2 vars.digest="sha256:b970655b400177439b664c70d61f99182c0b5d4f1e848c1e4a2d2b525cb8c215" vars.name="test2/nodejs-mongodb-example"
+       time="2016-10-13T04:55:01.846855684-04:00" level=error msg="response completed with error" err.code="blob unknown" err.detail=sha256:30cf2e26a24f2a8426cbe8444f8af2ecb7023bd468b05c1b6fd0b2797b0f9ff9 err.message="blob unknown to registry" go.version=go1.6.2 http.request.host="172.30.231.201:5000" http.request.id=761089cb-843f-4275-9254-deb19be2345c http.request.method=HEAD http.request.remoteaddr="10.1.1.1:40248" http.request.uri="/v2/test2/nodejs-mongodb-example/blobs/sha256:30cf2e26a24f2a8426cbe8444f8af2ecb7023bd468b05c1b6fd0b2797b0f9ff9" http.request.useragent="docker/1.10.3 go/go1.6.2 git-commit/5206701-unsupported kernel/3.10.0-327.36.1.el7.x86_64 os/linux arch/amd64" http.response.contenttype="application/json; charset=utf-8" http.response.duration=67.327966ms http.response.status=404 http.response.written=157 instance.id=47cc9eaa-8140-44c3-af83-42ae74ada4a2 vars.digest="sha256:30cf2e26a24f2a8426cbe8444f8af2ecb7023bd468b05c1b6fd0b2797b0f9ff9" vars.name="test2/nodejs-mongodb-example"
+       time="2016-10-13T04:55:12.486222393-04:00" level=error msg="error authorizing context: authorization header required" go.version=go1.6.2 http.request.host="172.30.231.201:5000" http.request.id=069b7e6a-a45d-4613-a1b6-5adf43743853 http.request.method=GET http.request.remoteaddr="10.1.2.1:56120" http.request.uri="/v2/" http.request.useragent="docker/1.10.3 go/go1.6.2 git-commit/5206701-unsupported kernel/3.10.0-327.36.1.el7.x86_64 os/linux arch/amd64" instance.id=47cc9eaa-8140-44c3-af83-42ae74ada4a2
+       time="2016-10-13T04:55:12.572092403-04:00" level=error msg="response completed with error" err.code="blob unknown" err.detail=sha256:f6db1d2870e85d05aa08cb2d769e18847e5dc321cda780c6d5952f8f52c922f9 err.message="blob unknown to registry" go.version=go1.6.2 http.request.host="172.30.231.201:5000" http.request.id=9aac8ea9-8c45-46e9-87cf-a3e74deaf6e3 http.request.method=HEAD http.request.remoteaddr="10.1.2.1:56126" http.request.uri="/v2/test1/cakephp-example/blobs/sha256:f6db1d2870e85d05aa08cb2d769e18847e5dc321cda780c6d5952f8f52c922f9" http.request.useragent="docker/1.10.3 go/go1.6.2 git-commit/5206701-unsupported kernel/3.10.0-327.36.1.el7.x86_64 os/linux arch/amd64" http.response.contenttype="application/json; charset=utf-8" http.response.duration=41.904008ms http.response.status=404 http.response.written=157 instance.id=47cc9eaa-8140-44c3-af83-42ae74ada4a2 vars.digest="sha256:f6db1d2870e85d05aa08cb2d769e18847e5dc321cda780c6d5952f8f52c922f9" vars.name="test1/cakephp-example"
+       time="2016-10-13T04:55:12.575029037-04:00" level=error msg="response completed with error" err.code="blob unknown" err.detail=sha256:2772ae0d9360d210b6349b96f9e340ec6cb6dafb813a87814f991f2119d4c862 err.message="blob unknown to registry" go.version=go1.6.2 http.request.host="172.30.231.201:5000" http.request.id=15565809-e9ad-4fd6-b87f-7bb1dbcc9f6f http.request.method=HEAD http.request.remoteaddr="10.1.2.1:56128" http.request.uri="/v2/test1/cakephp-example/blobs/sha256:2772ae0d9360d210b6349b96f9e340ec6cb6dafb813a87814f991f2119d4c862" http.request.useragent="docker/1.10.3 go/go1.6.2 git-commit/5206701-unsupported kernel/3.10.0-327.36.1.el7.x86_64 os/linux arch/amd64" http.response.contenttype="application/json; charset=utf-8" http.response.duration=44.773839ms http.response.status=404 http.response.written=157 instance.id=47cc9eaa-8140-44c3-af83-42ae74ada4a2 vars.digest="sha256:2772ae0d9360d210b6349b96f9e340ec6cb6dafb813a87814f991f2119d4c862" vars.name="test1/cakephp-example"
+       time="2016-10-13T04:55:12.587866821-04:00" level=error msg="response completed with error" err.code="blob unknown" err.detail=sha256:30cf2e26a24f2a8426cbe8444f8af2ecb7023bd468b05c1b6fd0b2797b0f9ff9 err.message="blob unknown to registry" go.version=go1.6.2 http.request.host="172.30.231.201:5000" http.request.id=98d8bee0-1657-445c-a853-42b03f5bc49e http.request.method=HEAD http.request.remoteaddr="10.1.2.1:56132" http.request.uri="/v2/test1/cakephp-example/blobs/sha256:30cf2e26a24f2a8426cbe8444f8af2ecb7023bd468b05c1b6fd0b2797b0f9ff9" http.request.useragent="docker/1.10.3 go/go1.6.2 git-commit/5206701-unsupported kernel/3.10.0-327.36.1.el7.x86_64 os/linux arch/amd64" http.response.contenttype="application/json; charset=utf-8" http.response.duration=42.255024ms http.response.status=404 http.response.written=157 instance.id=47cc9eaa-8140-44c3-af83-42ae74ada4a2 vars.digest="sha256:30cf2e26a24f2a8426cbe8444f8af2ecb7023bd468b05c1b6fd0b2797b0f9ff9" vars.name="test1/cakephp-example"
+       time="2016-10-13T04:55:12.590817855-04:00" level=error msg="response completed with error" err.code="blob unknown" err.detail=sha256:99dd41655d8a45c2fb74f9eeb73e327b3ad4796f0ff0d602c575e32e9804baed err.message="blob unknown to registry" go.version=go1.6.2 http.request.host="172.30.231.201:5000" http.request.id=1f145a70-a39f-4f7d-815e-98771f1529ee http.request.method=HEAD http.request.remoteaddr="10.1.2.1:56130" http.request.uri="/v2/test1/cakephp-example/blobs/sha256:99dd41655d8a45c2fb74f9eeb73e327b3ad4796f0ff0d602c575e32e9804baed" http.request.useragent="docker/1.10.3 go/go1.6.2 git-commit/5206701-unsupported kernel/3.10.0-327.36.1.el7.x86_64 os/linux arch/amd64" http.response.contenttype="application/json; charset=utf-8" http.response.duration=41.28708ms http.response.status=404 http.response.written=157 instance.id=47cc9eaa-8140-44c3-af83-42ae74ada4a2 vars.digest="sha256:99dd41655d8a45c2fb74f9eeb73e327b3ad4796f0ff0d602c575e32e9804baed" vars.name="test1/cakephp-example"
+       time="2016-10-13T04:56:53.723566821-04:00" level=error msg="response completed with error" err.code="blob unknown" err.detail=sha256:34c6b24178c3706bb024b4e5c4cbe73eb93be3ae9d89b87e8cd9909238a14d7f err.message="blob unknown to registry" go.version=go1.6.2 http.request.host="172.30.231.201:5000" http.request.id=2c877657-9277-4874-b11e-fc3443102cfb http.request.method=HEAD http.request.remoteaddr="10.1.1.1:40366" http.request.uri="/v2/test2/nodejs-mongodb-example/blobs/sha256:34c6b24178c3706bb024b4e5c4cbe73eb93be3ae9d89b87e8cd9909238a14d7f" http.request.useragent="docker/1.10.3 go/go1.6.2 git-commit/5206701-unsupported kernel/3.10.0-327.36.1.el7.x86_64 os/linux arch/amd64" http.response.contenttype="application/json; charset=utf-8" http.response.duration=32.28977ms http.response.status=404 http.response.written=157 instance.id=47cc9eaa-8140-44c3-af83-42ae74ada4a2 vars.digest="sha256:34c6b24178c3706bb024b4e5c4cbe73eb93be3ae9d89b87e8cd9909238a14d7f" vars.name="test2/nodejs-mongodb-example"
+       time="2016-10-13T04:56:53.86125149-04:00" level=error msg="response completed with error" err.code=unknown err.detail="manifest invalid: manifest invalid" err.message="unknown error" go.version=go1.6.2 http.request.contenttype="application/vnd.docker.distribution.manifest.v2+json" http.request.host="172.30.231.201:5000" http.request.id=38223d7c-22b9-46d1-80dc-91e0ec7b3454 http.request.method=PUT http.request.remoteaddr="10.1.1.1:40376" http.request.uri="/v2/test2/nodejs-mongodb-example/manifests/latest" http.request.useragent="docker/1.10.3 go/go1.6.2 git-commit/5206701-unsupported kernel/3.10.0-327.36.1.el7.x86_64 os/linux arch/amd64" http.response.contenttype="application/json; charset=utf-8" http.response.duration=13.113797ms http.response.status=500 http.response.written=136 instance.id=47cc9eaa-8140-44c3-af83-42ae74ada4a2 vars.name="test2/nodejs-mongodb-example" vars.reference=latest
+       time="2016-10-13T04:57:01.879168345-04:00" level=error msg="response completed with error" err.code="blob unknown" err.detail=sha256:023107a7a7e472743ff61bb01f20391c4b7e42d55601f89e890062f53311f20b err.message="blob unknown to registry" go.version=go1.6.2 http.request.host="172.30.231.201:5000" http.request.id=93e647bf-ce23-4b51-97f7-3f3338c2f85b http.request.method=HEAD http.request.remoteaddr="10.1.2.1:56304" http.request.uri="/v2/test1/cakephp-example/blobs/sha256:023107a7a7e472743ff61bb01f20391c4b7e42d55601f89e890062f53311f20b" http.request.useragent="docker/1.10.3 go/go1.6.2 git-commit/5206701-unsupported kernel/3.10.0-327.36.1.el7.x86_64 os/linux arch/amd64" http.response.contenttype="application/json; charset=utf-8" http.response.duration=29.372437ms http.response.status=404 http.response.written=157 instance.id=47cc9eaa-8140-44c3-af83-42ae74ada4a2 vars.digest="sha256:023107a7a7e472743ff61bb01f20391c4b7e42d55601f89e890062f53311f20b" vars.name="test1/cakephp-example"
+       time="2016-10-13T04:57:02.023527217-04:00" level=error msg="response completed with error" err.code=unknown err.detail="manifest invalid: manifest invalid" err.message="unknown error" go.version=go1.6.2 http.request.contenttype="application/vnd.docker.distribution.manifest.v2+json" http.request.host="172.30.231.201:5000" http.request.id=82e258d8-5c13-422b-b103-5a5a08ec8a88 http.request.method=PUT http.request.remoteaddr="10.1.2.1:56316" http.request.uri="/v2/test1/cakephp-example/manifests/latest" http.request.useragent="docker/1.10.3 go/go1.6.2 git-commit/5206701-unsupported kernel/3.10.0-327.36.1.el7.x86_64 os/linux arch/amd64" http.response.contenttype="application/json; charset=utf-8" http.response.duration=15.341799ms http.response.status=500 http.response.written=136 instance.id=47cc9eaa-8140-44c3-af83-42ae74ada4a2 vars.name="test1/cakephp-example" vars.reference=latest
+       time="2016-10-13T04:57:23.365903534-04:00" level=error msg="error authorizing context: authorization header required" go.version=go1.6.2 http.request.host="172.30.231.201:5000" http.request.id=1857ebce-6dae-4d84-936a-07b402e6c402 http.request.method=GET http.request.remoteaddr="10.1.2.1:56350" http.request.uri="/v2/" http.request.useragent="docker/1.10.3 go/go1.6.2 git-commit/5206701-unsupported kernel/3.10.0-327.36.1.el7.x86_64 os/linux arch/amd64" instance.id=47cc9eaa-8140-44c3-af83-42ae74ada4a2
+       time="2016-10-13T04:57:26.696691184-04:00" level=error msg="error authorizing context: authorization header required" go.version=go1.6.2 http.request.host="172.30.231.201:5000" http.request.id=eb54b808-1ff0-48fb-be8c-cb55d08e3c7b http.request.method=GET http.request.remoteaddr="10.1.0.1:59808" http.request.uri="/v2/" http.request.useragent="docker/1.10.3 go/go1.6.2 git-commit/5206701-unsupported kernel/3.10.0-327.36.1.el7.x86_64 os/linux arch/amd64" instance.id=47cc9eaa-8140-44c3-af83-42ae74ada4a2
+
+[Note] Running diagnostic: ClusterRoleBindings
+       Description: Check that the default ClusterRoleBindings are present and contain the expected subjects
+
+Info:  clusterrolebinding/cluster-readers has more subjects than expected.
+
+       Use the `oadm policy reconcile-cluster-role-bindings` command to update the role binding to remove extra subjects.
+
+Info:  clusterrolebinding/cluster-readers has extra subject {ServiceAccount management-infra management-admin    }.
+
+[Note] Running diagnostic: ClusterRoles
+       Description: Check that the default ClusterRoles are present and contain the expected permissions
+
+[Note] Running diagnostic: ClusterRouterName
+       Description: Check there is a working router
+
+[Note] Running diagnostic: MasterNode
+       Description: Check if master is also running node (for Open vSwitch)
+
+WARN:  [DClu3004 from diagnostic MasterNode@openshift/origin/pkg/diagnostics/cluster/master_node.go:175]
+       Unable to find a node matching the cluster server IP.
+       This may indicate the master is not also running a node, and is unable
+       to proxy to pods over the Open vSwitch SDN.
+
+[Note] Skipping diagnostic: MetricsApiProxy
+       Description: Check the integrated heapster metrics can be reached via the API proxy
+       Because: The heapster service does not exist in the openshift-infra project at this time,
+       so it is not available for the Horizontal Pod Autoscaler to use as a source of metrics.
+
+[Note] Running diagnostic: NodeDefinitions
+       Description: Check node records on master
+
+WARN:  [DClu0003 from diagnostic NodeDefinition@openshift/origin/pkg/diagnostics/cluster/node_definitions.go:112]
+       Node master1.1fk11uzmoc0ezp05izhjre5jfb.ix.internal.cloudapp.net is ready but is marked Unschedulable.
+       This is usually set manually for administrative reasons.
+       An administrator can mark the node schedulable with:
+           oadm manage-node master1.1fk11uzmoc0ezp05izhjre5jfb.ix.internal.cloudapp.net --schedulable=true
+
+       While in this state, pods should not be scheduled to deploy on the node.
+       Existing pods will continue to run until completed or evacuated (see
+       other options for 'oadm manage-node').
+
+WARN:  [DClu0003 from diagnostic NodeDefinition@openshift/origin/pkg/diagnostics/cluster/node_definitions.go:112]
+       Node master2.1fk11uzmoc0ezp05izhjre5jfb.ix.internal.cloudapp.net is ready but is marked Unschedulable.
+       This is usually set manually for administrative reasons.
+       An administrator can mark the node schedulable with:
+           oadm manage-node master2.1fk11uzmoc0ezp05izhjre5jfb.ix.internal.cloudapp.net --schedulable=true
+
+       While in this state, pods should not be scheduled to deploy on the node.
+       Existing pods will continue to run until completed or evacuated (see
+       other options for 'oadm manage-node').
+
+WARN:  [DClu0003 from diagnostic NodeDefinition@openshift/origin/pkg/diagnostics/cluster/node_definitions.go:112]
+       Node master3.1fk11uzmoc0ezp05izhjre5jfb.ix.internal.cloudapp.net is ready but is marked Unschedulable.
+       This is usually set manually for administrative reasons.
+       An administrator can mark the node schedulable with:
+           oadm manage-node master3.1fk11uzmoc0ezp05izhjre5jfb.ix.internal.cloudapp.net --schedulable=true
+
+       While in this state, pods should not be scheduled to deploy on the node.
+       Existing pods will continue to run until completed or evacuated (see
+       other options for 'oadm manage-node').
+
+[Note] Running diagnostic: ServiceExternalIPs
+       Description: Check for existing services with ExternalIPs that are disallowed by master config
+
+[Note] Running diagnostic: AnalyzeLogs
+       Description: Check for recent problems in systemd service logs
+
+Info:  Checking journalctl logs for 'atomic-openshift-node' service
+Info:  Checking journalctl logs for 'docker' service
+
+[Note] Running diagnostic: MasterConfigCheck
+       Description: Check the master config file
+
+WARN:  [DH0005 from diagnostic MasterConfigCheck@openshift/origin/pkg/diagnostics/host/check_master_config.go:52]
+       Validation of master config file '/etc/origin/master/master-config.yaml' warned:
+       assetConfig.loggingPublicURL: Invalid value: "": required to view aggregated container logs in the console
+       assetConfig.metricsPublicURL: Invalid value: "": required to view cluster metrics in the console
+
+[Note] Running diagnostic: NodeConfigCheck
+       Description: Check the node config file
+
+Info:  Found a node config file: /etc/origin/node/node-config.yaml
+
+[Note] Running diagnostic: UnitStatus
+       Description: Check status for related systemd units
+
+[Note] Summary of diagnostics execution (version v3.3.0.34):
+[Note] Warnings seen: 6
+[root@master1 glennswest]#
+
+----
+
+NOTE: The warnings will not cause issues in the environment
+
+Based on the results of the diagnostics, actions can be taken to alleviate any issues.
+
+=== Checking the Health of ETCD
+
+This section focuses on the `ETCD` cluster. It describes the different commands to ensure the cluster is healthy. The internal `DNS` names of the nodes running `ETCD` must be used.
+
+`SSH` into the first master node (master1). This must be done via bastion host _RESOURCEGROUPNAME_b@regionname.cloudapp.azure.com
+Using the output of the command `hostname` issue the `etcdctl` command to confirm that the cluster is healthy.
+
+[subs=+quotes]
+----
+$ *ssh azure-user@master01.southeastasia.cloudapp.azure.com*
+$ *sudo -i*
+----
+
+
+[subs=+quotes]
+----
+# *hostname*
+ip-10-20-1-106.azure.internal
+# *etcdctl -C https://master1.southeastasia.cloudapp.azure.com:2379 --ca-file /etc/etcd/ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key cluster-health*
+member 82c895b7b0de4330 is healthy: got healthy result from https://10.20.1.`06:2379
+member c8e7ac98bb93fe8c is healthy: got healthy result from https://10.20.3.74:2379
+member f7bbfc4285f239ba is healthy: got healthy result from https://10.20.2.157:2379
+----
+
+NOTE: In this configuration the `ETCD` services are distributed among the OpenShift master nodes.
+
+=== Default Node Selector
+As explained in section 2.12.4 node labels are an important part of the OpenShift environment. By default of the reference architecture installation, the default node selector is set to "role=apps" in `/etc/origin/master/master-config.yaml` on all of the master nodes.  This configuration parameter is set by the Ansible role openshift-default-selector on all masters and the master API service is restarted that is required when making any changes to the master configuration.
+
+`SSH` into the first master node (master1) to verify the `defaultNodeSelector` is defined.
+
+[subs=+quotes]
+----
+# *vi /etc/origin/master/master-config.yaml*
+...omitted...
+projectConfig:
+  defaultNodeSelector: "role=app"
+  projectRequestMessage: ""
+  projectRequestTemplate: ""
+...omitted...
+----
+
+NOTE: If making any changes to the master configuration then the master API service must be restarted or the configuration change will not take place. Any changes and the subsequent restart must be done on all masters.
+
+=== Management of Maximum Pod Size
+Quotas are set on ephemeral volumes within pods to prohibit a pod from becoming to large and impacting the node. There are three places where sizing restrictions should be set. When persistent volume claims are not set a pod has the ability to grow as large as the underlying filesystem will allow. The required modifcations are set by Ansible. The roles below will be the specific Ansible role that defines the parameters along with the locations on the nodes in which the parameters are set.
+
+
+*Openshift Volume Quota*
+
+At launch time user-data creates a xfs partition on the `/dev/xvdc` block device, adds an entry in fstab, and mounts the volume with the option of gquota. If gquota is not set the OpenShift node will not be able to start with the "perFSGroup" parameter defined below. This disk and configuration is done on the infrastructure and application nodes.  The configuration is not done on the masters due to the master nodes being unschedulable.
+
+`SSH` into the first infrastructure node (ose-infra-node01.sysdeseng.com) to verify the entry exists within fstab.
+
+[subs=+quotes]
+----
+# *vi /etc/fstab*
+/dev/xvdc /var/lib/origin/openshift.local.volumes xfs gquota 0 0
+----
+
+*Docker Storage Setup*
+
+The docker-storage-setup file is created at luanch time by user-data. This file tells the Docker service to use `/dev/xvdb` and create the volume group of `docker-vol`.  The extra Docker storage options ensures that a container can grow no larger than 3G.  Docker storage setup is performed on all master, infrastructure, and application nodes.
+
+`SSH` into the first infrastructure node (infranode1) to verify `/etc/sysconfig/docker-storage-setup` matches the information below.
+
+[subs=+quotes]
+----
+# vi /etc/sysconfig/docker-storage-setup
+DEVS=/dev/xvdb
+VG=docker-vol
+DATA_SIZE=95%VG
+EXTRA_DOCKER_STORAGE_OPTIONS="--storage-opt dm.basesize=3G"
+----
+
+*OpenShift Emptydir Quota*
+
+The role openshift-emptydir-quota sets a parameter within the node configuration. The perFSGroup setting restricts the ephemeral emptyDir volume from growing larger than 512Mi.  This empty dir quota is done on the infrastructure and application nodes.  The configuration is not done on the masters due to the master nodes being unschedulable.
+
+`SSH` into the first infrastructure node (ose-infra-node01.sysdeseng.com) to verify `/etc/origin/node/node-config.yml` matches the information below.
+
+[subs=+quotes]
+----
+# *vi /etc/origin/node/node-config.yml*
+...omitted...
+volumeConfig:
+  localQuota:
+     perFSGroup: 512Mi
+----
+
+=== Yum Repositories
+In section 2.3 Required Channels the specific repositories for a successful OpenShift installation were defined.  All systems except for the bastion host should have the same subscriptions. To verify subscriptions match those defined in Required Channels perfom the following. The repositories below are enabled during the rhsm-repos playbook during the installation. The installation will be unsuccessful if the repositories are missing from the system.
+
+----
+# *yum repolist*
+Loaded plugins: amazon-id, rhui-lb, search-disabled-repos, subscription-manager
+repo id                                                 repo name                                                        status
+rhel-7-server-extras-rpms/x86_64                        Red Hat Enterprise Linux 7 Server - Extras (RPMs)                   249
+rhel-7-server-ose-3.4-rpms/x86_64                       Red Hat OpenShift Enterprise 3.4 (RPMs)                             569
+rhel-7-server-rpms/7Server/x86_64                       Red Hat Enterprise Linux 7 Server (RPMs)                         11,088
+!rhui-REGION-client-config-server-7/x86_64              Red Hat Update Infrastructure 2.0 Client Configuration Server 7       6
+!rhui-REGION-rhel-server-releases/7Server/x86_6         Red Hat Enterprise Linux Server 7 (RPMs)                         11,088
+!rhui-REGION-rhel-server-rh-common/7Server/x86_         Red Hat Enterprise Linux Server 7 RH Common (RPMs)                  196
+repolist: 23,196
+----
+NOTE: All rhui repositories are disabled and only those repositories defined in the Ansible role *rhsm-repos* are enabled.
+
+=== Console Access
+
+This section will cover logging into the OpenShift Container Platform management console via the GUI and the CLI. After logging in via one of these methods applications can then be deployed and managed.
+
+==== Log into GUI console and deploy an application
+
+Perform the following steps from the local workstation.
+
+Open a browser and access  https://resourcegroupname.region.cloudapp.azure.com/console. The resourcegroupname is given in the ARM template, and region is the Azure zone selected during install. When logging into the OpenShift web interface the first time the page will redirect and prompt for GitHub credentials. Log into GitHub using an account that is a member of the Organization specified during the install.  Next, GitHub will prompt to grant access to authorize the login. If GitHub access is not granted the account will not be able to login to the OpenShift web console.
+
+To deploy an application, click on the `New Project` button. Provide a `Name` and click `Create`. Next, deploy the `jenkins-ephemeral` instant app by clicking the corresponding box. Accept the defaults and click `Create`. Instructions along with a URL will be provided for how to access the application on the next screen. Click `Continue to Overview` and bring up the management page for the application. Click on the link provided and access the application to confirm functionality.
+
+==== Log into CLI and Deploy an Application
+
+Perform the following steps from your local workstation.
+
+Install the `oc client` by visiting the public URL of the OpenShift deployment. For example, https://resourcegroupname.region.cloudapp.azure.com/console/command-line and click latest release. When directed to https://access.redhat.com, login with the valid Red Hat customer credentials and download the client relevant to the current workstation. Follow the instructions located on the production documentation site for https://docs.openshift.com/container-platform/3.3/cli_reference/get_started_cli.html[getting started with the cli].
+
+A token is required to login using GitHub OAuth and OpenShift. The token is presented on the https://resourcegroupname.region.cloudapp.azure.com/console/command-line page. Click the click to show token hyperlink and perform the following on the workstation in which the oc client was installed.
+
+[subs=+quotes]
+----
+$ *oc login https://resourcegroupname.region.cloudapp.azure.com --token=fEAjn7LnZE6v5SOocCSRVmUWGBNIIEKbjD9h-Fv7p09*
+----
+
+
+<<<
+After the oc client is configured, create a new project and deploy an application.
+
+[subs=+quotes]
+----
+$ *oc new-project test-app*
+
+$ *oc new-app https://github.com/openshift/cakephp-ex.git --name=php*
+--> Found image 2997627 (7 days old) in image stream "php" in project "openshift" under tag "5.6" for "php"
+
+    Apache 2.4 with PHP 5.6
+    -----------------------
+    Platform for building and running PHP 5.6 applications
+
+    Tags: builder, php, php56, rh-php56
+
+    * The source repository appears to match: php
+    * A source build using source code from https://github.com/openshift/cakephp-ex.git will be created
+      * The resulting image will be pushed to image stream "php:latest"
+    * This image will be deployed in deployment config "php"
+    * Port 8080/tcp will be load balanced by service "php"
+      * Other containers can access this service through the hostname "php"
+
+--> Creating resources with label app=php ...
+    imagestream "php" created
+    buildconfig "php" created
+    deploymentconfig "php" created
+    service "php" created
+--> Success
+    Build scheduled, use 'oc logs -f bc/php' to track its progress.
+    Run 'oc status' to view your app.
+
+
+$ *oc expose service php*
+route "php" exposed
+----
+
+<<<
+
+Display the status of the application.
+
+[subs=+quotes]
+----
+$ *oc status*
+In project test-app on server https://resourcegroupname.region.cloudapp.azure.com
+
+http://test-app.apps.sysdeseng.com to pod port 8080-tcp (svc/php)
+  dc/php deploys istag/php:latest <- bc/php builds https://github.com/openshift/cakephp-ex.git with openshift/php:5.6
+    deployment #1 deployed about a minute ago - 1 pod
+
+1 warning identified, use 'oc status -v' to see details.
+----
+
+Access the application by accessing the URL provided by `oc status`.  The CakePHP application should be visible now.
+
+=== Explore the Environment
+
+==== List Nodes and Set Permissions
+
+If you try to run the following command, it should fail.
+
+[subs=+quotes]
+----
+# *oc get nodes --show-labels*
+Error from server: User "user@redhat.com" cannot list all nodes in the cluster
+----
+
+The reason it is failing is because the permissions for that user are incorrect. Get the username and configure the permissions.
+
+[subs=+quotes]
+----
+$ *oc whoAVMI*
+----
+
+Once the username has been established, log back into a master node and enable the appropriate permissions for your user. Perform the following step from the first master (ose-master01.sysdeseng.com).
+
+[subs=+quotes]
+----
+# *oadm policy add-cluster-role-to-user cluster-admin user@redhat.com*
+----
+
+<<<
+
+Attempt to list the nodes again and show the labels.
+
+[subs=+quotes]
+----
+# *oc get nodes --show-labels*
+NAME          STATUS                     AGE
+infranode1    Ready                      16d
+infranode2    Ready                      16d
+infranode3    Ready                      16d
+master1       Ready,SchedulingDisabled   16d
+master2       Ready,SchedulingDisabled   16d
+master3       Ready,SchedulingDisabled   16d
+node01        Ready                      16d
+node02        Ready                      16d
+node03        Ready                      16d
+
+----
+
+==== List Router and Registry
+
+List the router and registry by changing to the `default` project.
+
+NOTE: Perform the following steps from your the workstation.
+
+[subs=+quotes]
+----
+# *oc project default*
+# *oc get all*
+NAME                         REVISION        DESIRED       CURRENT   TRIGGERED BY
+dc/docker-registry           1               2             2         config
+dc/router                    1               2             2         config
+NAME                         DESIRED         CURRENT       AGE
+rc/docker-registry-1         2               2             10m
+rc/router-1                  2               2             10m
+NAME                         CLUSTER-IP      EXTERNAL-IP   PORT(S)                   AGE
+svc/docker-registry          172.30.243.63   <none>        5000/TCP                  10m
+svc/kubernetes               172.30.0.1      <none>        443/TCP,53/UDP,53/TCP     20m
+svc/router                   172.30.224.41   <none>        80/TCP,443/TCP,1936/TCP   10m
+NAME                         READY           STATUS        RESTARTS                  AGE
+po/docker-registry-1-2a1ho   1/1             Running       0                         8m
+po/docker-registry-1-krpix   1/1             Running       0                         8m
+po/router-1-1g84e            1/1             Running       0                         8m
+po/router-1-t84cy            1/1             Running       0                         8m
+
+----
+
+Observe the output of `oc get all`
+
+<<<
+
+==== Explore the Docker Registry
+The OpenShift Ansible playbooks configure two infrastructure nodes that have two registries running. In order to understand the configuration and mapping process of the registry pods, the command 'oc describe' is used. Oc describe details how registries are configured and mapped to the Amazon `S3` buckets for storage. Using Oc describe should help explain how HA works in this environment.
+
+NOTE: Perform the following steps from your the workstation.
+
+[subs=+quotes]
+----
+$ *oc describe svc/docker-registry*
+Name:			docker-registry
+Namespace:		default
+Labels:			docker-registry=default
+Selector:		docker-registry=default
+Type:			ClusterIP
+IP:			172.30.110.31
+Port:			5000-tcp	5000/TCP
+Endpoints:		172.16.4.2:5000,172.16.4.3:5000
+Session Affinity:	ClientIP
+No events.
+----
+
+Notice that the registry has two `endpoints` listed. Each of those `endpoints` represents a Docker container. The `ClusterIP` listed is the actual ingress point for the registries.
+
+<<<
+
+The `oc` client allows similar functionality to the `docker` command. To find out more information about the registry storage perform the following.
+
+[subs=+quotes]
+----
+# *oc get pods*
+NAME                      READY     STATUS    RESTARTS   AGE
+docker-registry-2-8b7c6   1/1       Running   0          2h
+docker-registry-2-drhgz   1/1       Running   0          2h
+----
+
+[subs=+quotes]
+----
+# oc exec docker-registry-2-8b7c6 cat /etc/registryconfig/config.yml
+version: 0.1
+log:
+  level: debug
+http:
+  addr: :5000
+storage:
+  cache:
+    layerinfo: inmemory
+  s3:
+    accesskey: "AKIAJZO3LDPPKZFORUQQ"
+    secretkey: "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"
+    region: us-east-1
+    bucket: "1476274760-openshift-docker-registry"
+    encrypt: true
+    secure: true
+    v4auth: true
+    rootdirectory: /registry
+auth:
+  openshift:
+    realm: openshift
+middleware:
+  repository:
+    - name: openshift
+----
+
+In the Azure, the registery will use a PV on Azure VHD volume.
+
+==== Explore Docker Storage
+
+This section will explore the Docker storage on an infrastructure node.
+
+The example below can be performed on any node but for this example the infrastructure node(ose-infra-node01.sysdeseng.com) is used.
+
+The output below verifies docker storage is not using a loop back device.
+[subs=+quotes]
+----
+$ *docker info*
+Containers: 2
+ Running: 2
+ Paused: 0
+ Stopped: 0
+Images: 4
+Server Version: 1.10.3
+Storage Driver: devicemapper
+ Pool Name: docker--vol-docker--pool
+ Pool Blocksize: 524.3 kB
+ Base Device Size: 3.221 GB
+ Backing Filesystem: xfs
+ Data file:
+ Metadata file:
+ Data Space Used: 1.221 GB
+ Data Space Total: 25.5 GB
+ Data Space Available: 24.28 GB
+ Metadata Space Used: 307.2 kB
+ Metadata Space Total: 29.36 MB
+ Metadata Space Available: 29.05 MB
+ Udev Sync Supported: true
+ Deferred Removal Enabled: true
+ Deferred Deletion Enabled: true
+ Deferred Deleted Device Count: 0
+ Library Version: 1.02.107-RHEL7 (2016-06-09)
+Execution Driver: native-0.2
+Logging Driver: json-file
+Plugins:
+ Volume: local
+ Network: bridge null host
+ Authorization: rhel-push-plugin
+Kernel Version: 3.10.0-327.10.1.el7.x86_64
+Operating System: Employee SKU
+OSType: linux
+Architecture: x86_64
+Number of Docker Hooks: 2
+CPUs: 2
+Total Memory: 7.389 GiB
+Name: ip-10-20-3-46.azure.internal
+ID: XDCD:7NAA:N2S5:AMYW:EF33:P2WM:NF5M:XOLN:JHAD:SIHC:IZXP:MOT3
+WARNING: bridge-nf-call-iptables is disabled
+WARNING: bridge-nf-call-ip6tables is disabled
+Registries: registry.access.redhat.com (secure), docker.io (secure)
+----
+
+Verify 3 disks are attached to the instance. The disk `/dev/xvda` is used for the OS,
+ `/dev/xvdb` is used for docker storage, and `/dev/xvdc` is used for emptyDir storage for containers
+that do not use a persistent volume.
+
+[subs=+quotes]
+----
+$ *fdisk -l*
+WARNING: fdisk GPT support is currently new, and therefore in an experimental phase. Use at your own discretion.
+
+Disk /dev/xvda: 26.8 GB, 26843545600 bytes, 52428800 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: gpt
+
+
+#         Start          End    Size  Type            Name
+ 1         2048         4095      1M  BIOS boot parti
+ 2         4096     52428766     25G  Microsoft basic
+
+Disk /dev/xvdc: 53.7 GB, 53687091200 bytes, 104857600 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/xvdb: 26.8 GB, 26843545600 bytes, 52428800 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x00000000
+
+    Device Boot      Start         End      Blocks   Id  System
+/dev/xvdb1            2048    52428799    26213376   8e  Linux LVM
+
+Disk /dev/mapper/docker--vol-docker--pool_tmeta: 29 MB, 29360128 bytes, 57344 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/mapper/docker--vol-docker--pool_tdata: 25.5 GB, 25497174016 bytes, 49799168 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/mapper/docker--vol-docker--pool: 25.5 GB, 25497174016 bytes, 49799168 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 131072 bytes / 524288 bytes
+
+
+Disk /dev/mapper/docker-202:2-75507787-4a813770697f04b1a4e8f5cdaf29ff52073ea66b72a2fbe2546c469b479da9b5: 3221 MB, 3221225472 bytes, 6291456 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 131072 bytes / 524288 bytes
+
+
+Disk /dev/mapper/docker-202:2-75507787-260bda602f4e740451c428af19bfec870a47270f446ddf7cb427eee52caafdf6: 3221 MB, 3221225472 bytes, 6291456 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 131072 bytes / 524288 bytes
+----
+
+
+==== Explore the Azure Load Balancers
+
+As mentioned earlier in the document two `Traffic Managers` have been created. The purpose of this section is to encourage exploration of the `ELBs` that were created.
+
+NOTE: Perform the following steps from the `Azure` web console.
+
+On the main `Azure` dashboard, click on `Resource Groups` icon. Then select the resource group that corresponds with the OpenShift Deployment, and then find the Traffic Managers within the resource group. Select the `AppLB` load balancer and on the `Description` page note the `Port Configuration` and how it is configured. That is for the OpenShift application traffic.
+There should be three master instances running with a `Status` of `Ok`. Next check the `Health Check` tab and the options that were configured.
+Further details of the configuration can be viewed by exploring the Azure ARM templates to see exactly what was configured.
+
+==== Explore the Azure Resource Group
+
+As mentioned earlier in the document a Azure Resource Group was created. The purpose of this section is to encourage exploration of the `Resource Group` that was created.
+
+NOTE: Perform the following steps from the `Azure` web console.
+
+On the main Microsoft Azure console, click on `Resource Group`. Next on the left hand navigation panel select the `Your Resource Groups`.
+Select the `Resource Group` recently created and explore the `Summary` tabs. Next, on the right hand navigation panel, explore the `Virtual Machines`, `Storage Accounts`, `Traffic Managers`, and `Networks`.
+More detail can be looked at with the configuration by exploring the Ansible playbooks and ARM json Files to see exactly what was configured.
+
+=== Persistent Volumes
+
+`Persistent volumes` (pv) are OpenShift objects that allow for storage to be defined and then claimed by pods to allow for data persistence.
+The PV volumes can only be mounted or claimed by one pod at a time. Mounting of `persistent volumes` is done by using a `persistent volume claim` (pvc).
+This claim will mount the persistent storage to a specific directory within a pod. This directory is referred to as the `mountPath`.
+
+In this reference architecture, the PV volumes are implemented via a storage server running on azure, using Azure VHD protocol. This allows a variety of sizes to be
+implemented from small to large, and implements thin-provisioning to conserve space.
+<<<
+
+
+
+==== Creating a Persistent Volumes
+
+
+Persistant Volumes are pre-created during the install process on the storage server. Additional PVs can be created using the ose_pv_create script
+on the store server during install time. The first parameter is the storage group which already exists, the
+second paremeter is the count of volumes you want to create, followed by the size in gigabytes. The volumes are thin provisioned in the volume group,
+exported by Azure VHD, and attached via creating yml definition, and registered via oc command to a master automatically.
+
+
+[subs=+quotes]
+----
+$ *ssh bastion*
+$ *ssh store1*
+$ ose_pv_create vg1 1 1
+
+----
+
+==== Creating a Persistent Volumes Claim
+
+The `persistent volume claim` will change the pod from using `EmptyDir` non-persistent storage to storage backed by a persistent volume. To claim space from the `persistent volume` a database server will be used
+to demonstrate a `persistent volume claim`.
+
+[subs=+quotes]
+----
+$ *oc new-app --docker-image registry.access.redhat.com/openshift3/mysql-55-rhel7 --name=db -e 'MYSQL_USER=rcook,MYSQL_PASSWORD=d0nth@x,MYSQL_DATABASE=persistent'*
+
+... ommitted ...
+
+$ *oc get pods*
+NAME         READY     STATUS    RESTARTS   AGE
+db-1-dwa7o   1/1       Running   0          5m
+
+$ *oc describe pod db-1-dwa7o*
+
+... ommitted ...
+
+Volumes:
+  db-volume-1:
+    Type:   EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:
+
+... ommitted ...
+
+$ *oc volume dc/db --add --overwrite --name=db-volume-1 --type=persistentVolumeClaim --claim-size=10Gi*
+persistentvolumeclaims/pvc-ic0mu
+deploymentconfigs/db
+
+$ *oc get pvc*
+NAME       STATUS    VOLUME       CAPACITY   ACCESSMODES   AGE
+pvc-ic0mu  Bound     persistent   10Gi       RWO           4s
+
+$ *oc get pods*
+NAME         READY     STATUS    RESTARTS   AGE
+db-2-0srls   1/1       Running   0          23s
+
+$ *oc describe pod db-2-0srls*
+
+.... ommitted ....
+
+Volumes:
+  db-volume-1:
+    Type:   PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  pvc-ic0mu
+    ReadOnly:   false
+
+.... ommitted ....
+
+----
+
+The above has created a database pod with a `persistent volume claim` named database and has attached the claim to the previously `EmptyDir` volume.
+
+=== Testing Failure
+
+In this section, reactions to failure are explored. After a sucessful install and some of the smoke tests noted above have been completed, failure testing is executed.
+
+==== Generate a Master Outage
+
+NOTE: Perform the following steps from the `Azure` web console and the OpenShift public URL.
+
+Log into the `Azure` console.  On the dashboard, click on the `Resource Group` web service and then click `Overview`. Locate your running master02 instance, select it, right click and change the state to `stopped`.
+
+Ensure the console can still be accessed by opening a browser and accessing openshift-master.sysdeseng.com. At this point, the cluster is in a degraded state because only 2/3 master nodes are running, but complete funcionality remains.
+
+==== Observe the Behavior of `ETCD` with a Failed Master Node
+
+`SSH` into the first master node (master1) from the bastion. Using the output of the command `hostname` issue the `etcdctl` command to confirm that the cluster is healthy.
+
+[subs=+quotes]
+----
+$ *ssh user@master1*
+$ *sudo -i*
+----
+
+
+[subs=+quotes]
+----
+# *hostname*
+ip-10-20-1-106.azure.internal
+# *etcdctl -C https://master1:2379 --ca-file /etc/etcd/ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key cluster-health*
+failed to check the health of member 82c895b7b0de4330 on https://10.20.2.251:2379: Get https://10.20.1.251:2379/health: dial tcp 10.20.1.251:2379: i/o timeout
+member 82c895b7b0de4330 is unreachable: [https://10.20.1.251:2379] are all unreachable
+member c8e7ac98bb93fe8c is healthy: got healthy result from https://10.20.3.74:2379
+member f7bbfc4285f239ba is healthy: got healthy result from https://10.20.1.106:2379
+cluster is healthy
+----
+
+Notice how one member of the `ETCD` cluster is now unreachable. Restart master2 by following the same steps in the `Azure` web console as noted above.
+
+==== Generate an Infrastruture Node outage
+
+This section shows what to expect when an infrastructure node fails or is brought down intentionally.
+
+===== Confirm Application Accessibility
+
+NOTE: Perform the following steps from the browser on a local workstation.
+
+Before bringing down an infrastructure node, check behavior and ensure things are working as expected. The goal of testing an infrastructure node outage is to see how the OpenShift routers and registries behave. Confirm the simple application deployed from before is still functional. If it is not, deploy a new version. Access the application to confirm connectivity. As a reminder, to find the required information the ensure the application is still running, list the projects, change to the project that the application is deployed in, get the status of the application which including the URL and access the application via that URL.
+
+[subs=+quotes]
+----
+$ *oc get projects*
+NAME               DISPLAY NAME   STATUS
+openshift                         Active
+openshift-infra                   Active
+ttester                           Active
+test-app1                         Active
+default                           Active
+management-infra                  Active
+
+$ *oc project test-app1*
+Now using project "test-app1" on server "https://openshift-master.sysdeseng.com".
+
+$ *oc status*
+In project test-app1 on server https://openshift-master.sysdeseng.com
+
+http://php-test-app1.apps.sysdeseng.com to pod port 8080-tcp (svc/php-prod)
+  dc/php-prod deploys istag/php-prod:latest <-
+    bc/php-prod builds https://github.com/openshift/cakephp-ex.git with openshift/php:5.6
+    deployment #1 deployed 27 minutes ago - 1 pod
+
+1 warning identified, use 'oc status -v' to see details.
+----
+
+Open a browser and ensure the application is still accessible.
+
+===== Confirm Registry Functionality
+
+This section is another step to take before initiating the outage of the infrastructure node to ensure that the registry is functioning properly. The goal is to push to the OpenShift registry.
+
+NOTE: Perform the following steps from a CLI on a local workstation and ensure that the oc client has been configured.
+
+A token is needed so that the Docker registry can be logged into.
+
+[subs=+quotes]
+----
+# *oc whoAVMI -t*
+feAeAgL139uFFF_72bcJlboTv7gi_bo373kf1byaAT8
+----
+
+Pull a new docker image for the purposes of test pushing.
+
+[subs=+quotes]
+----
+# *docker pull fedora/apache*
+# *docker images*
+----
+
+Capture the registry endpoint. The `svc/docker-registry` shows the endpoint.
+
+[subs=+quotes]
+----
+# *oc status*
+In project default on server https://openshift-master.sysdeseng.com
+
+svc/docker-registry - 172.30.237.147:5000
+  dc/docker-registry deploys docker.io/openshift3/ose-docker-registry:v3.3.0.32
+    deployment #2 deployed 51 minutes ago - 2 pods
+    deployment #1 deployed 53 minutes ago
+
+svc/kubernetes - 172.30.0.1 ports 443, 53->8053, 53->8053
+
+svc/router - 172.30.144.227 ports 80, 443, 1936
+  dc/router deploys docker.io/openshift3/ose-haproxy-router:v3.3.0.32
+    deployment #1 deployed 55 minutes ago - 2 pods
+
+View details with 'oc describe <resource>/<name>' or list everything with 'oc get all'.
+----
+
+Tag the docker image with the endpoint from the previous step.
+
+[subs=+quotes]
+----
+# *docker tag docker.io/fedora/apache 172.30.110.31:5000/openshift/prodapache*
+----
+
+Check the images and ensure the newly tagged image is available.
+
+[subs=+quotes]
+----
+# *docker images*
+----
+
+<<<
+
+Issue a Docker login.
+
+[subs=+quotes]
+----
+# *docker login -u prod@redhat.com -e prod@redhat.com -p _7yJcnXfeRtAbJVEaQwPwXreEhlV56TkgDwZ6UEUDWw 172.30.110.31:5000*
+----
+
+[subs=+quotes]
+----
+# *oadm policy add-role-to-user admin prod@redhat.com -n openshift*
+# *oadm policy add-role-to-user system:registry prod@redhat.com*
+# *oadm policy add-role-to-user system:image-builder prod@redhat.com*
+----
+
+Push the image to the OpenShift registry now.
+
+[subs=+quotes]
+----
+# *docker push 172.30.110.222:5000/openshift/prodapache*
+The push refers to a repository [172.30.110.222:5000/openshift/prodapache]
+389eb3601e55: Layer already exists
+c56d9d429ea9: Layer already exists
+2a6c028a91ff: Layer already exists
+11284f349477: Layer already exists
+6c992a0e818a: Layer already exists
+latest: digest: sha256:ca66f8321243cce9c5dbab48dc79b7c31cf0e1d7e94984de61d37dfdac4e381f size: 6186
+----
+
+<<<
+
+===== Get Location of Router and Registry.
+
+NOTE: Perform the following steps from the CLI of a local workstation.
+
+Change to the default OpenShift project and check the router and registry pod locations.
+
+[subs=+quotes]
+----
+$ *oc project default*
+Now using project "default" on server "https://openshift-master.sysdeseng.com".
+
+$ *oc get pods*
+NAME                      READY     STATUS    RESTARTS   AGE
+docker-registry-2-gmvdr   1/1       Running   1          21h
+docker-registry-2-jueep   1/1       Running   0          7h
+router-1-6y5td            1/1       Running   1          21h
+router-1-rlcwj            1/1       Running   1          21h
+
+$ *oc describe pod docker-registry-2-jueep | grep -i node*
+Node:		ip-10-30-1-17.azure.internal/10.30.1.17
+$ *oc describe pod docker-registry-2-gmvdr | grep -i node*
+Node:		ip-10-30-2-208.azure.internal/10.30.2.208
+$ *oc describe pod router-1-6y5td | grep -i node*
+Node:		ip-10-30-1-17.azure.internal/10.30.1.17
+$ *oc describe pod router-1-rlcwj | grep -i node*
+Node:		ip-10-30-2-208.azure.internal/10.30.2.208
+----
+
+===== Initiate the Failure and Confirm Functionality
+
+NOTE: Perform the following steps from the `Azure` web console and a browser.
+
+Log into the `Azure` console.  On the dashboard, click on the `Resource Group`.
+Locate your running infra01 instance, select it, right click and change the state to `stopped`.
+Wait a minute or two for the registry and pod to migrate over to infra01. Check the registry locations and confirm that they are on the same node.
+
+[subs=+quotes]
+----
+$ *oc describe pod docker-registry-2-fw1et | grep -i node*
+Node:		ip-10-30-2-208.azure.internal/10.30.2.208
+$ *oc describe pod docker-registry-2-gmvdr | grep -i node*
+Node:		ip-10-30-2-208.azure.internal/10.30.2.208
+----
+
+Follow the procedures above to ensure a Docker image can still be pushed to the registry now that infra01 is down.
+
+// vim: set syntax=asciidoc:

@@ -1,0 +1,30 @@
+===  Azure Virtual Network (VNet)
+
+An `Azure VNet` provides the ability to set up custom virtual networking which includes subnets, and
+IP address ranges. In this reference implementation
+guide, a dedicated `VNet` is created with all its accompanying services to provide a
+stable network for the OpenShift v3 deployment.
+
+A `VNet` is created as a logical representation of a networking environment in the `Azure`
+cloud. The following subnets and CIDR listed below are used. Substitute the values
+to ensure no conflict with an existing CIDR or subnet in the environment. The values
+are defined in `https://github.com/openshift/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible/azuredeploy.json`.
+
+.VNet Networking
+|====
+^|CIDR / Subnet ^| Values
+
+| CIDR | 10.0.0.0/16
+| Master Subnet 1 | 10.0.0.0/24
+| Node Subnet 2 | 10.0.1.0/24
+| Infra Subnet 3 | 10.0.2.0/24
+|====
+
+The `VNet` is created and a human readable tag is assigned. Three subnets are created in the `VNet`.
+The bastion instance is on the Master Subnet.
+The two internal `Load Balancers` allow access to the OpenShift masters and the routing of application
+traffic. The Nodes are able to communicate to the internet for packages, container images, and
+Github repositories.
+
+For more information see https://azure.microsoft.com/en-us/documentation/articles/virtual-networks-overview/
+// vim: set syntax=asciidoc:
