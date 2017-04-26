@@ -1,0 +1,31 @@
+= Deploying Red Hat OpenShift Container Platform 3 on Azure 
+Glenn West <refarch-feedback@redhat.com>
+:doctype: book
+//:title-logo: images/rh-ra-banner.png
+//:title-logo-image: image:images/template/rh-ra-banner.png[scaledwidth=70%,align=center]
+//:footer-logo: images/rh-ra-banner.png
+//:header-logo: images/rh-logo.png
+// Settings:
+:compat-mode!:
+:numbered:
+//:autofit:
+:chapter-label:
+:specialnumbered!:
+:experimental:
+:back-cover-image: image:images/bckcover.pdf[]
+:listing-caption: Listing
+:toc:
+:icons: font
+:toclevels: 3
+ifdef::backend-pdf[]
+:pagenums: :pygments-style: bw :source-highlighter: pygments
+endif::[]
+
+//[abstract]
+//empty on purpose so that legal can be on separate page and not conflict with toc
+[preface]
+Comments and Feedback
+---------------------
+In the spirit of open source, we invite anyone to provide feedback and comments on any reference architecture. Although we review our papers internally, sometimes issues or typographical errors are encountered. Feedback allows us to not only improve the quality of the papers we produce, but allows the reader to provide their thoughts on potential improvements and topic expansion to the papers. Feedback on the papers can be provided by emailing refarch-feedback@redhat.com. Please refer to the title within the email.
+
+include::docs/appendix.adoc[]
