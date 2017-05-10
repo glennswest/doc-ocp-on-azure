@@ -1,8 +1,9 @@
+[[refarch_details]]
 
 == Components and Configuration
 
 This chapter describes the reference architecture environment that is deployed that
-enables the configuration of a highly available OpenShift Compute Platform 3 environment on Microsoft Azure.
+enables the configuration of a highly available OpenShift Container Platform 3 environment on Microsoft Azure.
 
 The image below provides a high-level representation of the components within this
 reference architecture.  Using Microsoft Azure (Azure), resources are highly
@@ -13,19 +14,19 @@ all `SSH` traffic passes through the Bastion host. The master instances host the
 OpenShift master components such as etcd and the OpenShift API.  The Application
 instances are for users to deploy their containers while the Infrastructure
 instances are used for the OpenShift router and registry.  Authentication is managed
-by the htpasswd Identity Provider.  OpenShift on `Azure` uses a combination premium or standard storage.
+by the htpasswd Identity Provider.  OpenShift on `Azure` uses a combination of premium and standard storage.
 Storage is used for the filesystem of instances but can also be used for persistent
 storage in containers.
 
 The network is configured to leverage two `Azure Load Balancers` for access to
 the OpenShift API, OpenShift console, and the OpenShift routers. The first
-traffic manager is for the OpenShift API and console access originating from outside
-of the cluster. The second traffic manager is for application access from outside the cluster.
+load balancer is for the OpenShift API and console access originating from outside
+of the cluster. The second load balancer is for application access from outside the cluster.
 The OpenShift Console, and API may be accessed directly via the automatically created
-DNS entry. The application access must be accessed from a externally created domain, that
-uses a C record to forward traffic to the application traffic manager.
+DNS entry. The application access must be accessed from an externally created domain, that
+uses a C record to forward traffic to the application load balancer.
 
-image::images/OSE-on-Azure.jpg
+image::images/OSE-on-Azure.png[]
 
 This reference architecture breaks down the deployment into three separate phases.
 
@@ -64,7 +65,7 @@ be described in future reference architecture.
 
 The master instances for the OpenShift environment are `Standard_DS4_v2`. The node instances
 are `Standard_DS4_v2` used for Docker containers and OpenShift. The infrastructure nodes use `Standard_DS4_v2` instances.
-The bastion host is a `Standard_DS2`.
+The bastion host is a `Standard_DS1_v2`.
 Instance sizing can be changed when the ARM template is run which is covered in later chapters.
 
 === Azure Load Balancer Details
@@ -76,12 +77,12 @@ Two load balancers are used in the reference environment. The table below descri
 |====
 ^|ALB ^| Assigned Instances ^| Port
 
-| _resourcegroupname_.trafficmanager.net | master01-3 | 443
-| _wildcardzone_.trafficmanager.net | infra-nodes01-2 | 80 and 443
+| _resourcegroupname_._region_.cloudapp.azure.com | master1-3 | 443
+| _wildcardzone_._publicip_.nip.io | infra-nodes1-3 | 80 and 443
 |====
 
 The `openshift-master ALB` utilizes the OpenShift Master API port for communication internally and externally.
-The _wildcardzone_.trafficmanager.net `ALB` uses the public subnets and maps to infrastructure nodes.
+The _wildcardzone_._publicip_.nip.io `ALB` uses the public subnets and maps to infrastructure nodes.
 The infrastructure nodes run the router pod which then directs traffic directly from the outside world into OpenShift pods with external routes defined.
 
 Note that in order to use the wildcard zone, an external C-Record DNS Entry must be defined, with a wildcard in front.
@@ -97,7 +98,7 @@ The following tables provide the installed software versions for the different s
 |Red Hat Enterprise Linux 7.3 x86_64 | kernel-3.10.0-327
 | Atomic-OpenShift{master/clients/node/sdn-ovs/utils} | 3.5.x.x
 | Docker | 1.12.x
-| Ansible | 2.2.0-0.5.prerelease.el7.noarch
+| Ansible | 2.2.1
 |====
 
 === Required Channels
@@ -111,6 +112,7 @@ A subscription to the following channels is required in order to deploy this ref
 | Red Hat Enterprise Linux 7 Server (RPMs) |
 rhel-7-server-rpms | Red Hat OpenShift Enterprise 3.5 (RPMs) | rhel-7-server-ose-3.5-rpms
 | Red Hat Enterprise Linux 7 Server - Extras (RPMs) | rhel-7-server-extras-rpms
+| Red Hat Enterprise Linux 7 Server - Fast Datapath (RPMs) | rhel-7-fast-datapath-rpms
 
 |====
 
@@ -135,48 +137,55 @@ There is no requirement to download the code, as it's done automatically once th
 
 === Azure Subscription
 
-=== Permissions for Microsoft Azure
+In order to deploy the template, a Azure Subscription is required. A trial subscription is
+not recommended, as the Reference Architecture uses significant resources, and the typical
+trial subscription does not provide adequate resources.
 
 The deployment of OpenShift requires a user that has the proper permissions by the
  `Azure` administrator. The user must be able to create accounts, storage accounts,
-roles, policies, traffic manager entries, and deploy virtual machine instances.
+roles, policies, load balancers, and deploy virtual machine instances.
 It is helpful to have delete permissions in order to be able to redeploy the environment
 while testing.
 
 
 === Azure Region Selection
 
-A Azure cluster is deployed with-in one Azure Region. In order to get the best possible
-availability in Azure, a federation of three clusters is recommended. Azure Region should
-be chosen to put applications closer to the end-users.
+An OpenShift cluster is deployed with-in one Azure Region. In order to get the best possible
+availability in Azure, availability sets are implemented.
 
+In Azure, virtual machines (VMs) can be placed in to a logical grouping called an availability set.
+When you create VMs within an availability set, the Azure platform distributes the placement of those VMs
+across the underlying infrastructure. Should there be a planned maintenance event to the Azure platform or an
+underlying hardware / infrastructure fault, the use of availability sets ensures that at least one VM remains
+running. The Azure SLA requires two or more VMs within an availability set to allow the distribution of VMs across
+the underlying infrastructure.
 
 
 === SSH Public and Private Key
 SSH Keys are used instead of passwords in the Azure OCP Install. These keys are generated
-on the system that will be used to login and manage the system. In addition they are automatically
+on the system that will be used to login and manage the system. In addition, they are automatically
 distributed by the Azure Resource Management template to all virtual machines
 that are created.
 
-In order to use the template, ssh public and private keys are needed.
+In order to use the template, ssh public and private keys are needed. It is important to not apply a passphrase to the key.
 
 If you have not created .ssh keys for your account:
+
 ==== RHEL SSH
 Generate an RSA key pair by typing the following at a shell prompt:
 
-[source,bas
+[source,bash]
 ----
-~]$ ssh-keygen -t rsa
+~]$ ssh-keygen -t rsa -N ''
 Generating public/private rsa key pair.
 Enter file in which to save the key (/home/USER/.ssh/id_rsa):
 ----
 
 Press Enter to confirm default location.
-Press Enter again for the passphrase.
 
 After this, you will be presented with a message similar to this:
 
-[source,bas
+[source,bash]
 ----
 Your identification has been saved in /home/USER/.ssh/id_rsa.
 Your public key has been saved in /home/USER/.ssh/id_rsa.pub.
@@ -205,10 +214,11 @@ subscriptions installed in the account in order to  use the template. The User N
 must be supplied to the template.
 
 === Red Hat Subscription Pool Id
-using a system that currently has a valid subscription to Red Hat products, you can
-find the pool_id by using subscription-manager.
+In order to assign a subscription, a pool id is required. Using a system that currently has a valid subscription
+to Red Hat products, you can find the pool_id by using subscription-manager. Perform the folliwng command, and take
+note of the pool id.
 
-[source,bas
+[source,bash]
 ----
 root# subscription-manager list --available
 
@@ -249,8 +259,8 @@ The Pool Id is also available under RHN (RedHat Network) under the subscription 
 
 === Resource Groups and Resource Group Name
 In Azure, resources are grouped together in resource groups. You may choose any resource group
-name that is unique for  your subscription. Note that multiple resource groups are supported in a region, in addition you may have resource groups in
-multiple regions. A resource group may not span a multiple regions.
+name that is unique for your subscription. Note that multiple resource groups are supported in a region, in addition you may have resource groups in
+multiple regions. A resource group may not span multiple regions.
 
 
 
