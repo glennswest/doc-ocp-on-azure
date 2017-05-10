@@ -1,5 +1,3 @@
-[[Operational-Management]]
-
 == Operational Management
 
 With the successful deployment of OpenShift, the following section demonstrates how to confirm proper functionality of the Red Hat OpenShift Container Platform.
