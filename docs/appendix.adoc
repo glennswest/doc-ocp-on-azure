@@ -42,7 +42,7 @@ Thomas Wiest, content reviewer
 [[Installation-Failure]]
 == Installation Failure
 In the event of an OpenShift installation failure use the following sections to diagnose and
-find the source of the problem. Note that u may delete the resourcegroup, and reinstall by running
+find the source of the problem. Note that the `resource group` group can be deleted, and reinstall by running
 the script again.
 
 
