@@ -4,7 +4,7 @@ In this reference architecture, eight groups are created. The purpose of the sec
  restrict traffic from outside of the `VNet` to servers inside of the `VNet` . The security groups
  also are used to restrict server to server communications inside the `VNet`. Security groups provide
  an extra layer of security similar to a firewall. In the event a port is opened on an instance,
- the security group will not allow the communication to the port unless explicitly stated in a security group. See the tables below for details on each security group.
+ the security group will not allow the communication to the port unless explicitly stated in a security group.
  These settings are in each node types json file.
 
 ==== Bastion Security Group
