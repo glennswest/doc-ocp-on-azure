@@ -169,10 +169,8 @@ that are created.
 
 In order to use the template, ssh public and private keys are needed. It is important to not apply a passphrase to the key.
 
-If you have not created .ssh keys for your account:
-
 ==== SSH Key Generation
-Generate an RSA key pair by typing the following at a shell prompt:
+If SSH keys do not currently exist then it is required to create them. Generate an RSA key pair by typing the following at a shell prompt:
 
 [source,bash]
 ----
