@@ -148,7 +148,7 @@ data:
 info:    role assignment create command OK
 ```
 
-===== Introduction to azure-ansible Template
+=== Introduction to the Azure Template
 Azure Resource Manager templates consist of json files. The main template file is azuredeploy.json.
 This file is the main ARM template that launches all the other templates under azure-ansible.
 There are 4 types of Virtual Machines created by the template. These are bastion, master, infranode,
@@ -160,9 +160,9 @@ provide isolation of all the hosts in the resource group from the public interne
 
 First, gather the required information needed, for the provisioning and installation of OpenShift.
 
- 1. A Microsoft Azure Subscription, with appropriate core and VM quota limits.
- 2. Resource Group - Used as the name of the OpenShift Cluster - All the assets of a single cluster use the Azure Resource Group to organize and group the assets. This name needs to be unique for each cluster per Azure Region (Location).
- 3. Admin Username and Admin Password - This is an admin user, used for multiple purposes.
+1. A Microsoft Azure Subscription, with appropriate core and VM quota limits.
+2. Resource Group - Used as the name of the OpenShift Cluster - All the assets of a single cluster use the Azure Resource Group to organize and group the assets. This name needs to be unique for each cluster per Azure Region (Location).
+3. Admin Username and Admin Password - This is an admin user, used for multiple purposes.
    a. As the ssh user to be able to connect to the bastion host, and administer the cluster.
    b. As an OpenShift administrative user, able to create and control OpenShift from the command line, or the user interface.
    c. A gmail account, allowing the notification of the installation process of OpenShift.
