@@ -2,19 +2,6 @@
 
 With the successful deployment of OpenShift, the following section demonstrates how to confirm proper functionality of the Red Hat OpenShift Container Platform.
 
-=== Validate the Deployment
-
-With the successful deployment of OpenShift, the following section demonstrates how to confirm proper
-functionality of the OpenShift environment.
-
-*Environment Validation*
-
-* Validate the health of the `ETCD` cluster to ensure all `ETCD` nodes are healthy
-* Create an OpenShift Application
-* Validate the URL returns a status code of 200 or healthy
-
-
-
 === Gathering hostnames
 With all of the steps that occur during the installation of OpenShift, it is possible to lose track of the names of the instances in the recently deployed environment. One option to get these hostnames is to browse to the `Azure Resource Group` dashboard and select `Overview`. The filter shows all instances relating to the reference architecture deployment.
 
