@@ -39,13 +39,17 @@ Roger Lopez, content reviewer
 
 Harold Wong, content reviewer
 
+Thomas Wiest, content reviewer
+
 //TODO: Just adding a few names for now, will update with addt'l names if needed
 
 [[Installation-Failure]]
 == Installation Failure
-In the event of an OpenShift installation failure perform the following steps.
+In the event of an OpenShift installation failure use the following sections to diagnose and
+find the source of the problem. Note that u may delete the resourcegroup, and reinstall by running
+the script again.
 
-<<<
+
 === Diagnostic and Control of Azure OpenShift
 The Openshift Azure installation may be controlled from the Bastion Host. This is a separate
 Virtual Machine, that allows access to all vm's in the same resource group that defines the OpenShift
