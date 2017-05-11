@@ -78,21 +78,20 @@ In order to create the AAD client id, and password, the nodejs azure cli is requ
    b. Login to azure:
       azure login
    c. Create a service princple:
-      azure ad sp create -n \<friendly name\> -p \<password\><br/>
+
 [subs=+quotes]
 ----
 # *azure ad sp create -n openshiftcloudprovider -p Pass@word1*
 ----
 
    d. Show the azure account data:
-      Example: `azure account show`
 [subs=+quotes]
 ----
 # *azure account show*
 ----
    e. Grant the service princple the access level of contributer to allow openshift to create/delete resources.
-      The objectID comes from the "azure ad sp create", and is labeled 'Object ID' on the output of that command.
-      The subscription number must come from the "azure account show" command, and is labeled 'ID'
+      The objectID comes from the `azure ad sp create`, and is labeled `Object ID` on the output of that command.
+      The subscription number must come from the `azure account show` command, and is labeled `ID`
       provided by the azure account show.
 [subs=+quotes]
 ----
