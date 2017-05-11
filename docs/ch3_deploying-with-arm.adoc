@@ -136,20 +136,23 @@ In order to create the AAD client id, and password, the nodejs azure cli is requ
 ----
 
    d. Show the azure account data:
+
 [subs=+quotes]
 ----
 # *azure account show*
 ----
+
    e. Grant the service princple the access level of contributer to allow openshift to create/delete resources.
       The objectID comes from the `azure ad sp create`, and is labeled `Object ID` on the output of that command.
       The subscription number must come from the `azure account show` command, and is labeled `ID`
       provided by the azure account show.
+
 [subs=+quotes]
 ----
 # *azure role assignment create --objectId 00419334-174b-41e8-9b83-9b5011d8d352 -o contributor -c /subscriptions/77ece336-c110-470d-a446-757a69cb9485/*
 ----
 
-The following is a walk thru of creating the service principle.  
+The following is a walk through of creating the service principal.  
 
 ```
 info:    Executing command ad sp create
@@ -199,12 +202,12 @@ info:    role assignment create command OK
 ```
 
 === Introduction to the Azure Template
-Azure Resource Manager templates consist of json files. The main template file is azuredeploy.json.
+Azure Resource Manager templates consist of json files. The main template file is `azuredeploy.json`.
 This file is the main ARM template that launches all the other templates under azure-ansible.
 There are 4 types of Virtual Machines created by the template. These are bastion, master, infranode,
 and node. For each of these types there is a additional json file, that defines each VM type.
 The ARM template for each type, automatically starts a bash shell script, that does part of the initial setup.
-The most important shell script is that of the bastion host, which is bastion.sh. The bastion script handles the generation
+The most important shell script is that of the bastion host, which is `bastion.sh`. The bastion script handles the generation
 of ansible host inventory, as well as the setup and running of ansible across all the hosts. The bastion host also functions to
 provide isolation of all the hosts in the resource group from the public internet for the purpose of ssh access.
 
@@ -216,7 +219,7 @@ First, gather the required information needed, for the provisioning and installa
    a. As the ssh user to be able to connect to the bastion host, and administer the cluster.
    b. As an OpenShift administrative user, able to create and control OpenShift from the command line, or the user interface.
    c. A gmail account, allowing the notification of the installation process of OpenShift.
-4. SSH Key Data - This is a SSH RSA public key, generated for the user that will administer the server. During the creation and installation of OpenShift virtual machines, the key will automatically be added to each host. This assures proper security and access. This key must be backed up, as its the only principle way to access the cluster for administration.
+4. SSH Key Data - This is a SSH RSA public key, generated for the user that will administer the server. During the creation and installation of OpenShift virtual machines, the key will automatically be added to each host. This assures proper security and access. This key must be backed up, as its the only principal way to access the cluster for administration.
 5. SSH Private Data - This is the `~/.ssh/id_rsa` file contents that has been base64 encoded. This data should be backed up.
 6. Wildcard Zone - DNS subdomain for applications in the OpenShift Cluster.
 7. Number of Nodes - The template supports the creation of 3 to 30 nodes during greenfield creation of a cluster. Note that the quota of your Azure account must support the number chosen.
