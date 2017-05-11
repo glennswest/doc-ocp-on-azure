@@ -26,13 +26,13 @@ the private key is coverted to base64 encoding, and placed on the clipboard.
 For OsX:
 [subs=+quotes]
 ----
-cat ~/.ssh/id_rsa | base64 | pbcopy
+# *cat ~/.ssh/id_rsa | base64 | pbcopy*
 ----
 
 For RHEL/Centos:
 [subs=+quotes]
 ----
-cat ~/.ssh/id_rsa | base64 | xclip -selection clipboard
+# *cat ~/.ssh/id_rsa | base64 | xclip -selection clipboard*
 ----
 
 For Windows:
@@ -76,7 +76,12 @@ In order to create the AAD client id, and password, the nodejs azure cli is requ
 ----
 
    b. Login to azure:
-      azure login
+
+[subs=+quotes]
+----
+# *azure login*
+----
+
    c. Create a service princple:
 
 [subs=+quotes]
