@@ -1,6 +1,6 @@
 [[Provision-Ansible]]
 
-=== Provisioning the Infrastructure with Ansible
+=== Provisioning Prerequisites
 The script and playbooks provided within the git repository deploys
 infrastructure, installs and configures OpenShift, and performs post installation
 tasks such as scaling the router and registry. The playbooks create specific
@@ -68,21 +68,36 @@ In order to create the AAD client id, and password, the nodejs azure cli is requ
 
 1. Install nodejs on your Platform.
 2. Install the azure cli:
-   a. On Linux Or Mac: sudo npm install -g azure-cli
-   b. On Windows: npm install -g azure-cli
-   c. Login to azure:
+   a. On Linux Windows or Mac:
+
+[subs=+quotes]
+----
+# *sudo npm install -g azure-cli*
+----
+
+   b. Login to azure:
       azure login
-   d. Create a service princple:
+   c. Create a service princple:
       azure ad sp create -n \<friendly name\> -p \<password\><br/>
-      Example: `azure ad sp create -n openshiftcloudprovider -p Pass@word1`
-   e. Show the azure account data:
+[subs=+quotes]
+----
+# *azure ad sp create -n openshiftcloudprovider -p Pass@word1*
+----
+
+   d. Show the azure account data:
       Example: `azure account show`
-      azure account show
-   f. Grant the service princple the access level of contributer to allow openshift to create/delete resources.
+[subs=+quotes]
+----
+# *azure account show*
+----
+   e. Grant the service princple the access level of contributer to allow openshift to create/delete resources.
       The objectID comes from the "azure ad sp create", and is labeled 'Object ID' on the output of that command.
       The subscription number must come from the "azure account show" command, and is labeled 'ID'
       provided by the azure account show.
-   Example: `azure role assignment create --objectId 00419334-174b-41e8-9b83-9b5011d8d352 -o contributor -c /subscriptions/77ece336-c110-470d-a446-757a69cb9485/`
+[subs=+quotes]
+----
+# *azure role assignment create --objectId 00419334-174b-41e8-9b83-9b5011d8d352 -o contributor -c /subscriptions/77ece336-c110-470d-a446-757a69cb9485/*
+----
 
 The following is a walk thru of creating the service principle.  
 

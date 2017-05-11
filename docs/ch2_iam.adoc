@@ -3,12 +3,12 @@
 For this reference account, an Azure Account is required. Ideally this is either a pay-as-you-go
 account, or a Microsoft Enterprise Agreement.
 
-You must have enough resources to deploy the reference architecture.
-
+The Azure account must have enough resources to deploy the reference architecture. The quota
+for a region can be increased by submitting a ticket to Azure support.
 
 During the installation of OpenShift Container Platform, four Storage accounts
 are created automatically per cluster. One is created for infrastructure, one for masters, 
-one for nodes, and one for store1.
+and one for nodes.
 
 
 For more information see
