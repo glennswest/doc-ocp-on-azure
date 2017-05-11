@@ -1,9 +1,9 @@
 === Bastion
 
-The Bastion server implements two distinct functions. One is that of a secure way to
-connect to all the nodes, and second that of the "installer" of the system. The Bastion
+The bastion server implements two distinct functions. One is that of a secure way to
+connect to all the nodes, and second that of the "installer" of the system. The bastion
 host acts as the system installer. The information provided to the ARM template is
-passed to the Bastion host. From there, playbooks and scripts are automatically generated,
+passed to the bastion host. From there, playbooks and scripts are automatically generated,
 and then executed, resulting in the OCP system being installed. 
 
 As shown in the <<bastion-diagram>> the `bastion` server in this reference architecture

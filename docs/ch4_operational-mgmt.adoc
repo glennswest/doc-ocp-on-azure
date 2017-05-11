@@ -226,9 +226,9 @@ NOTE: The warnings will not cause issues in the environment
 
 Based on the results of the diagnostics, actions can be taken to alleviate any issues.
 
-=== Checking the Health of ETCD
+=== Checking the Health of `etcd` 
 
-This section focuses on the `ETCD` cluster. It describes the different commands to ensure the cluster is healthy. The internal `DNS` names of the nodes running `ETCD` must be used.
+This section focuses on the `etcd` cluster. It describes the different commands to ensure the cluster is healthy. The internal `DNS` names of the nodes running `etcd` must be used.
 
 `SSH` into the first master node (master1). This must be done via bastion host.
 Using the output of the command `hostname` issue the `etcdctl` command to confirm that the cluster is healthy.
@@ -248,7 +248,7 @@ member c8e7ac98bb93fe8c is healthy: got healthy result from https://10.20.3.74:2
 member f7bbfc4285f239ba is healthy: got healthy result from https://10.20.2.157:2379
 ----
 
-NOTE: In this configuration the `ETCD` services are distributed among the OpenShift master nodes.
+NOTE: In this configuration the `etcd` services are distributed among the OpenShift master nodes.
 
 === Default Node Selector
 As explained in section 2.12.4 node labels are an important part of the OpenShift environment. By default of the reference architecture installation, the default node selector is set to "role=apps" in `/etc/origin/master/master-config.yaml` on all of the master nodes.  This configuration parameter is set during the installation of OpenShift on all masters.
@@ -272,7 +272,7 @@ NOTE: If making any changes to the master configuration then the master API serv
 Quotas are set on ephemeral volumes within pods to prohibit a pod from becoming to large and impacting the node. There are three places where sizing restrictions should be set. When persistent volume claims are not set a pod has the ability to grow as large as the underlying filesystem will allow. The required modifcations are set by automatically.
 
 
-*Openshift Volume Quota*
+*OpenShift Volume Quota*
 
 At launch time a script creates a `xfs` partition on the block device, adds an entry in fstab, and mounts the volume with the option of `gquota`. If `gquota` is not set the OpenShift node will not be able to start with the `perFSGroup` parameter defined below. This disk and configuration is done on the master, infrastructure, and application nodes.
 
@@ -330,8 +330,8 @@ the GUI and the CLI. After logging in via one of these methods applications can 
 Perform the following steps from the local workstation.
 
 Open a browser and access  https://resourcegroupname.region.cloudapp.azure.com/console.
-The resourcegroupname is given in the ARM template, and region is the Azure zone selected during install.
-When logging into the OpenShift web interface, use the user login and password specified during the launch of the ARM template.
+The resourcegroupname is given in the `ARM` template, and region is the Azure zone selected during install.
+When logging into the OpenShift web interface, use the user login and password specified during the launch of the `ARM` template.
 
 To deploy an application, click on the `New Project` button. Provide a `Name` and click `Create`. Next, deploy the `jenkins-ephemeral` instant app by clicking the corresponding box. Accept the defaults and click `Create`. Instructions along with a URL will be provided for how to access the application on the next screen. Click `Continue to Overview` and bring up the management page for the application. Click on the link provided and access the application to confirm functionality.
 
@@ -567,7 +567,7 @@ NOTE: Perform the following steps from the `Azure` web console.
 
 On the main `Azure` dashboard, click on `Resource Groups` icon. Then select the resource group that corresponds with the OpenShift Deployment, and then find the Load Balancers within the resource group. Select the `AppLB` load balancer and on the `Description` page note the `Port Configuration` and how it is configured. That is for the OpenShift application traffic.
 There should be three master instances running with a `Status` of `Ok`. Next check the `Health Check` tab and the options that were configured.
-Further details of the configuration can be viewed by exploring the Azure ARM templates to see exactly what was configured.
+Further details of the configuration can be viewed by exploring the `Azure ARM` templates to see exactly what was configured.
 
 ==== Explore the Azure Resource Group
 
@@ -577,7 +577,7 @@ NOTE: Perform the following steps from the `Azure` web console.
 
 On the main Microsoft Azure console, click on `Resource Group`. Next on the left hand navigation panel select the `Your Resource Groups`.
 Select the `Resource Group` recently created and explore the `Summary` tabs. Next, on the right hand navigation panel, explore the `Virtual Machines`, `Storage Accounts`, `Load Balancers`, and `Networks`.
-More detail can be looked at with the configuration by exploring the Ansible playbooks and ARM json Files to see exactly what was configured.
+More detail can be looked at with the configuration by exploring the Ansible playbooks and `ARM` json Files to see exactly what was configured.
 
 === Testing Failure
 
@@ -591,7 +591,7 @@ Log into the `Azure` console.  On the dashboard, click on the `Resource Group` w
 
 Ensure the console can still be accessed by opening a browser and accessing https://resourcegroupname.region.cloudapp.azure.com. At this point, the cluster is in a degraded state because only 2/3 master nodes are running, but complete funcionality remains.
 
-==== Observe the Behavior of `ETCD` with a Failed Master Node
+==== Observe the Behavior of `etcd` with a Failed Master Node
 
 `SSH` into the first master node (master1) from the bastion. Using the output of the command `hostname` issue the `etcdctl` command to confirm that the cluster is healthy.
 
@@ -612,7 +612,7 @@ member f7bbfc4285f239ba is healthy: got healthy result from https://10.20.1.106:
 cluster is healthy
 ----
 
-Notice how one member of the `ETCD` cluster is now unreachable. Restart master2 by following the same steps in the `Azure` web console as noted above.
+Notice how one member of the `etcd` cluster is now unreachable. Restart master2 by following the same steps in the `Azure` web console as noted above.
 
 ==== Generate an Infrastruture Node outage
 

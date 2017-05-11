@@ -1,4 +1,4 @@
-=== Router
+=== OpenShift Router
 
 Pods inside of an OpenShift cluster are only reachable via their IP addresses on
 the cluster network. An edge load balancer can be used to accept traffic from

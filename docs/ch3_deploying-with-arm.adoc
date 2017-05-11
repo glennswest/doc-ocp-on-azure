@@ -1,37 +1,37 @@
 [[Provision-Ansible]]
 
 === Provisioning Prerequisites
-The script and playbooks provided within the git repository deploys
+The script and playbooks provided within the `Git` repository deploys
 infrastructure, installs and configures OpenShift, and performs post installation
 tasks such as scaling the router and registry. The playbooks create specific
 roles, policies, and users required for cloud provider configuration in OpenShift, as well as
-storage accounts on Azure. In order to deploy Openshift on Azure, an ARM template must be created. The ARM
-template takes the basic information, admin user name, password, rhn username and password,
-ssh public and private keys, as well as offering the ability to size the virtual machines.
+storage accounts on Azure. In order to deploy OpenShift on Azure, an `ARM` template must be created. The `ARM`
+template takes the basic information, admin user name, password, Red Hat Subscription Manager username and password,
+`SSH` public and private keys, as well as offering the ability to size the virtual machines.
 
 ==== Authentication Prerequisite
-The templates creates an administrative user, as specified in the ARM template when creating
+The templates creates an administrative user, as specified in the `ARM` template when creating
 the infrastructure. This user will be the cluster administrator for the reference architecture.
 The template uses the supplied values in admin username, and admin password. They're implemented using
-Openshift htpasswd identity provider.
+OpenShift htpasswd identity provider.
 
 ==== SSH Prerequisite
 
 ===== SSH Configuration
-Before beginning the deployment of the `Azure` infrastucture and the deployment of OpenShift, the ssh
+Before beginning the deployment of the `Azure` infrastucture and the deployment of OpenShift, the `SSH` 
 private key must be converted into a base64 string. Otherwise, the Azure infrastructure cannot be configured
 manually or automatically.
 
-This task is performed locally, on the machine that will run the ARM template. In this example,
+This task is performed locally, on the machine that will run the `ARM` template. In this example,
 the private key is coverted to base64 encoding, and placed on the clipboard.
 
-For OsX:
+For OSX:
 [subs=+quotes]
 ----
 # *cat ~/.ssh/id_rsa | base64 | pbcopy*
 ----
 
-For RHEL/Centos:
+For RHEL/CentOS:
 [subs=+quotes]
 ----
 # *cat ~/.ssh/id_rsa | base64 | xclip -selection clipboard*
@@ -57,12 +57,12 @@ Red Hat Subscription Manager Password: SecretPass
 Pool ID: 1b152951269116311123bc522341e1
 ----
 
-The next section will show how to locate the pool id.
+The next section will show how to locate the Pool ID.
 
-===== Red Hat Subscription Pool Id
-In order to assign a subscription, a pool id is required. Using a system that currently has a valid subscription
-to Red Hat products, by using subscription-manager the pool id can be acquired. Perform the folliwng command, and take
-note of the pool id. 
+===== Red Hat Subscription Pool ID
+In order to assign a subscription, a Pool ID is required. Using a system that currently has a valid subscription
+to Red Hat products, by using subscription-manager the Pool ID can be acquired. Perform the following command, and take
+note of the Pool ID. 
 
 [subs=+quotes]
 ----
@@ -101,19 +101,19 @@ Ends:                25/08/2017
 System Type:         Physical
 ----
 
-The Pool Id is also available under RHN (RedHat Network) under the subscription overview, under the category of Pool IDs/Derived Pools.
+The Pool ID is also available under `RHSM` (Red Hat Subscription Manager) under the subscription overview, under the category of Pool IDs/Derived Pools.
 
 ==== Azure Active Directory Credentials
-In order to create the AAD client id, and password, the nodejs azure cli is required.
+In order to create the AAD client id, and password, the `nodejs Azure CLI` is required.
 
-1. Install nodejs on the Platform.
+1. Install `nodejs` on the Platform.
 
 [subs=+quotes]
 ----
 # *sudo yum -y install npm*
 ----
 
-2. Install the azure cli:
+2. Install the `Azure cli`:
    a. On Linux Windows or Mac:
 
 [subs=+quotes]
@@ -121,31 +121,31 @@ In order to create the AAD client id, and password, the nodejs azure cli is requ
 # *sudo npm install -g azure-cli*
 ----
 
-   b. Login to azure:
+   b. Login to `Azure`:
 
 [subs=+quotes]
 ----
 # *azure login*
 ----
 
-   c. Create a service princple:
+   c. Create a service principle:
 
 [subs=+quotes]
 ----
 # *azure ad sp create -n openshiftcloudprovider -p Pass@word1*
 ----
 
-   d. Show the azure account data:
+   d. Show the `Azure` account data:
 
 [subs=+quotes]
 ----
 # *azure account show*
 ----
 
-   e. Grant the service princple the access level of contributer to allow openshift to create/delete resources.
-      The objectID comes from the `azure ad sp create`, and is labeled `Object ID` on the output of that command.
-      The subscription number must come from the `azure account show` command, and is labeled `ID`
-      provided by the azure account show.
+   e. Grant the service principle the access level of contributer to allow openshift to create/delete resources.
+      The objectID comes from the `Azure ad sp create`, and is labeled `Object ID` on the output of that command.
+      The subscription number must come from the `Azure account show` command, and is labeled `ID`
+      provided by the `Azure` account show.
 
 [subs=+quotes]
 ----
@@ -203,24 +203,24 @@ info:    role assignment create command OK
 
 === Introduction to the Azure Template
 Azure Resource Manager templates consist of json files. The main template file is `azuredeploy.json`.
-This file is the main ARM template that launches all the other templates under azure-ansible.
-There are 4 types of Virtual Machines created by the template. These are bastion, master, infranode,
+This file is the main `ARM` template that launches all the other templates under `azure-ansible`.
+There are four types of Virtual Machines created by the template. These are bastion, master, infranode,
 and node. For each of these types there is a additional json file, that defines each VM type.
-The ARM template for each type, automatically starts a bash shell script, that does part of the initial setup.
+The `ARM` template for each type, automatically starts a bash shell script, that does part of the initial setup.
 The most important shell script is that of the bastion host, which is `bastion.sh`. The bastion script handles the generation
 of ansible host inventory, as well as the setup and running of ansible across all the hosts. The bastion host also functions to
-provide isolation of all the hosts in the resource group from the public internet for the purpose of ssh access.
+provide isolation of all the hosts in the resource group from the public internet for the purpose of `SSH` access.
 
 First, gather the required information needed, for the provisioning and installation of OpenShift.
 
 1. A Microsoft Azure Subscription, with appropriate core and VM quota limits.
 2. Resource Group - Used as the name of the OpenShift Cluster - All the assets of a single cluster use the Azure Resource Group to organize and group the assets. This name needs to be unique for each cluster per Azure Region (Location).
 3. Admin Username and Admin Password - This is an admin user, used for multiple purposes.
-   a. As the ssh user to be able to connect to the bastion host, and administer the cluster.
+   a. As the `SSH` user to be able to connect to the bastion host, and administer the cluster.
    b. As an OpenShift administrative user, able to create and control OpenShift from the command line, or the user interface.
    c. A gmail account, allowing the notification of the installation process of OpenShift.
-4. SSH Key Data - This is a SSH RSA public key, generated for the user that will administer the server. During the creation and installation of OpenShift virtual machines, the key will automatically be added to each host. This assures proper security and access. This key must be backed up, as its the only principal way to access the cluster for administration.
-5. SSH Private Data - This is the `~/.ssh/id_rsa` file contents that has been base64 encoded. This data should be backed up.
+4. `SSH` Key Data - This is a `SSH RSA` public key, generated for the user that will administer the server. During the creation and installation of OpenShift virtual machines, the key will automatically be added to each host. This assures proper security and access. This key must be backed up, as its the only principal way to access the cluster for administration.
+5. `SSH` Private Data - This is the `~/.ssh/id_rsa` file contents that has been base64 encoded. This data should be backed up.
 6. Wildcard Zone - DNS subdomain for applications in the OpenShift Cluster.
 7. Number of Nodes - The template supports the creation of 3 to 30 nodes during greenfield creation of a cluster. Note that the quota of the Azure account must support the number chosen.
 8. Image - The template supports RHEL (Red Hat Enterprise Linux) 7.3 or later. The image will be upgraded during the installation process to the latest release.
@@ -230,14 +230,14 @@ First, gather the required information needed, for the provisioning and installa
 12. RHN Username - This should be the username used for the Red Hat Subscription Account that has OpenShift Container Platform entitlements.
 13. RHN Password - This should be the password for the Red Hat Subscription Account.
 14. Subscription Pool ID - This is a number sequence that uniquely identifies the subscriptions that are to be used for the OpenShift intstall.
-15. AAD Client Id - This gives Openshift the Active Directory ID, needed to be able to create, move and delete persistent volumes.
-16. AAD Client Secret - The Active Directory Password to match the AAD Client ID. Require for Openshift Cloud Provider.
+15. AAD Client Id - This gives OpenShift the Active Directory ID, needed to be able to create, move and delete persistent volumes.
+16. AAD Client Secret - The Active Directory Password to match the AAD Client ID. Require for OpenShift Cloud Provider.
 
 With the above information ready, go to https://github.com/openshift/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible
 and click the "Deploy To Azure" button near the bottom of the page. This will then show the form, to allow the deployment to be started.
 
 [arm-template-image]]
-.Arm Template
+.ARM Template
 image::images/AzureOCPEmptyTemplate.png["ARM Template",align="center"]
 
 ===== Post Ansible Deployment
