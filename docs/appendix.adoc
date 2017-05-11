@@ -149,9 +149,6 @@ node[01:03] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 infranode openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 
 
-[misc]
-store1
-
 ----
 
 === Uninstalling and Deleting

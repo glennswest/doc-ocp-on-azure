@@ -3,31 +3,3 @@
 This chapter focuses on Phase 1 of the process. The prerequisites defined below
  are required for a successful deployment of infrastructure and the installation of OpenShift.
 
-First, gather the required information needed, for the provisioning and installation of OpenShift.
-
- 1. A Microsoft Azure Subscription, with appropriate core and VM quota limits.
- 2. Resource Group - Used as the name of the OpenShift Cluster - All the assets of a single cluster use the Azure Resource Group to organize and group the assets. This name needs to be unique for each cluster per Azure Region (Location).
- 3. Admin Username and Admin Password - This is an admin user, used for multiple purposes.
-   a. As the ssh user to be able to connect to the bastion host, and administer the cluster.
-   b. As an OpenShift administrative user, able to create and control OpenShift from the command line, or the user interface.
-   c. A gmail account, allowing the notification of the installation process of OpenShift.
-4. SSH Key Data - This is a SSH RSA public key, generated for the user that will administer the server. During the creation and installation of OpenShift virtual machines, the key will automatically be added to each host. This assures proper security and access. This key must be backed up, as its the only principle way to access the cluster for administration.
-5. SSH Private Data - This is the ~/.ssh/id_rsa file contents that has been base64 encoded. This data should be backed up.
-6. Wildcard Zone - DNS subdomain for applications in the OpenShift Cluster.
-7. Number of Nodes - The template supports the creation of 3 to 30 nodes during greenfield creation of a cluster. Note that the quota of your Azure account must support the number chosen.
-8. Image - The template supports RHEL (Red Hat Enterprise Linux) 7.3 or later. The image will be upgraded during the installation process to the latest release.
-9. Master VM Size - Standard_DS4_v2 - The default value gives 8 CPU Cores and 28 Gigabytes of memory, with 56 GB of local disk. This is used for OpenShift Master Nodes, as well as the Bastion host. This VM Size uses premium storage. Generally recommended to use premium storage for OpenShift on Azure.
-10. Infranode VM Size - Standard_D4_v2 - The default value gives 8 CPU Cores and 28 Gigabytes of memory. Infranodes run the OpenShift Router Containers, and the OpenShift Registry. As the infranode provide the ingress for all applications, its recommended that DS2 be the smallest node used for the Infranodes.
-11. Node VM Size - Standard DS4_v2 - This default value gives 8 CPU Cores and 28 Gigabytes of memory. Nodes run your application containers. The number and size of the applications have an impact on node size. Larger container sizes may warrant using Standard_DS13(56Gig of Memory) or Standard_DS14(112Gig of Memory).
-12. RHN Username - This should be the username used for your Red Hat Subscription Account that has OpenShift Container Platform entitlements.
-13. RHN Password - This should be the password for your Red Hat Subscription Account.
-14. Subscription Pool ID - This is a number sequence that uniquely identifies the subscriptions that are to be used for the OpenShift intstall.
-15. AAD Client Id - This gives Openshift the Active Directory ID, needed to be able to create, move and delete persistent volumes.
-16. AAD Client Secret - The Active Directory Password to match the AAD Client ID. Require for Openshift Cloud Provider.
-
-With the above information ready, go to https://github.com/openshift/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible
-and click the "Deploy To Azure" button near the bottom of the page. This will then show the form, to allow you to start deployment.
-
-[arm-template-image]]
-.Arm Template
-image::images/AzureOCPEmptyTemplate.png["ARM Template",align="center"]
