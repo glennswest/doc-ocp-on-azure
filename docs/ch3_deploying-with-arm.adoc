@@ -5,7 +5,9 @@ The script and playbooks provided within the git repository deploys
 infrastructure, installs and configures OpenShift, and performs post installation
 tasks such as scaling the router and registry. The playbooks create specific
 roles, policies, and users required for cloud provider configuration in OpenShift, as well as
-storage accounts on Azure.
+storage accounts on Azure. In order to deploy Openshift on Azure, an ARM template must be created. The ARM
+template takes the basic information, admin user name, password, rhn username and password,
+ssh public and private keys, as well as offering the ability to size the virtual machines.
 
 ==== Authentication Prerequisite
 The templates creates an administrative user, as specified in the ARM template when creating
@@ -56,12 +58,6 @@ The items above are examples and should reflect subscriptions relevant to the ac
 performing the installation. There are a few different variants of the OpenShift Subscription Name. It is advised to visit
 https://access.redhat.com/management/subscriptions to find the specific Pool ID and Subscription Name as the values will
 be used below during the deployment.
-
-
-==== Deploying the Environment
-In order to deploy Openshift on Azure, an ARM template has been created. The ARM
-template takes the basic information, admin user name, password, rhn username and password,
-ssh public and private keys, as well as offering the ability to size the virtual machines.
 
 ==== Azure Active Directory Credentials
 In order to create the AAD client id, and password, the nodejs azure cli is required.
