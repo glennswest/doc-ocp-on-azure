@@ -169,10 +169,8 @@ that are created.
 
 In order to use the template, ssh public and private keys are needed. It is important to not apply a passphrase to the key.
 
-If you have not created .ssh keys for your account:
-
-==== RHEL SSH
-Generate an RSA key pair by typing the following at a shell prompt:
+==== SSH Key Generation
+If SSH keys do not currently exist then it is required to create them. Generate an RSA key pair by typing the following at a shell prompt:
 
 [source,bash]
 ----
@@ -204,58 +202,6 @@ The key's randomart image is:
 |           o*  o.|
 +-----------------+
 ----
-
-
-
-
-=== Red Hat Network 'RHN' User Account and Password
-A Red Hat account is required to use this template. This account must have appropriate
-subscriptions installed in the account in order to  use the template. The User Name and Password
-must be supplied to the template.
-
-=== Red Hat Subscription Pool Id
-In order to assign a subscription, a pool id is required. Using a system that currently has a valid subscription
-to Red Hat products, you can find the pool_id by using subscription-manager. Perform the folliwng command, and take
-note of the pool id.
-
-[source,bash]
-----
-root# subscription-manager list --available
-
-+-------------------------------------------+
-    Available Subscriptions
-+-------------------------------------------+
-Subscription Name:   Red Hat OpenShift Container Platform, Premium (1-2 Sockets)
-Provides:            Red Hat OpenShift Enterprise Application Node
-                     Red Hat Software Collections (for RHEL Server)
-                     Red Hat Single Sign-On
-                     Red Hat Beta
-                     dotNET on RHEL Beta (for RHEL Server)
-                     Red Hat OpenShift Container Platform
-                     JBoss Enterprise Web Server
-                     Oracle Java (for RHEL Server)
-                     Red Hat OpenShift Enterprise Client Tools
-                     Red Hat CloudForms Beta
-                     Red Hat Enterprise Linux Server
-                     dotNET on RHEL (for RHEL Server)
-                     Red Hat Software Collections Beta (for RHEL Server)
-                     Red Hat Enterprise Linux Atomic Host
-                     Red Hat OpenShift Enterprise Infrastructure
-                     Red Hat CloudForms
-SKU:                 MCT2862
-Contract:            38154141
-Pool ID:             1b153951369116211123bc543241e1
-Provides Management: No
-Available:           64
-Suggested:           1
-Service Level:       Premium
-Service Type:        L1-L3
-Subscription Type:   Stackable
-Ends:                25/08/2017
-System Type:         Physical
-----
-
-The Pool Id is also available under RHN (RedHat Network) under the subscription overview, under the category of Pool IDs/Derived Pools.
 
 === Resource Groups and Resource Group Name
 In Azure, resources are grouped together in resource groups. You may choose any resource group

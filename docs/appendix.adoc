@@ -25,27 +25,27 @@ Glenn West
 
 Glenn West, content provider
 
+Ryan Cook, content provider
+
 Scott Collier, content provider
 
 Jason DeTiberus, content provider
 
-Erik Jacobs, content reviewer
-
 Matt Woodson, content reviewer
 
-Rayford Johnson, content reviewer
-
-Roger Lopez, content reviewer
-
 Harold Wong, content reviewer
+
+Thomas Wiest, content reviewer
 
 //TODO: Just adding a few names for now, will update with addt'l names if needed
 
 [[Installation-Failure]]
 == Installation Failure
-In the event of an OpenShift installation failure perform the following steps.
+In the event of an OpenShift installation failure use the following sections to diagnose and
+find the source of the problem. Note that u may delete the resourcegroup, and reinstall by running
+the script again.
 
-<<<
+
 === Diagnostic and Control of Azure OpenShift
 The Openshift Azure installation may be controlled from the Bastion Host. This is a separate
 Virtual Machine, that allows access to all vm's in the same resource group that defines the OpenShift
@@ -111,11 +111,11 @@ remote_user=glennswest
 
 openshift_master_default_subdomain=52.163.224.147.xip.io
 openshift_use_dnsmasq=False
-openshift_public_hostname=gswthuv1500.trafficmanager.net
+openshift_public_hostname=resourcegroupname.region.cloudapp.azure.com
 
 openshift_master_cluster_method=native
-openshift_master_cluster_hostname=gswthuv1500.trafficmanager.net
-openshift_master_cluster_public_hostname=gswthuv1500.trafficmanager.net
+openshift_master_cluster_hostname=resourcegroupname.region.cloudapp.azure.com
+openshift_master_cluster_public_hostname=resourcegroupname.region.cloudapp.azure.com
 
 # Enable cockpit
 osm_use_cockpit=true
@@ -144,9 +144,6 @@ master3 openshift_node_labels="{'region':'master','zone':'default'}"
 node[01:03] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 infranode openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 
-
-[misc]
-store1
 
 ----
 

@@ -23,6 +23,7 @@ that points to the wildcardzone name.
 
 
 NOTE: When installing using this method the browser certificate must be accepted three times. The certificate must be accepted three times due to the number of masters in the cluster. Failure to accept the certificate can cause disconnect issues and the appearance of network failures.
+
 image::images/assetlist.png[]
 
 // vim: set syntax=asciidoc:
