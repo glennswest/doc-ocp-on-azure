@@ -171,7 +171,7 @@ In order to use the template, ssh public and private keys are needed. It is impo
 
 If you have not created .ssh keys for your account:
 
-==== SSH
+==== SSH Key Generation
 Generate an RSA key pair by typing the following at a shell prompt:
 
 [source,bash]

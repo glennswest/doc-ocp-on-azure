@@ -24,6 +24,4 @@ In initial deployment, a nip dns name is generated to point to the Application l
 to allow immediate usage of the deployed openshift. A Wildcard CNAME should be created to anothername of
 choice.
 
-NOTE: A subdomain can also be used. The same steps listed above are applicable when using a subdomain.
-
 // vim: set syntax=asciidoc:
