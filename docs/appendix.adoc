@@ -25,17 +25,13 @@ Glenn West
 
 Glenn West, content provider
 
+Ryan Cook, content provider
+
 Scott Collier, content provider
 
 Jason DeTiberus, content provider
 
-Erik Jacobs, content reviewer
-
 Matt Woodson, content reviewer
-
-Rayford Johnson, content reviewer
-
-Roger Lopez, content reviewer
 
 Harold Wong, content reviewer
 
@@ -115,11 +111,11 @@ remote_user=glennswest
 
 openshift_master_default_subdomain=52.163.224.147.xip.io
 openshift_use_dnsmasq=False
-openshift_public_hostname=gswthuv1500.trafficmanager.net
+openshift_public_hostname=resourcegroupname.region.cloudapp.azure.com
 
 openshift_master_cluster_method=native
-openshift_master_cluster_hostname=gswthuv1500.trafficmanager.net
-openshift_master_cluster_public_hostname=gswthuv1500.trafficmanager.net
+openshift_master_cluster_hostname=resourcegroupname.region.cloudapp.azure.com
+openshift_master_cluster_public_hostname=resourcegroupname.region.cloudapp.azure.com
 
 # Enable cockpit
 osm_use_cockpit=true

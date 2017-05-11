@@ -230,7 +230,7 @@ Based on the results of the diagnostics, actions can be taken to alleviate any i
 
 This section focuses on the `ETCD` cluster. It describes the different commands to ensure the cluster is healthy. The internal `DNS` names of the nodes running `ETCD` must be used.
 
-`SSH` into the first master node (master1). This must be done via bastion host `_RESOURCEGROUPNAME_b@regionname.cloudapp.azure.com`
+`SSH` into the first master node (master1). This must be done via bastion host.
 Using the output of the command `hostname` issue the `etcdctl` command to confirm that the cluster is healthy.
 
 [subs=+quotes]
@@ -274,7 +274,7 @@ Quotas are set on ephemeral volumes within pods to prohibit a pod from becoming 
 
 *Openshift Volume Quota*
 
-At launch time a script creates a xfs partition on the block device, adds an entry in fstab, and mounts the volume with the option of gquota. If gquota is not set the OpenShift node will not be able to start with the "perFSGroup" parameter defined below. This disk and configuration is done on the master, infrastructure, and application nodes.
+At launch time a script creates a `xfs` partition on the block device, adds an entry in fstab, and mounts the volume with the option of `gquota`. If `gquota` is not set the OpenShift node will not be able to start with the `perFSGroup` parameter defined below. This disk and configuration is done on the master, infrastructure, and application nodes.
 
 `SSH` into the first infrastructure node (infranode1) to verify the entry exists within fstab.
 
@@ -286,7 +286,7 @@ At launch time a script creates a xfs partition on the block device, adds an ent
 
 *Docker Storage Setup*
 
-The docker-storage-setup file is created at launch time by the bash script. This file tells the Docker service to use a specific volume group for containers.  The extra Docker storage options ensures that a container can grow no larger than 3G.  Docker storage setup is performed on all master, infrastructure, and application nodes.
+The `docker-storage-setup` file is created at launch time by the bash script. This file tells the Docker service to use a specific volume group for containers.  The extra Docker storage options ensures that a container can grow no larger than 3G.  Docker storage setup is performed on all master, infrastructure, and application nodes.
 
 `SSH` into the first infrastructure node (infranode1) to verify `/etc/sysconfig/docker-storage-setup` matches the information below.
 
@@ -301,7 +301,7 @@ EXTRA_DOCKER_STORAGE_OPTIONS="--storage-opt dm.basesize=3G"
 
 *OpenShift Emptydir Quota*
 
-The role openshift-emptydir-quota sets a parameter within the node configuration. The perFSGroup setting restricts the ephemeral emptyDir volume from growing larger than 512Mi.  This empty dir quota is done on the master, infrastructure, and application nodes. 
+During installation a value for `perFSGroup` is set within the node configuration. The `perFSGroup` setting restricts the ephemeral emptyDir volume from growing larger than 512Mi.  This empty dir quota is done on the master, infrastructure, and application nodes. 
 
 `SSH` into the first infrastructure node (infranode1) to verify `/etc/origin/node/node-config.yml` matches the information below.
 
@@ -341,15 +341,13 @@ Perform the following steps from your local workstation.
 
 Install the `oc client` by visiting the public URL of the OpenShift deployment. For example, https://resourcegroupname.region.cloudapp.azure.com/console/command-line and click latest release. When directed to https://access.redhat.com, login with the valid Red Hat customer credentials and download the client relevant to the current workstation. Follow the instructions located on the production documentation site for https://docs.openshift.com/container-platform/3.5/cli_reference/get_started_cli.html[getting started with the cli].
 
-A token is required to login using GitHub OAuth and OpenShift. The token is presented on the https://resourcegroupname.region.cloudapp.azure.com/console/command-line page. Click the click to show token hyperlink and perform the following on the workstation in which the oc client was installed.
+A token is required to login to OpenShift. The token is presented on the https://resourcegroupname.region.cloudapp.azure.com/console/command-line page. Click the click to show token hyperlink and perform the following on the workstation in which the oc client was installed.
 
 [subs=+quotes]
 ----
 $ *oc login https://resourcegroupname.region.cloudapp.azure.com --token=fEAjn7LnZE6v5SOocCSRVmUWGBNIIEKbjD9h-Fv7p09*
 ----
 
-
-<<<
 After the oc client is configured, create a new project and deploy an application.
 
 [subs=+quotes]
@@ -413,7 +411,7 @@ If you try to run the following command, it should fail.
 [subs=+quotes]
 ----
 # *oc get nodes --show-labels*
-Error from server: User "user@redhat.com" cannot list all nodes in the cluster
+Error from server: User "syseng-admin" cannot list all nodes in the cluster
 ----
 
 The reason it is failing is because the permissions for that user are incorrect. Get the username and configure the permissions.
@@ -423,11 +421,11 @@ The reason it is failing is because the permissions for that user are incorrect.
 $ *oc whoami*
 ----
 
-Once the username has been established, log back into a master node and enable the appropriate permissions for your user. Perform the following step from the first master (master1.sysdeseng.com).
+Once the username has been established, log back into a master node and enable the appropriate permissions for your user. Perform the following step from the first master (master1).
 
 [subs=+quotes]
 ----
-# *oadm policy add-cluster-role-to-user cluster-admin user@redhat.com*
+# *oadm policy add-cluster-role-to-user cluster-admin syseng-admin*
 ----
 
 <<<
@@ -461,10 +459,10 @@ NOTE: Perform the following steps from your the workstation.
 # *oc project default*
 # *oc get all*
 NAME                         REVISION        DESIRED       CURRENT   TRIGGERED BY
-dc/docker-registry           1               2             2         config
+dc/docker-registry           1               1             1         config
 dc/router                    1               2             2         config
 NAME                         DESIRED         CURRENT       AGE
-rc/docker-registry-1         2               2             10m
+rc/docker-registry-1         1               1             10m
 rc/router-1                  2               2             10m
 NAME                         CLUSTER-IP      EXTERNAL-IP   PORT(S)                   AGE
 svc/docker-registry          172.30.243.63   <none>        5000/TCP                  10m
@@ -472,7 +470,6 @@ svc/kubernetes               172.30.0.1      <none>        443/TCP,53/UDP,53/TCP
 svc/router                   172.30.224.41   <none>        80/TCP,443/TCP,1936/TCP   10m
 NAME                         READY           STATUS        RESTARTS                  AGE
 po/docker-registry-1-2a1ho   1/1             Running       0                         8m
-po/docker-registry-1-krpix   1/1             Running       0                         8m
 po/router-1-1g84e            1/1             Running       0                         8m
 po/router-1-t84cy            1/1             Running       0                         8m
 
@@ -483,8 +480,8 @@ Observe the output of `oc get all`
 <<<
 
 ==== Explore the Docker Registry
-The OpenShift Ansible playbooks configure three infrastructure nodes that have one registry running. In order to understand the configuration and mapping process of the registry pods, the command 'oc describe' is used.
-Oc describe details how registries are configured and mapped to the Azure Blob's for storage. Using Oc describe should help explain how HA works in this environment.
+The OpenShift Ansible playbooks configure three infrastructure nodes that have one registry running. In order to understand the configuration and mapping process of the registry pods, the command `oc describe` is used.
+`oc describe` details how registries are configured and mapped to the Azure Blob's for storage. Using `oc describe` should help explain how HA works in this environment.
 
 NOTE: Perform the following steps from your the workstation.
 
@@ -645,7 +642,7 @@ Now using project "test-app1" on server "https://resourcegroupname.region.clouda
 $ oc status
 In project test-app1 on server https://resourcegroupname.region.cloudapp.azure.com
 
-http://php-test-app1.apps.sysdeseng.com to pod port 8080-tcp (svc/php-prod)
+http://php-test-app1.apps.apps.region.cloudapp.azure.com to pod port 8080-tcp (svc/php-prod)
   dc/php-prod deploys istag/php-prod:latest <-
     bc/php-prod builds https://github.com/openshift/cakephp-ex.git with openshift/php:5.6
     deployment #1 deployed 27 minutes ago - 1 pod
@@ -686,7 +683,7 @@ In project default on server https://resourcegroupname.region.cloudapp.azure.com
 
 svc/docker-registry - 172.30.237.147:5000
   dc/docker-registry deploys docker.io/openshift3/ose-docker-registry:v3.3.0.32
-    deployment #2 deployed 51 minutes ago - 2 pods
+    deployment #2 deployed 51 minutes ago - 1 pods
     deployment #1 deployed 53 minutes ago
 
 svc/kubernetes - 172.30.0.1 ports 443, 53->8053, 53->8053
@@ -718,14 +715,14 @@ Issue a Docker login.
 
 [subs=+quotes]
 ----
-# docker login -u prod@redhat.com -e prod@redhat.com -p _7yJcnXfeRtAbJVEaQwPwXreEhlV56TkgDwZ6UEUDWw 172.30.110.31:5000
+# docker login -u syseng-admin -e syseng-admin -p _7yJcnXfeRtAbJVEaQwPwXreEhlV56TkgDwZ6UEUDWw 172.30.110.31:5000
 ----
 
 [subs=+quotes]
 ----
-# oadm policy add-role-to-user admin prod@redhat.com -n openshift
-# oadm policy add-role-to-user system:registry prod@redhat.com
-# oadm policy add-role-to-user system:image-builder prod@redhat.com
+# oadm policy add-role-to-user admin syseng-admin -n openshift
+# oadm policy add-role-to-user system:registry syseng-admin
+# oadm policy add-role-to-user system:image-builder syseng-admin
 ----
 
 Push the image to the OpenShift registry now.
