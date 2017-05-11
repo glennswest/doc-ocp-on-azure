@@ -50,11 +50,12 @@ must be supplied to the template.
 
 For the installation of `OCP` on `Azure` the following items are required:
 
+[subs=+quotes]
+----
 Red Hat Subscription Manager User: rhsm-se
-
 Red Hat Subscription Manager Password: SecretPass
-
 Pool ID: 1b152951269116311123bc522341e1
+----
 
 The next section will show how to locate the pool id.
 
@@ -106,6 +107,7 @@ The Pool Id is also available under RHN (RedHat Network) under the subscription 
 In order to create the AAD client id, and password, the nodejs azure cli is required.
 
 1. Install nodejs on your Platform.
+
 [subs=+quotes]
 ----
 # *sudo yum -y install npm*
