@@ -337,7 +337,7 @@ To deploy an application, click on the `New Project` button. Provide a `Name` an
 
 ==== Log into CLI and Deploy an Application
 
-Perform the following steps from your local workstation.
+Perform the following steps from the local workstation.
 
 Install the `oc client` by visiting the public URL of the OpenShift deployment. For example, https://resourcegroupname.region.cloudapp.azure.com/console/command-line and click latest release. When directed to https://access.redhat.com, login with the valid Red Hat customer credentials and download the client relevant to the current workstation. Follow the instructions located on the production documentation site for https://docs.openshift.com/container-platform/3.5/cli_reference/get_started_cli.html[getting started with the cli].
 
@@ -406,7 +406,7 @@ Access the application by accessing the URL provided by `oc status`.  The CakePH
 
 ==== List Nodes and Set Permissions
 
-If you try to run the following command, it should fail.
+Try to run the following command, it should fail.
 
 [subs=+quotes]
 ----
@@ -421,7 +421,7 @@ The reason it is failing is because the permissions for that user are incorrect.
 $ *oc whoami*
 ----
 
-Once the username has been established, log back into a master node and enable the appropriate permissions for your user. Perform the following step from the first master (master1).
+Once the username has been established, log back into a master node and enable the appropriate permissions for the user. Perform the following step from the first master (master1).
 
 [subs=+quotes]
 ----
@@ -452,7 +452,7 @@ node03        Ready                      16d
 
 List the router and registry by changing to the `default` project.
 
-NOTE: Perform the following steps from your the workstation.
+NOTE: Perform the following steps from the local workstation.
 
 [subs=+quotes]
 ----
@@ -483,7 +483,7 @@ Observe the output of `oc get all`
 The OpenShift Ansible playbooks configure three infrastructure nodes that have one registry running. In order to understand the configuration and mapping process of the registry pods, the command `oc describe` is used.
 `oc describe` details how registries are configured and mapped to the Azure Blob's for storage. Using `oc describe` should help explain how HA works in this environment.
 
-NOTE: Perform the following steps from your the workstation.
+NOTE: Perform the following steps from the local workstation.
 
 [subs=+quotes]
 ----
@@ -587,7 +587,7 @@ In this section, reactions to failure are explored. After a sucessful install an
 
 NOTE: Perform the following steps from the `Azure` web console and the OpenShift public URL.
 
-Log into the `Azure` console.  On the dashboard, click on the `Resource Group` web service and then click `Overview`. Locate your running master2 instance, select it, right click and change the state to `stopped`.
+Log into the `Azure` console.  On the dashboard, click on the `Resource Group` web service and then click `Overview`. Locate the running master2 instance, select it, right click and change the state to `stopped`.
 
 Ensure the console can still be accessed by opening a browser and accessing https://resourcegroupname.region.cloudapp.azure.com. At this point, the cluster is in a degraded state because only 2/3 master nodes are running, but complete funcionality remains.
 
@@ -771,7 +771,7 @@ Node:		ip-10-30-2-208.azure.internal/10.30.2.208
 NOTE: Perform the following steps from the `Azure` web console and a browser.
 
 Log into the `Azure` console.  On the dashboard, click on the `Resource Group`.
-Locate your running infranode1 instance, select it, right click and change the state to `stopped`.
+Locate the running infranode1 instance, select it, right click and change the state to `stopped`.
 Wait a minute or two for the registry and pod to migrate over to a different infranode.
 Check the registry locations and confirm that they are on the same node.
 

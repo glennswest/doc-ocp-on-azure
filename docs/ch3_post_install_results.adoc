@@ -16,7 +16,7 @@ At this point the infrastructure and Red Hat OpenShift Container Platform have b
 After the Azure Resource Manager template is submitted, and the ARM deployment
 succeeds, the ansible install is started.
 
-A DNS entry must be created in your custom domain. This will consist of a DNS "C" record
+A DNS entry must be created in a custom domain. This will consist of a DNS `CNAME` record
 that points to the wildcardzone name.
 
 

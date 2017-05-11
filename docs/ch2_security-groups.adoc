@@ -9,7 +9,6 @@ In this reference architecture, four groups are created. The purpose of the netw
 
 ==== Bastion Security Group
 The Bastion network security group allows ssh. Any connectivity via `SSH` to the master, application or infrastructure nodes must go through the bastion host.
-Ensure the bastion host is secured per your companies security requirements.
 
 
 ==== Master Security Group
