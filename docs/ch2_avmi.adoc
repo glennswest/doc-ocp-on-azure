@@ -12,8 +12,8 @@ The Bastion Host Size is controlled by the master size
 specified in the template. The Infra nodes can be specified separately. Node VM
 size is an important parameter for selecting how many containers as well as how big containers
 will be. The current default for nodes allocates 28 Gigabytes of memory. This gives
-around 26 gigabytes for application usage. If your containers are memory intensive
-then you may either increase the node count, or increase the node memory size.
+around 26 gigabytes for application usage. If the containers are memory intensive
+then it is advised to either increase the node count, or increase the node memory size.
 For these applications, choosing a "Standard_D14_v2" will give 112 Gigabytes of memory or another VM size with more memory if needed.
 
 Further, all the nodes, have been selected with Microsoft Azure Premium Storage, to

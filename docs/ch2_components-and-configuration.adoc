@@ -52,7 +52,7 @@ verifying the configuration. This is done by running tools like `oadm diagnostic
 systems engineering teams `validation` Ansible playbook.
 
 
-NOTE: The scripts provided in the github repo are not supported by Red Hat. They merely provide a mechanism that can be used to build out your own infrastructure.
+NOTE: The scripts provided in the github repo are not supported by Red Hat. They merely provide a mechanism that can be used to build out an OpenShift environment.
 
 === Azure Cloud Instance Details
 
@@ -154,7 +154,7 @@ An OpenShift cluster is deployed with-in one Azure Region. In order to get the b
 availability in Azure, availability sets are implemented.
 
 In Azure, virtual machines (VMs) can be placed in to a logical grouping called an availability set.
-When you create VMs within an availability set, the Azure platform distributes the placement of those VMs
+When creating VMs within an availability set, the Azure platform distributes the placement of those VMs
 across the underlying infrastructure. Should there be a planned maintenance event to the Azure platform or an
 underlying hardware / infrastructure fault, the use of availability sets ensures that at least one VM remains
 running. The Azure SLA requires two or more VMs within an availability set to allow the distribution of VMs across
@@ -181,7 +181,7 @@ Enter file in which to save the key (/home/USER/.ssh/id_rsa):
 
 Press Enter to confirm default location.
 
-After this, you will be presented with a message similar to this:
+After this, a message similar to this will be presented.
 
 [source,bash]
 ----
@@ -204,8 +204,8 @@ The key's randomart image is:
 ----
 
 === Resource Groups and Resource Group Name
-In Azure, resources are grouped together in resource groups. You may choose any resource group
-name that is unique for your subscription. Note that multiple resource groups are supported in a region, in addition you may have resource groups in
+In Azure, resources are grouped together in resource groups. Resource group
+names must be unique to a subscription. Note that multiple resource groups are supported in a region, in addition it is possible to  have resource groups in
 multiple regions. A resource group may not span multiple regions.
 
 
