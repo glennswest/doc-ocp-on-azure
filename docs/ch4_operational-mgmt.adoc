@@ -226,7 +226,7 @@ NOTE: The warnings will not cause issues in the environment
 
 Based on the results of the diagnostics, actions can be taken to alleviate any issues.
 
-=== Checking the Health of `etcd` 
+=== Checking the Health of etcd
 
 This section focuses on the `etcd` cluster. It describes the different commands to ensure the cluster is healthy. The internal `DNS` names of the nodes running `etcd` must be used.
 
@@ -591,7 +591,7 @@ Log into the `Azure` console.  On the dashboard, click on the `Resource Group` w
 
 Ensure the console can still be accessed by opening a browser and accessing https://resourcegroupname.region.cloudapp.azure.com. At this point, the cluster is in a degraded state because only 2/3 master nodes are running, but complete funcionality remains.
 
-==== Observe the Behavior of `etcd` with a Failed Master Node
+==== Observe the Behavior of etcd with a Failed Master Node
 
 `SSH` into the first master node (master1) from the bastion. Using the output of the command `hostname` issue the `etcdctl` command to confirm that the cluster is healthy.
 
