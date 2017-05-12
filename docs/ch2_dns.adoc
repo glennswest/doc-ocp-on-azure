@@ -15,13 +15,15 @@ When the reference architecture is deployed, azure supplied domains are used. Th
 hostname.{region}.cloudapp.azure.com. For example, in the southeasasia zone, the full domain of the bastion
 host would be bastion.southeastasia.cloudapp.azure.com.
 
-For each OpenShift Cluster on Azure, there are three created domain names:
-{resroucegroup}.{region}.cloudapp.azure.com - The API and OpenShift Console Load Balancer
-{resourcegroup}b.{region}.cloudapp.azure.com - The bastion host for ssh access
+For each Openshift Cluster on Azure, there are three created domain names:
+{resroucegroup}.{region}.cloudapp.azure.com - The API and Openshift Console Load Balancer
+{resourcegroup}b.{region}.cloudapp.azure.com - The Bastion Host for ssh access
 {wildcardzone}.{region}.cloudapp.azure.com - the dns/ip of the Application Load Balancer.
 
 In initial deployment, a nip dns name is generated to point to the Application load balancer,
-to allow immediate usage of the deployed openshift. A Wildcard CNAME should be created to anothername of
+to allow immediate usage of the deployed openshift. A Wildcard C name should be created to anothername of
 choice.
+
+NOTE: A subdomain can also be used. The same steps listed above are applicable when using a subdomain.
 
 // vim: set syntax=asciidoc:

@@ -1,9 +1,9 @@
 === Bastion
 
-The bastion server implements two distinct functions. One is that of a secure way to
-connect to all the nodes, and second that of the "installer" of the system. The bastion
+The Bastion server implements two distinct functions. One is that of a secure way to
+connect to all the nodes, and second that of the "installer" of the system. The Bastion
 host acts as the system installer. The information provided to the ARM template is
-passed to the bastion host. From there, playbooks and scripts are automatically generated,
+passed to the Bastion host. From there, playbooks and scripts are automatically generated,
 and then executed, resulting in the OCP system being installed. 
 
 As shown in the <<bastion-diagram>> the `bastion` server in this reference architecture
@@ -14,6 +14,7 @@ from everywhere. The bastion host is the only ingress point for `SSH` in the clu
 from external entities. When connecting to the OpenShift Container Platform infrastructure,
 the bastion forwards the request to the appropriate server.
 Connecting through the bastion server requires specific `SSH` configuration.
+The `.ssh/config` is outlined in the deployment section of the reference architecture guide.
 
 [[bastion-diagram]]
 .Bastion Diagram

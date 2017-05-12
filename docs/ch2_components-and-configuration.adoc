@@ -9,8 +9,8 @@ The image below provides a high-level representation of the components within th
 reference architecture.  Using Microsoft Azure (Azure), resources are highly
 available using a combination of VM placement using Azure Availability Sets, Azure Load Balancer(ALB),
 and `Azure VHD` persistent volumes. Instances deployed are given specific roles
-to support OpenShift. The bastion host limits the external access to internal servers by ensuring that
-all `SSH` traffic passes through the bastion host. The master instances host the
+to support OpenShift. The Bastion host limits the external access to internal servers by ensuring that
+all `SSH` traffic passes through the Bastion host. The master instances host the
 OpenShift master components such as etcd and the OpenShift API.  The Application
 instances are for users to deploy their containers while the Infrastructure
 instances are used for the OpenShift router and registry.  Authentication is managed
@@ -36,8 +36,8 @@ This reference architecture breaks down the deployment into three separate phase
 
 For Phase 1, the provisioning of the environment is done using a series of
 Azure Resource Manager Templates (ARM) that are provided in the
-https://github.com/openshift/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible[openshift-ansible-contrib] GitHub repo.
-Once the infrastructure is deployed by `ARM`, as the last action, the `ARM` templates will start
+https://github.com/glennswest/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible[openshift-ansible-contrib] github repo.
+Once the infrastructure is deployed by `ARM`, as the last action, the ARM templates will start
 the next phase by running a bash script that starts phase 2.
 
 Phase 2 is the provisioning of OpenShift Container Platform which is done via the
@@ -52,12 +52,12 @@ verifying the configuration. This is done by running tools like `oadm diagnostic
 systems engineering teams `validation` Ansible playbook.
 
 
-NOTE: The scripts provided in the GitHub repo are not supported by Red Hat. They merely provide a mechanism that can be used to build out an OpenShift environment.
+NOTE: The scripts provided in the github repo are not supported by Red Hat. They merely provide a mechanism that can be used to build out your own infrastructure.
 
 === Azure Cloud Instance Details
 
 Within this reference environment, the instances are deployed in a single `Azure Region`
-which can be selected when running the `ARM` template.  Although the default region can
+which can be selected when running the ARM template.  Although the default region can
 be changed, the reference architecture deployment should only be
 used in Regions with premium storage. Note that where a customer wishes higher availability, multiple
 clusters should be created, and federation should be used. This architecture is emerging and will
@@ -66,7 +66,7 @@ be described in future reference architecture.
 The master instances for the OpenShift environment are `Standard_DS4_v2`. The node instances
 are `Standard_DS4_v2` used for Docker containers and OpenShift. The infrastructure nodes use `Standard_DS4_v2` instances.
 The bastion host is a `Standard_DS1_v2`.
-Instance sizing can be changed when the `ARM` template is run which is covered in later chapters.
+Instance sizing can be changed when the ARM template is run which is covered in later chapters.
 
 === Azure Load Balancer Details
 
@@ -116,12 +116,12 @@ rhel-7-server-rpms | Red Hat OpenShift Enterprise 3.5 (RPMs) | rhel-7-server-ose
 
 |====
 
-The subscriptions are accessed via a _pool_id_, which is required when launching the `ARM`
+The subscriptions are accessed via a _pool_id_, which is required when launching the ARM
 template
 
 
 === Prerequisites
-This section describes the environment and setup needed to execute the `ARM` template,
+This section describes the environment and setup needed to execute the ARM template,
 and perform post installation tasks.
 
 ==== GitHub Repositories
@@ -154,7 +154,7 @@ An OpenShift cluster is deployed with-in one Azure Region. In order to get the b
 availability in Azure, availability sets are implemented.
 
 In Azure, virtual machines (VMs) can be placed in to a logical grouping called an availability set.
-When creating VMs within an availability set, the Azure platform distributes the placement of those VMs
+When you create VMs within an availability set, the Azure platform distributes the placement of those VMs
 across the underlying infrastructure. Should there be a planned maintenance event to the Azure platform or an
 underlying hardware / infrastructure fault, the use of availability sets ensures that at least one VM remains
 running. The Azure SLA requires two or more VMs within an availability set to allow the distribution of VMs across
@@ -162,15 +162,17 @@ the underlying infrastructure.
 
 
 === SSH Public and Private Key
-`SSH` Keys are used instead of passwords in the Azure OCP Install. These keys are generated
+SSH Keys are used instead of passwords in the Azure OCP Install. These keys are generated
 on the system that will be used to login and manage the system. In addition, they are automatically
 distributed by the Azure Resource Management template to all virtual machines
 that are created.
 
-In order to use the template, `SSH` public and private keys are needed. It is important to not apply a passphrase to the key.
+In order to use the template, ssh public and private keys are needed. It is important to not apply a passphrase to the key.
 
-==== SSH Key Generation
-If `SSH` keys do not currently exist then it is required to create them. Generate an RSA key pair by typing the following at a shell prompt:
+If you have not created .ssh keys for your account:
+
+==== RHEL SSH
+Generate an RSA key pair by typing the following at a shell prompt:
 
 [source,bash]
 ----
@@ -181,7 +183,7 @@ Enter file in which to save the key (/home/USER/.ssh/id_rsa):
 
 Press Enter to confirm default location.
 
-After this, a message similar to this will be presented.
+After this, you will be presented with a message similar to this:
 
 [source,bash]
 ----
@@ -203,9 +205,61 @@ The key's randomart image is:
 +-----------------+
 ----
 
+
+
+
+=== Red Hat Network 'RHN' User Account and Password
+A Red Hat account is required to use this template. This account must have appropriate
+subscriptions installed in the account in order to  use the template. The User Name and Password
+must be supplied to the template.
+
+=== Red Hat Subscription Pool Id
+In order to assign a subscription, a pool id is required. Using a system that currently has a valid subscription
+to Red Hat products, you can find the pool_id by using subscription-manager. Perform the folliwng command, and take
+note of the pool id.
+
+[source,bash]
+----
+root# subscription-manager list --available
+
++-------------------------------------------+
+    Available Subscriptions
++-------------------------------------------+
+Subscription Name:   Red Hat OpenShift Container Platform, Premium (1-2 Sockets)
+Provides:            Red Hat OpenShift Enterprise Application Node
+                     Red Hat Software Collections (for RHEL Server)
+                     Red Hat Single Sign-On
+                     Red Hat Beta
+                     dotNET on RHEL Beta (for RHEL Server)
+                     Red Hat OpenShift Container Platform
+                     JBoss Enterprise Web Server
+                     Oracle Java (for RHEL Server)
+                     Red Hat OpenShift Enterprise Client Tools
+                     Red Hat CloudForms Beta
+                     Red Hat Enterprise Linux Server
+                     dotNET on RHEL (for RHEL Server)
+                     Red Hat Software Collections Beta (for RHEL Server)
+                     Red Hat Enterprise Linux Atomic Host
+                     Red Hat OpenShift Enterprise Infrastructure
+                     Red Hat CloudForms
+SKU:                 MCT2862
+Contract:            38154141
+Pool ID:             1b153951369116211123bc543241e1
+Provides Management: No
+Available:           64
+Suggested:           1
+Service Level:       Premium
+Service Type:        L1-L3
+Subscription Type:   Stackable
+Ends:                25/08/2017
+System Type:         Physical
+----
+
+The Pool Id is also available under RHN (RedHat Network) under the subscription overview, under the category of Pool IDs/Derived Pools.
+
 === Resource Groups and Resource Group Name
-In Azure, resources are grouped together in resource groups. Resource group
-names must be unique to a subscription. Note that multiple resource groups are supported in a region, in addition it is possible to  have resource groups in
+In Azure, resources are grouped together in resource groups. You may choose any resource group
+name that is unique for your subscription. Note that multiple resource groups are supported in a region, in addition you may have resource groups in
 multiple regions. A resource group may not span multiple regions.
 
 

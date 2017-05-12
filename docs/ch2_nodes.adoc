@@ -5,7 +5,7 @@ can be vertically scaled before or after the OpenShift installation using the `A
 ==== Master nodes
 
 The master nodes contain the master components, including
-the API server, controller manager server and `etcd`. The master maintains the
+the API server, controller manager server and `ETCD`. The master maintains the
 clusters configuration, manages nodes in its OpenShift cluster. The master assigns
 pods to nodes and synchronizes pod information with service configuration.  The
 master is used to define routes, services, and volume claims for pods deployed within the

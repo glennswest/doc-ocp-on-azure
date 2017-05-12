@@ -1,13 +1,13 @@
 === Registry
 
-OpenShift can build Docker images from source code, deploy them, and
+OpenShift can build Docker images from your source code, deploy them, and
 manage their lifecycle. To enable this, OpenShift provides an internal,
-integrated Docker registry that can be deployed in the OpenShift environment
+integrated Docker registry that can be deployed in your OpenShift environment
 to manage images.
 
-The registry stores Docker images and metadata. For production environment, 
-persistent storage is used for the registry, otherwise any images
-built or pushed into the registry would disappear if the pod were to restart.
+The registry stores Docker images and metadata. For production environment, you
+should use persistent storage for the registry, otherwise any images
+anyone has built or pushed into the registry would disappear if the pod were to restart.
 
 Using the installation methods described in this document the registry is
 deployed using Azure Blob Storage.

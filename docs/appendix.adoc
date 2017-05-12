@@ -25,46 +25,47 @@ Glenn West
 
 Glenn West, content provider
 
-Ryan Cook, content provider
-
 Scott Collier, content provider
 
 Jason DeTiberus, content provider
 
+Erik Jacobs, content reviewer
+
 Matt Woodson, content reviewer
 
-Harold Wong, content reviewer
+Rayford Johnson, content reviewer
 
-Thomas Wiest, content reviewer
+Roger Lopez, content reviewer
+
+Harold Wong, content reviewer
 
 //TODO: Just adding a few names for now, will update with addt'l names if needed
 
 [[Installation-Failure]]
 == Installation Failure
-In the event of an OpenShift installation failure use the following sections to diagnose and
-find the source of the problem. Note that the `resource group` group can be deleted, and reinstall by running
-the script again.
+In the event of an OpenShift installation failure perform the following steps.
 
-
+<<<
 === Diagnostic and Control of Azure OpenShift
-The OpenShift Azure installation may be controlled from the bastion host. This is a separate
+The Openshift Azure installation may be controlled from the Bastion Host. This is a separate
 Virtual Machine, that allows access to all vm's in the same resource group that defines the OpenShift
 installation on Azure.
 
-As an example, assuming the resource group was named during creation to ocpxenon1000, with a
-username of ocpadmin.
+As an example, assuming you have named your resource group during creation to ocpxenon1000, with a
+username of ocpadmin
 
-[subs=+quotes]
 ----
 ssh ocpadmin@ocpxenon1000b
 Last login: Sat Jan 21 04:32:47 2017 from 103.252.201.32
 [ocpadmin@bastion ~]$
 ----
 
+---
+
 === Logging of Installation
 The automation collects logs for various stages of the installation. All the logs are
 stored on the bastion host.
-Assuming ocpadmin has been chosen as the admin user when creating the install:
+Assuming you have choosen ocpadmin as the admin user when creating the install:
 
 In the directory /root
 
@@ -72,7 +73,7 @@ In directory /home/ocpadmin
 [width="60%"]
 |====================================================================================
 | ansible-preinstall-ping.out  | Check connectitity of all hosts
-| byo.out                      | Main OpenShift Install across all hosts
+| byo.out                      | Main Openshift Install across all hosts
 | openshift-install.out        | The top level script that coordinates the install
 |====================================================================================
 
@@ -110,11 +111,11 @@ remote_user=glennswest
 
 openshift_master_default_subdomain=52.163.224.147.xip.io
 openshift_use_dnsmasq=False
-openshift_public_hostname=resourcegroupname.region.cloudapp.azure.com
+openshift_public_hostname=gswthuv1500.trafficmanager.net
 
 openshift_master_cluster_method=native
-openshift_master_cluster_hostname=resourcegroupname.region.cloudapp.azure.com
-openshift_master_cluster_public_hostname=resourcegroupname.region.cloudapp.azure.com
+openshift_master_cluster_hostname=gswthuv1500.trafficmanager.net
+openshift_master_cluster_public_hostname=gswthuv1500.trafficmanager.net
 
 # Enable cockpit
 osm_use_cockpit=true
@@ -144,10 +145,13 @@ node[01:03] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 infranode openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 
 
+[misc]
+store1
+
 ----
 
 === Uninstalling and Deleting
-The uninstall playbook removes OpenShift related packages, `etcd`, and removes any certificates that were created during the failed install.
+The uninstall playbook removes OpenShift related packages, ETCD, and removes any certificates that were created during the failed install.
 
 ----
 ansible-playbook  /usr/share/ansible/openshift-ansible/playbooks/adhoc/uninstall.yml
@@ -158,7 +162,7 @@ and then delete the resource group within Azure portal, which will delete all re
 
 
 === Manually Launching the Installation of OpenShift
-The following script, is run automatically to install OpenShift. The script can be re-run to diagnose problems.
+The following script, is run automatically to install Openshift. You may wish to re-run it to diagnose problems.
 
 ----
 openshift-install.sh

@@ -10,7 +10,7 @@ template passes parameters via a script extension to RHEL on the bastion. On the
 a bastion.sh script generates the inventory file in /etc/ansible/hosts.
 
 [[app-listing]]
-.Generated Inventory Script within bastion.sh
+.Dynamic Inventory Script within bastion.sh
 [source,bash]
 ----
 

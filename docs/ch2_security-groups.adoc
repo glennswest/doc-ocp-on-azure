@@ -1,24 +1,52 @@
-=== Network Security Groups
+===  Security Groups
 
-In this reference architecture, four groups are created. The purpose of the network security groups are to
- restrict traffic from outside of the `VNet` to servers inside of the `VNet`. The network security groups
- also are used to restrict server to server communications inside the `VNet`. Network security groups provide
+In this reference architecture, eight groups are created. The purpose of the security groups is to
+ restrict traffic from outside of the `VNet` to servers inside of the `VNet` . The security groups
+ also are used to restrict server to server communications inside the `VNet`. Security groups provide
  an extra layer of security similar to a firewall. In the event a port is opened on an instance,
- the security group will not allow the communication to the port unless explicitly stated in a network security group.
+ the security group will not allow the communication to the port unless explicitly stated in a security group. See the tables below for details on each security group.
  These settings are in each node types json file.
 
+<<<
 ==== Bastion Security Group
-The Bastion network security group allows `SSH`. Any connectivity via `SSH` to the master, application or infrastructure nodes must go through the bastion host.
+The Bastion Security Group allows ssh. Any connectivity via `SSH` to the master, application or infrastructure nodes must go through the bastion host.
+Ensure the bastion host is secured per your companies security requirements.
 
 
 ==== Master Security Group
-The Master network security group allows `SSH` from the bastion, and communications to other masters.
-The Master network security group allows inbound access on port 8443 from the internet to the virtual network.
+The Master Security Group allows ssh from the bastion, and communications to other masters.
+The Master  security group allows inbound access on port 8443 from the internet to the virtual network.
 The traffic is then allowed to be forwarded to the master instances.
+
+
+
+<<<
 
 ==== Router/Infra Security Group
 
-The Router/Infra network security group allows inbound access on port 80 and 443. If the applications running on the OpenShift cluster are using different ports this can be adjusted as needed.
+The Router/Infra security group allows inbound access on port 80 and 443. If the applications running on the OpenShift cluster are using different ports this can be adjusted as needed.
+
+.Azure Router/Infra Security Group Details - Inbound
+image::images/Router-ELB-SG.png["Router SG",align="center"]
+|====
+^|Inbound ^|From
+
+| 443 / TCP | Anywhere
+| 80 / TCP | Anywhere
+|====
+
+
+.Azure Router/Infra Security Group Details - Outbound
+|====
+^|Outbound ^|To
+
+| 80 | ose_infra_node_sg
+| 443 | ose_infra_node_sg
+|====
+
+<<<
+
+
 
 
 // vim: set syntax=asciidoc:

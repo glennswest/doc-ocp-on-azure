@@ -13,17 +13,16 @@ At this point the infrastructure and Red Hat OpenShift Container Platform have b
 * 2 Load Balancer Profiles
 * 2 Load Balancer DNS entries
 
-After the Azure Resource Manager template is submitted, and the `ARM` deployment
+After the Azure Resource Manager template is submitted, and the ARM deployment
 succeeds, the ansible install is started.
 
-A DNS entry must be created in a custom domain. This will consist of a DNS `CNAME` record
+A DNS entry must be created in your custom domain. This will consist of a DNS "C" record
 that points to the wildcardzone name.
 
 
 
 
 NOTE: When installing using this method the browser certificate must be accepted three times. The certificate must be accepted three times due to the number of masters in the cluster. Failure to accept the certificate can cause disconnect issues and the appearance of network failures.
-
 image::images/assetlist.png[]
 
 // vim: set syntax=asciidoc:

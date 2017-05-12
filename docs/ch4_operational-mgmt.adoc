@@ -2,6 +2,25 @@
 
 With the successful deployment of OpenShift, the following section demonstrates how to confirm proper functionality of the Red Hat OpenShift Container Platform.
 
+=== Validate the Deployment
+
+With the successful deployment of OpenShift, the following section demonstrates how to confirm proper functionality of the OpenShift environment. An Ansible script in the git repository will allow for an application to be deployed which will test the functionality of the master, nodes, registry, and router. The playbook will test the deployment and clean up any projects and pods created during the validation run.
+
+The playbook will perform the following steps:
+
+*Environment Validation*
+
+* Validate the internal OpenShift address from the master nodes
+* Validate the master local master address
+* Validate the health of the `ETCD` cluster to ensure all `ETCD` nodes are healthy
+* Create a project in OpenShift called validate
+* Create an OpenShift Application
+* Add a route for the Application
+* Validate the URL returns a status code of 200 or healthy
+* Delete the validation project
+
+
+
 === Gathering hostnames
 With all of the steps that occur during the installation of OpenShift, it is possible to lose track of the names of the instances in the recently deployed environment. One option to get these hostnames is to browse to the `Azure Resource Group` dashboard and select `Overview`. The filter shows all instances relating to the reference architecture deployment.
 
@@ -27,10 +46,12 @@ To run diagnostics, `SSH` into the  master node (master1), via the bastion host.
 
 [subs=+quotes]
 ----
-$ *ssh username@resourcegroupb*
-$ *ssh username@master1*
+$ *ssh username@resourcegroupb
+$ *ssh username@master1
 $ *sudo -i*
 ----
+
+<<<
 
 Connectivity to the first master node (master1.region.cloudapp.azure.com) as the `root` user should have been established. Run the diagnostics that are included as part of the install.
 
@@ -226,38 +247,40 @@ NOTE: The warnings will not cause issues in the environment
 
 Based on the results of the diagnostics, actions can be taken to alleviate any issues.
 
-=== Checking the Health of etcd
+=== Checking the Health of ETCD
 
-This section focuses on the `etcd` cluster. It describes the different commands to ensure the cluster is healthy. The internal `DNS` names of the nodes running `etcd` must be used.
+This section focuses on the `ETCD` cluster. It describes the different commands to ensure the cluster is healthy. The internal `DNS` names of the nodes running `ETCD` must be used.
 
-`SSH` into the first master node (master1). This must be done via bastion host.
+`SSH` into the first master node (master1). This must be done via bastion host _RESOURCEGROUPNAME_b@regionname.cloudapp.azure.com
 Using the output of the command `hostname` issue the `etcdctl` command to confirm that the cluster is healthy.
 
 [subs=+quotes]
 ----
-$ ssh azure-user@master1.southeastasia.cloudapp.azure.com
-$ sudo -i
+$ *ssh azure-user@master1.southeastasia.cloudapp.azure.com*
+$ *sudo -i*
 ----
 
 
 [subs=+quotes]
 ----
+# *hostname*
+ip-10-20-1-106.azure.internal
 # *etcdctl -C https://master1.southeastasia.cloudapp.azure.com:2379 --ca-file /etc/etcd/ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key cluster-health*
-member 82c895b7b0de4330 is healthy: got healthy result from https://10.20.1.106:2379
+member 82c895b7b0de4330 is healthy: got healthy result from https://10.20.1.`06:2379
 member c8e7ac98bb93fe8c is healthy: got healthy result from https://10.20.3.74:2379
 member f7bbfc4285f239ba is healthy: got healthy result from https://10.20.2.157:2379
 ----
 
-NOTE: In this configuration the `etcd` services are distributed among the OpenShift master nodes.
+NOTE: In this configuration the `ETCD` services are distributed among the OpenShift master nodes.
 
 === Default Node Selector
-As explained in section 2.12.4 node labels are an important part of the OpenShift environment. By default of the reference architecture installation, the default node selector is set to "role=apps" in `/etc/origin/master/master-config.yaml` on all of the master nodes.  This configuration parameter is set during the installation of OpenShift on all masters.
+As explained in section 2.12.4 node labels are an important part of the OpenShift environment. By default of the reference architecture installation, the default node selector is set to "role=apps" in `/etc/origin/master/master-config.yaml` on all of the master nodes.  This configuration parameter is set by the Ansible role openshift-default-selector on all masters and the master API service is restarted that is required when making any changes to the master configuration.
 
 `SSH` into the first master node (master1) to verify the `defaultNodeSelector` is defined.
 
 [subs=+quotes]
 ----
-# vi /etc/origin/master/master-config.yaml
+# *vi /etc/origin/master/master-config.yaml*
 ...omitted...
 projectConfig:
   defaultNodeSelector: "role=app"
@@ -269,24 +292,24 @@ projectConfig:
 NOTE: If making any changes to the master configuration then the master API service must be restarted or the configuration change will not take place. Any changes and the subsequent restart must be done on all masters.
 
 === Management of Maximum Pod Size
-Quotas are set on ephemeral volumes within pods to prohibit a pod from becoming to large and impacting the node. There are three places where sizing restrictions should be set. When persistent volume claims are not set a pod has the ability to grow as large as the underlying filesystem will allow. The required modifcations are set by automatically.
+Quotas are set on ephemeral volumes within pods to prohibit a pod from becoming to large and impacting the node. There are three places where sizing restrictions should be set. When persistent volume claims are not set a pod has the ability to grow as large as the underlying filesystem will allow. The required modifcations are set by Ansible. The roles below will be the specific Ansible role that defines the parameters along with the locations on the nodes in which the parameters are set.
 
 
-*OpenShift Volume Quota*
+*Openshift Volume Quota*
 
-At launch time a script creates a `xfs` partition on the block device, adds an entry in fstab, and mounts the volume with the option of `gquota`. If `gquota` is not set the OpenShift node will not be able to start with the `perFSGroup` parameter defined below. This disk and configuration is done on the master, infrastructure, and application nodes.
+At launch time user-data creates a xfs partition on the `/dev/sdc1` block device, adds an entry in fstab, and mounts the volume with the option of gquota. If gquota is not set the OpenShift node will not be able to start with the "perFSGroup" parameter defined below. This disk and configuration is done on the infrastructure and application nodes.  The configuration is not done on the masters due to the master nodes being unschedulable.
 
-`SSH` into the first infrastructure node (infranode1) to verify the entry exists within fstab.
+`SSH` into the first infrastructure node (ose-infra-node01.sysdeseng.com) to verify the entry exists within fstab.
 
 [subs=+quotes]
 ----
-# vi /etc/fstab
+# *vi /etc/fstab*
 /dev/sdc1 /var/lib/origin/openshift.local.volumes xfs gquota 0 0
 ----
 
 *Docker Storage Setup*
 
-The `docker-storage-setup` file is created at launch time by the bash script. This file tells the Docker service to use a specific volume group for containers.  The extra Docker storage options ensures that a container can grow no larger than 3G.  Docker storage setup is performed on all master, infrastructure, and application nodes.
+The docker-storage-setup file is created at luanch time by user-data. This file tells the Docker service to use `/dev/xvdb` and create the volume group of `docker-vol`.  The extra Docker storage options ensures that a container can grow no larger than 3G.  Docker storage setup is performed on all master, infrastructure, and application nodes.
 
 `SSH` into the first infrastructure node (infranode1) to verify `/etc/sysconfig/docker-storage-setup` matches the information below.
 
@@ -301,13 +324,13 @@ EXTRA_DOCKER_STORAGE_OPTIONS="--storage-opt dm.basesize=3G"
 
 *OpenShift Emptydir Quota*
 
-During installation a value for `perFSGroup` is set within the node configuration. The `perFSGroup` setting restricts the ephemeral emptyDir volume from growing larger than 512Mi.  This empty dir quota is done on the master, infrastructure, and application nodes. 
+The role openshift-emptydir-quota sets a parameter within the node configuration. The perFSGroup setting restricts the ephemeral emptyDir volume from growing larger than 512Mi.  This empty dir quota is done on the infrastructure and application nodes.  The configuration is not done on the masters due to the master nodes being unschedulable.
 
-`SSH` into the first infrastructure node (infranode1) to verify `/etc/origin/node/node-config.yml` matches the information below.
+`SSH` into the first infrastructure node (ose-infra-node01.sysdeseng.com) to verify `/etc/origin/node/node-config.yml` matches the information below.
 
 [subs=+quotes]
 ----
-# vi /etc/origin/node/node-config.yml
+# *vi /etc/origin/node/node-config.yml*
 ...omitted...
 volumeConfig:
   localQuota:
@@ -330,24 +353,26 @@ the GUI and the CLI. After logging in via one of these methods applications can 
 Perform the following steps from the local workstation.
 
 Open a browser and access  https://resourcegroupname.region.cloudapp.azure.com/console.
-The resourcegroupname is given in the `ARM` template, and region is the Azure zone selected during install.
-When logging into the OpenShift web interface, use the user login and password specified during the launch of the `ARM` template.
+The resourcegroupname is given in the ARM template, and region is the Azure zone selected during install.
+When logging into the OpenShift web interface, use the user login and password specified during the launch of the ARM template.
 
 To deploy an application, click on the `New Project` button. Provide a `Name` and click `Create`. Next, deploy the `jenkins-ephemeral` instant app by clicking the corresponding box. Accept the defaults and click `Create`. Instructions along with a URL will be provided for how to access the application on the next screen. Click `Continue to Overview` and bring up the management page for the application. Click on the link provided and access the application to confirm functionality.
 
 ==== Log into CLI and Deploy an Application
 
-Perform the following steps from the local workstation.
+Perform the following steps from your local workstation.
 
 Install the `oc client` by visiting the public URL of the OpenShift deployment. For example, https://resourcegroupname.region.cloudapp.azure.com/console/command-line and click latest release. When directed to https://access.redhat.com, login with the valid Red Hat customer credentials and download the client relevant to the current workstation. Follow the instructions located on the production documentation site for https://docs.openshift.com/container-platform/3.5/cli_reference/get_started_cli.html[getting started with the cli].
 
-A token is required to login to OpenShift. The token is presented on the https://resourcegroupname.region.cloudapp.azure.com/console/command-line page. Click the click to show token hyperlink and perform the following on the workstation in which the oc client was installed.
+A token is required to login using GitHub OAuth and OpenShift. The token is presented on the https://resourcegroupname.region.cloudapp.azure.com/console/command-line page. Click the click to show token hyperlink and perform the following on the workstation in which the oc client was installed.
 
 [subs=+quotes]
 ----
 $ *oc login https://resourcegroupname.region.cloudapp.azure.com --token=fEAjn7LnZE6v5SOocCSRVmUWGBNIIEKbjD9h-Fv7p09*
 ----
 
+
+<<<
 After the oc client is configured, create a new project and deploy an application.
 
 [subs=+quotes]
@@ -406,12 +431,12 @@ Access the application by accessing the URL provided by `oc status`.  The CakePH
 
 ==== List Nodes and Set Permissions
 
-Try to run the following command, it should fail.
+If you try to run the following command, it should fail.
 
 [subs=+quotes]
 ----
 # *oc get nodes --show-labels*
-Error from server: User "syseng-admin" cannot list all nodes in the cluster
+Error from server: User "user@redhat.com" cannot list all nodes in the cluster
 ----
 
 The reason it is failing is because the permissions for that user are incorrect. Get the username and configure the permissions.
@@ -421,11 +446,11 @@ The reason it is failing is because the permissions for that user are incorrect.
 $ *oc whoami*
 ----
 
-Once the username has been established, log back into a master node and enable the appropriate permissions for the user. Perform the following step from the first master (master1).
+Once the username has been established, log back into a master node and enable the appropriate permissions for your user. Perform the following step from the first master (master1.sysdeseng.com).
 
 [subs=+quotes]
 ----
-# *oadm policy add-cluster-role-to-user cluster-admin syseng-admin*
+# *oadm policy add-cluster-role-to-user cluster-admin user@redhat.com*
 ----
 
 <<<
@@ -452,17 +477,17 @@ node03        Ready                      16d
 
 List the router and registry by changing to the `default` project.
 
-NOTE: Perform the following steps from the local workstation.
+NOTE: Perform the following steps from your the workstation.
 
 [subs=+quotes]
 ----
 # *oc project default*
 # *oc get all*
 NAME                         REVISION        DESIRED       CURRENT   TRIGGERED BY
-dc/docker-registry           1               1             1         config
+dc/docker-registry           1               2             2         config
 dc/router                    1               2             2         config
 NAME                         DESIRED         CURRENT       AGE
-rc/docker-registry-1         1               1             10m
+rc/docker-registry-1         2               2             10m
 rc/router-1                  2               2             10m
 NAME                         CLUSTER-IP      EXTERNAL-IP   PORT(S)                   AGE
 svc/docker-registry          172.30.243.63   <none>        5000/TCP                  10m
@@ -470,6 +495,7 @@ svc/kubernetes               172.30.0.1      <none>        443/TCP,53/UDP,53/TCP
 svc/router                   172.30.224.41   <none>        80/TCP,443/TCP,1936/TCP   10m
 NAME                         READY           STATUS        RESTARTS                  AGE
 po/docker-registry-1-2a1ho   1/1             Running       0                         8m
+po/docker-registry-1-krpix   1/1             Running       0                         8m
 po/router-1-1g84e            1/1             Running       0                         8m
 po/router-1-t84cy            1/1             Running       0                         8m
 
@@ -480,10 +506,10 @@ Observe the output of `oc get all`
 <<<
 
 ==== Explore the Docker Registry
-The OpenShift Ansible playbooks configure three infrastructure nodes that have one registry running. In order to understand the configuration and mapping process of the registry pods, the command `oc describe` is used.
-`oc describe` details how registries are configured and mapped to the Azure Blob's for storage. Using `oc describe` should help explain how HA works in this environment.
+The OpenShift Ansible playbooks configure two infrastructure nodes that have two registries running. In order to understand the configuration and mapping process of the registry pods, the command 'oc describe' is used.
+Oc describe details how registries are configured and mapped to the Azure Blob's for storage. Using Oc describe should help explain how HA works in this environment.
 
-NOTE: Perform the following steps from the local workstation.
+NOTE: Perform the following steps from your the workstation.
 
 [subs=+quotes]
 ----
@@ -502,19 +528,70 @@ No events.
 
 Notice that the registry has two `endpoints` listed. Each of those `endpoints` represents a Docker container. The `ClusterIP` listed is the actual ingress point for the registries.
 
+<<<
+
+The `oc` client allows similar functionality to the `docker` command. To find out more information about the registry storage perform the following.
+
+[subs=+quotes]
+----
+# *oc get pods*
+NAME                      READY     STATUS    RESTARTS   AGE
+docker-registry-2-8b7c6   1/1       Running   0          2h
+----
+
+[subs=+quotes]
+----
+# oc exec docker-registry-2-8b7c6 cat /etc/config.yml
+version: 0.1
+log:
+  level: debug
+http:
+  addr: :5000
+storage:
+  cache:
+    blobdescriptor: inmemory
+  filesystem:
+    rootdirectory: /registry
+  delete:
+    enabled: true
+auth:
+  openshift:
+    realm: openshift
+    audit:
+      enabled: false
+
+    # tokenrealm is a base URL to use for the token-granting registry endpoint.
+    # If unspecified, the scheme and host for the token redirect are determined from the incoming request.
+    # If specified, a scheme and host must be chosen that all registry clients can resolve and access:
+    #
+    # tokenrealm: https://example.com:5000
+middleware:
+  registry:
+    - name: openshift
+  repository:
+    - name: openshift
+      options:
+        acceptschema2: false
+        pullthrough: true
+        mirrorpullthrough: true
+        enforcequota: false
+        projectcachettl: 1m
+        blobrepositorycachettl: 10m
+  storage:
+    - name: openshift
+----
+
+
 ==== Explore Docker Storage
 
 This section will explore the Docker storage on an infrastructure node.
 
-The example below can be performed on any node but for this example the infrastructure node(infranode1) is used.
+The example below can be performed on any node but for this example the infrastructure node(ose-infra-node01.sysdeseng.com) is used.
 
-The output below verifies docker storage is not using a loop back device. If it was in loopback, the output would
-list the loopback file. As the below output does not contain the word loopback, the docker daemon is working in the
-optimal way.
-
+The output below verifies docker storage is not using a loop back device.
 [subs=+quotes]
 ----
-$ docker info
+$ *docker info*
 Containers: 2
  Running: 2
  Paused: 0
@@ -559,25 +636,165 @@ WARNING: bridge-nf-call-ip6tables is disabled
 Registries: registry.access.redhat.com (secure), docker.io (secure)
 ----
 
+Verify 3 disks are attached to the instance. The disk `/dev/xvda` is used for the OS,
+ `/dev/xvdb` is used for docker storage, and `/dev/xvdc` is used for emptyDir storage for containers
+that do not use a persistent volume.
+
+[subs=+quotes]
+----
+$ *fdisk -l*
+WARNING: fdisk GPT support is currently new, and therefore in an experimental phase. Use at your own discretion.
+
+Disk /dev/xvda: 26.8 GB, 26843545600 bytes, 52428800 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: gpt
+
+
+#         Start          End    Size  Type            Name
+ 1         2048         4095      1M  BIOS boot parti
+ 2         4096     52428766     25G  Microsoft basic
+
+Disk /dev/xvdc: 53.7 GB, 53687091200 bytes, 104857600 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/xvdb: 26.8 GB, 26843545600 bytes, 52428800 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x00000000
+
+    Device Boot      Start         End      Blocks   Id  System
+/dev/xvdb1            2048    52428799    26213376   8e  Linux LVM
+
+Disk /dev/mapper/docker--vol-docker--pool_tmeta: 29 MB, 29360128 bytes, 57344 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/mapper/docker--vol-docker--pool_tdata: 25.5 GB, 25497174016 bytes, 49799168 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/mapper/docker--vol-docker--pool: 25.5 GB, 25497174016 bytes, 49799168 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 131072 bytes / 524288 bytes
+
+
+Disk /dev/mapper/docker-202:2-75507787-4a813770697f04b1a4e8f5cdaf29ff52073ea66b72a2fbe2546c469b479da9b5: 3221 MB, 3221225472 bytes, 6291456 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 131072 bytes / 524288 bytes
+
+
+Disk /dev/mapper/docker-202:2-75507787-260bda602f4e740451c428af19bfec870a47270f446ddf7cb427eee52caafdf6: 3221 MB, 3221225472 bytes, 6291456 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 131072 bytes / 524288 bytes
+----
+
+
 ==== Explore the Azure Load Balancers
 
-As mentioned earlier in the document two `Load Balancers` have been created. The purpose of this section is to encourage exploration of the `LBs` that were created.
+As mentioned earlier in the document two `Load Balancers` have been created. The purpose of this section is to encourage exploration of the `ELBs` that were created.
 
 NOTE: Perform the following steps from the `Azure` web console.
 
 On the main `Azure` dashboard, click on `Resource Groups` icon. Then select the resource group that corresponds with the OpenShift Deployment, and then find the Load Balancers within the resource group. Select the `AppLB` load balancer and on the `Description` page note the `Port Configuration` and how it is configured. That is for the OpenShift application traffic.
 There should be three master instances running with a `Status` of `Ok`. Next check the `Health Check` tab and the options that were configured.
-Further details of the configuration can be viewed by exploring the `Azure ARM` templates to see exactly what was configured.
+Further details of the configuration can be viewed by exploring the Azure ARM templates to see exactly what was configured.
 
 ==== Explore the Azure Resource Group
 
-As mentioned earlier in the document an Azure Resource Group was created. The purpose of this section is to encourage exploration of the `Resource Group` that was created.
+As mentioned earlier in the document a Azure Resource Group was created. The purpose of this section is to encourage exploration of the `Resource Group` that was created.
 
 NOTE: Perform the following steps from the `Azure` web console.
 
 On the main Microsoft Azure console, click on `Resource Group`. Next on the left hand navigation panel select the `Your Resource Groups`.
 Select the `Resource Group` recently created and explore the `Summary` tabs. Next, on the right hand navigation panel, explore the `Virtual Machines`, `Storage Accounts`, `Load Balancers`, and `Networks`.
-More detail can be looked at with the configuration by exploring the Ansible playbooks and `ARM` json Files to see exactly what was configured.
+More detail can be looked at with the configuration by exploring the Ansible playbooks and ARM json Files to see exactly what was configured.
+
+=== Persistent Volumes
+
+`Persistent volumes` (PV) are OpenShift objects that allow for storage to be defined and then claimed by pods to allow for data persistence.
+The PV volumes can only be mounted or claimed by one pod at a time. Mounting of `persistent volumes` is done by using a `persistent volume claim` (PVC).
+This claim will mount the persistent storage to a specific directory within a pod. This directory is referred to as the `mountPath`.
+
+In this reference architecture, the PV volumes are implemented via Azure VHDs. This allows a variety of sizes to be
+implemented from small to large, and implements thin-provisioning to conserve space.
+<<<
+
+
+
+==== Creating a Persistent Volumes
+
+
+Persistant Volumes are dynamically created. The volumes are thin provisioned and backed by an Azure VHD.
+
+
+
+==== Creating a Persistent Volumes Claim
+
+The `persistent volume claim` will change the pod from using `EmptyDir` non-persistent storage to storage backed by a persistent volume. To claim space from the `persistent volume` a database server will be used
+to demonstrate a `persistent volume claim`.
+
+[subs=+quotes]
+----
+$ *oc new-app --docker-image registry.access.redhat.com/openshift3/mysql-55-rhel7 --name=db -e 'MYSQL_USER=rcook,MYSQL_PASSWORD=d0nth@x,MYSQL_DATABASE=persistent'*
+
+... ommitted ...
+
+$ *oc get pods*
+NAME         READY     STATUS    RESTARTS   AGE
+db-1-dwa7o   1/1       Running   0          5m
+
+$ *oc describe pod db-1-dwa7o*
+
+... ommitted ...
+
+Volumes:
+  db-volume-1:
+    Type:   EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:
+
+... ommitted ...
+
+$ *oc volume dc/db --add --overwrite --name=db-volume-1 --type=persistentVolumeClaim --claim-size=10Gi*
+persistentvolumeclaims/pvc-ic0mu
+deploymentconfigs/db
+
+$ *oc get pvc*
+NAME       STATUS    VOLUME       CAPACITY   ACCESSMODES   AGE
+pvc-ic0mu  Bound     persistent   10Gi       RWO           4s
+
+$ *oc get pods*
+NAME         READY     STATUS    RESTARTS   AGE
+db-2-0srls   1/1       Running   0          23s
+
+$ *oc describe pod db-2-0srls*
+
+.... ommitted ....
+
+Volumes:
+  db-volume-1:
+    Type:   PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  pvc-ic0mu
+    ReadOnly:   false
+
+.... ommitted ....
+
+----
+
+The above has created a database pod with a `persistent volume claim` named database and has attached the claim to the previously `EmptyDir` volume.
 
 === Testing Failure
 
@@ -587,11 +804,11 @@ In this section, reactions to failure are explored. After a sucessful install an
 
 NOTE: Perform the following steps from the `Azure` web console and the OpenShift public URL.
 
-Log into the `Azure` console.  On the dashboard, click on the `Resource Group` web service and then click `Overview`. Locate the running master2 instance, select it, right click and change the state to `stopped`.
+Log into the `Azure` console.  On the dashboard, click on the `Resource Group` web service and then click `Overview`. Locate your running master2 instance, select it, right click and change the state to `stopped`.
 
-Ensure the console can still be accessed by opening a browser and accessing https://resourcegroupname.region.cloudapp.azure.com. At this point, the cluster is in a degraded state because only 2/3 master nodes are running, but complete funcionality remains.
+Ensure the console can still be accessed by opening a browser and accessing openshift-master.sysdeseng.com. At this point, the cluster is in a degraded state because only 2/3 master nodes are running, but complete funcionality remains.
 
-==== Observe the Behavior of etcd with a Failed Master Node
+==== Observe the Behavior of `ETCD` with a Failed Master Node
 
 `SSH` into the first master node (master1) from the bastion. Using the output of the command `hostname` issue the `etcdctl` command to confirm that the cluster is healthy.
 
@@ -604,6 +821,8 @@ $ *sudo -i*
 
 [subs=+quotes]
 ----
+# *hostname*
+ip-10-20-1-106.azure.internal
 # *etcdctl -C https://master1:2379 --ca-file /etc/etcd/ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key cluster-health*
 failed to check the health of member 82c895b7b0de4330 on https://10.20.2.251:2379: Get https://10.20.1.251:2379/health: dial tcp 10.20.1.251:2379: i/o timeout
 member 82c895b7b0de4330 is unreachable: [https://10.20.1.251:2379] are all unreachable
@@ -612,7 +831,7 @@ member f7bbfc4285f239ba is healthy: got healthy result from https://10.20.1.106:
 cluster is healthy
 ----
 
-Notice how one member of the `etcd` cluster is now unreachable. Restart master2 by following the same steps in the `Azure` web console as noted above.
+Notice how one member of the `ETCD` cluster is now unreachable. Restart master2 by following the same steps in the `Azure` web console as noted above.
 
 ==== Generate an Infrastruture Node outage
 
@@ -622,12 +841,11 @@ This section shows what to expect when an infrastructure node fails or is brough
 
 NOTE: Perform the following steps from the browser on a local workstation.
 
-Before bringing down an infrastructure node, check behavior and ensure things are working as expected. The goal of testing an infrastructure node outage is to see how the OpenShift routers and registries behave. Confirm the simple application deployed from before is still functional. If it is not, deploy a new version. Access the application to confirm connectivity.
-As a reminder, to find the required information to ensure the application is still running, list the projects, change to the project that the application is deployed in, get the status of the application which including the URL and access the application via that URL.
+Before bringing down an infrastructure node, check behavior and ensure things are working as expected. The goal of testing an infrastructure node outage is to see how the OpenShift routers and registries behave. Confirm the simple application deployed from before is still functional. If it is not, deploy a new version. Access the application to confirm connectivity. As a reminder, to find the required information the ensure the application is still running, list the projects, change to the project that the application is deployed in, get the status of the application which including the URL and access the application via that URL.
 
 [subs=+quotes]
 ----
-$ oc get projects
+$ *oc get projects*
 NAME               DISPLAY NAME   STATUS
 openshift                         Active
 openshift-infra                   Active
@@ -636,13 +854,13 @@ test-app1                         Active
 default                           Active
 management-infra                  Active
 
-$ oc project test-app1
-Now using project "test-app1" on server "https://resourcegroupname.region.cloudapp.azure.com".
+$ *oc project test-app1*
+Now using project "test-app1" on server "https://openshift-master.sysdeseng.com".
 
-$ oc status
-In project test-app1 on server https://resourcegroupname.region.cloudapp.azure.com
+$ *oc status*
+In project test-app1 on server https://openshift-master.sysdeseng.com
 
-http://php-test-app1.apps.apps.region.cloudapp.azure.com to pod port 8080-tcp (svc/php-prod)
+http://php-test-app1.apps.sysdeseng.com to pod port 8080-tcp (svc/php-prod)
   dc/php-prod deploys istag/php-prod:latest <-
     bc/php-prod builds https://github.com/openshift/cakephp-ex.git with openshift/php:5.6
     deployment #1 deployed 27 minutes ago - 1 pod
@@ -662,7 +880,7 @@ A token is needed so that the Docker registry can be logged into.
 
 [subs=+quotes]
 ----
-# oc whoami -t
+# *oc whoami -t*
 feAeAgL139uFFF_72bcJlboTv7gi_bo373kf1byaAT8
 ----
 
@@ -670,20 +888,20 @@ Pull a new docker image for the purposes of test pushing.
 
 [subs=+quotes]
 ----
-# docker pull fedora/apache
-# docker images
+# *docker pull fedora/apache*
+# *docker images*
 ----
 
 Capture the registry endpoint. The `svc/docker-registry` shows the endpoint.
 
 [subs=+quotes]
 ----
-# oc status
-In project default on server https://resourcegroupname.region.cloudapp.azure.com
+# *oc status*
+In project default on server https://openshift-master.sysdeseng.com
 
 svc/docker-registry - 172.30.237.147:5000
   dc/docker-registry deploys docker.io/openshift3/ose-docker-registry:v3.3.0.32
-    deployment #2 deployed 51 minutes ago - 1 pods
+    deployment #2 deployed 51 minutes ago - 2 pods
     deployment #1 deployed 53 minutes ago
 
 svc/kubernetes - 172.30.0.1 ports 443, 53->8053, 53->8053
@@ -699,14 +917,14 @@ Tag the docker image with the endpoint from the previous step.
 
 [subs=+quotes]
 ----
-# docker tag docker.io/fedora/apache 172.30.110.31:5000/openshift/prodapache
+# *docker tag docker.io/fedora/apache 172.30.110.31:5000/openshift/prodapache*
 ----
 
 Check the images and ensure the newly tagged image is available.
 
 [subs=+quotes]
 ----
-# docker images
+# *docker images*
 ----
 
 <<<
@@ -715,21 +933,21 @@ Issue a Docker login.
 
 [subs=+quotes]
 ----
-# docker login -u syseng-admin -e syseng-admin -p _7yJcnXfeRtAbJVEaQwPwXreEhlV56TkgDwZ6UEUDWw 172.30.110.31:5000
+# *docker login -u prod@redhat.com -e prod@redhat.com -p _7yJcnXfeRtAbJVEaQwPwXreEhlV56TkgDwZ6UEUDWw 172.30.110.31:5000*
 ----
 
 [subs=+quotes]
 ----
-# oadm policy add-role-to-user admin syseng-admin -n openshift
-# oadm policy add-role-to-user system:registry syseng-admin
-# oadm policy add-role-to-user system:image-builder syseng-admin
+# *oadm policy add-role-to-user admin prod@redhat.com -n openshift*
+# *oadm policy add-role-to-user system:registry prod@redhat.com*
+# *oadm policy add-role-to-user system:image-builder prod@redhat.com*
 ----
 
 Push the image to the OpenShift registry now.
 
 [subs=+quotes]
 ----
-# docker push 172.30.110.222:5000/openshift/prodapache
+# *docker push 172.30.110.222:5000/openshift/prodapache*
 The push refers to a repository [172.30.110.222:5000/openshift/prodapache]
 389eb3601e55: Layer already exists
 c56d9d429ea9: Layer already exists
@@ -749,20 +967,23 @@ Change to the default OpenShift project and check the router and registry pod lo
 
 [subs=+quotes]
 ----
-$ oc project default
-Now using project "default" on server "https://resourcegroupname.region.cloudapp.azure.com".
+$ *oc project default*
+Now using project "default" on server "https://openshift-master.sysdeseng.com".
 
-$ oc get pods
+$ *oc get pods*
 NAME                      READY     STATUS    RESTARTS   AGE
 docker-registry-2-gmvdr   1/1       Running   1          21h
+docker-registry-2-jueep   1/1       Running   0          7h
 router-1-6y5td            1/1       Running   1          21h
 router-1-rlcwj            1/1       Running   1          21h
 
-$ oc describe pod docker-registry-2-jueep | grep -i node
+$ *oc describe pod docker-registry-2-jueep | grep -i node*
 Node:		ip-10-30-1-17.azure.internal/10.30.1.17
-$ oc describe pod router-1-6y5td | grep -i node
+$ *oc describe pod docker-registry-2-gmvdr | grep -i node*
+Node:		ip-10-30-2-208.azure.internal/10.30.2.208
+$ *oc describe pod router-1-6y5td | grep -i node*
 Node:		ip-10-30-1-17.azure.internal/10.30.1.17
-$ oc describe pod router-1-rlcwj | grep -i node
+$ *oc describe pod router-1-rlcwj | grep -i node*
 Node:		ip-10-30-2-208.azure.internal/10.30.2.208
 ----
 
@@ -771,13 +992,14 @@ Node:		ip-10-30-2-208.azure.internal/10.30.2.208
 NOTE: Perform the following steps from the `Azure` web console and a browser.
 
 Log into the `Azure` console.  On the dashboard, click on the `Resource Group`.
-Locate the running infranode1 instance, select it, right click and change the state to `stopped`.
-Wait a minute or two for the registry and pod to migrate over to a different infranode.
-Check the registry locations and confirm that they are on the same node.
+Locate your running infranode1 instance, select it, right click and change the state to `stopped`.
+Wait a minute or two for the registry and pod to migrate over to infranode1. Check the registry locations and confirm that they are on the same node.
 
 [subs=+quotes]
 ----
-$ oc describe pod docker-registry-2-fw1et | grep -i node
+$ *oc describe pod docker-registry-2-fw1et | grep -i node*
+Node:		ip-10-30-2-208.azure.internal/10.30.2.208
+$ *oc describe pod docker-registry-2-gmvdr | grep -i node*
 Node:		ip-10-30-2-208.azure.internal/10.30.2.208
 ----
 
