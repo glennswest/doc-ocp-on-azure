@@ -1,4 +1,4 @@
-=== Router
+=== OpenShift Router
 
 Pods inside of an OpenShift cluster are only reachable via their IP addresses on
 the cluster network. An edge load balancer can be used to accept traffic from
@@ -22,4 +22,5 @@ of OpenShift. This wildcard zone is used by the router to create routes for a se
 OpenShift environment to a publically accessible URL. The wildcard zone itself is a wildcard entry
 in `Azure DNS` which is linked using a CNAME to an `Azure Load Balancer` which performs a health check
 and forwards traffic to router pods on port 80 and 443.
+
 // vim: set syntax=asciidoc:
