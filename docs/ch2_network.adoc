@@ -27,5 +27,4 @@ traffic. The Nodes are able to communicate to the internet for packages, contain
 Github repositories.
 
 For more information see https://azure.microsoft.com/en-us/documentation/articles/virtual-networks-overview/
-
 // vim: set syntax=asciidoc:

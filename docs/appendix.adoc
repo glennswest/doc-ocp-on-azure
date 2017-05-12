@@ -47,7 +47,7 @@ the script again.
 
 
 === Diagnostic and Control of Azure OpenShift
-The Openshift Azure installation may be controlled from the Bastion Host. This is a separate
+The OpenShift Azure installation may be controlled from the bastion host. This is a separate
 Virtual Machine, that allows access to all vm's in the same resource group that defines the OpenShift
 installation on Azure.
 
@@ -72,7 +72,7 @@ In directory /home/ocpadmin
 [width="60%"]
 |====================================================================================
 | ansible-preinstall-ping.out  | Check connectitity of all hosts
-| byo.out                      | Main Openshift Install across all hosts
+| byo.out                      | Main OpenShift Install across all hosts
 | openshift-install.out        | The top level script that coordinates the install
 |====================================================================================
 
@@ -147,7 +147,7 @@ infranode openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 ----
 
 === Uninstalling and Deleting
-The uninstall playbook removes OpenShift related packages, ETCD, and removes any certificates that were created during the failed install.
+The uninstall playbook removes OpenShift related packages, `etcd`, and removes any certificates that were created during the failed install.
 
 ----
 ansible-playbook  /usr/share/ansible/openshift-ansible/playbooks/adhoc/uninstall.yml
@@ -158,7 +158,7 @@ and then delete the resource group within Azure portal, which will delete all re
 
 
 === Manually Launching the Installation of OpenShift
-The following script, is run automatically to install Openshift. The script can be re-run to diagnose problems.
+The following script, is run automatically to install OpenShift. The script can be re-run to diagnose problems.
 
 ----
 openshift-install.sh

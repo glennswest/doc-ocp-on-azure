@@ -14,6 +14,7 @@ from everywhere. The bastion host is the only ingress point for `SSH` in the clu
 from external entities. When connecting to the OpenShift Container Platform infrastructure,
 the bastion forwards the request to the appropriate server.
 Connecting through the bastion server requires specific `SSH` configuration.
+The `.ssh/config` is outlined in the deployment section of the reference architecture guide.
 
 [[bastion-diagram]]
 .Bastion Diagram

@@ -9,8 +9,8 @@ The image below provides a high-level representation of the components within th
 reference architecture.  Using Microsoft Azure (Azure), resources are highly
 available using a combination of VM placement using Azure Availability Sets, Azure Load Balancer(ALB),
 and `Azure VHD` persistent volumes. Instances deployed are given specific roles
-to support OpenShift. The Bastion host limits the external access to internal servers by ensuring that
-all `SSH` traffic passes through the Bastion host. The master instances host the
+to support OpenShift. The bastion host limits the external access to internal servers by ensuring that
+all `SSH` traffic passes through the bastion host. The master instances host the
 OpenShift master components such as etcd and the OpenShift API.  The Application
 instances are for users to deploy their containers while the Infrastructure
 instances are used for the OpenShift router and registry.  Authentication is managed
@@ -36,8 +36,8 @@ This reference architecture breaks down the deployment into three separate phase
 
 For Phase 1, the provisioning of the environment is done using a series of
 Azure Resource Manager Templates (ARM) that are provided in the
-https://github.com/glennswest/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible[openshift-ansible-contrib] github repo.
-Once the infrastructure is deployed by `ARM`, as the last action, the ARM templates will start
+https://github.com/openshift/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible[openshift-ansible-contrib] GitHub repo.
+Once the infrastructure is deployed by `ARM`, as the last action, the `ARM` templates will start
 the next phase by running a bash script that starts phase 2.
 
 Phase 2 is the provisioning of OpenShift Container Platform which is done via the
@@ -52,12 +52,12 @@ verifying the configuration. This is done by running tools like `oadm diagnostic
 systems engineering teams `validation` Ansible playbook.
 
 
-NOTE: The scripts provided in the github repo are not supported by Red Hat. They merely provide a mechanism that can be used to build out an OpenShift environment.
+NOTE: The scripts provided in the GitHub repo are not supported by Red Hat. They merely provide a mechanism that can be used to build out an OpenShift environment.
 
 === Azure Cloud Instance Details
 
 Within this reference environment, the instances are deployed in a single `Azure Region`
-which can be selected when running the ARM template.  Although the default region can
+which can be selected when running the `ARM` template.  Although the default region can
 be changed, the reference architecture deployment should only be
 used in Regions with premium storage. Note that where a customer wishes higher availability, multiple
 clusters should be created, and federation should be used. This architecture is emerging and will
@@ -66,7 +66,7 @@ be described in future reference architecture.
 The master instances for the OpenShift environment are `Standard_DS4_v2`. The node instances
 are `Standard_DS4_v2` used for Docker containers and OpenShift. The infrastructure nodes use `Standard_DS4_v2` instances.
 The bastion host is a `Standard_DS1_v2`.
-Instance sizing can be changed when the ARM template is run which is covered in later chapters.
+Instance sizing can be changed when the `ARM` template is run which is covered in later chapters.
 
 === Azure Load Balancer Details
 
@@ -116,12 +116,12 @@ rhel-7-server-rpms | Red Hat OpenShift Enterprise 3.5 (RPMs) | rhel-7-server-ose
 
 |====
 
-The subscriptions are accessed via a _pool_id_, which is required when launching the ARM
+The subscriptions are accessed via a _pool_id_, which is required when launching the `ARM`
 template
 
 
 === Prerequisites
-This section describes the environment and setup needed to execute the ARM template,
+This section describes the environment and setup needed to execute the `ARM` template,
 and perform post installation tasks.
 
 ==== GitHub Repositories
@@ -162,15 +162,15 @@ the underlying infrastructure.
 
 
 === SSH Public and Private Key
-SSH Keys are used instead of passwords in the Azure OCP Install. These keys are generated
+`SSH` Keys are used instead of passwords in the Azure OCP Install. These keys are generated
 on the system that will be used to login and manage the system. In addition, they are automatically
 distributed by the Azure Resource Management template to all virtual machines
 that are created.
 
-In order to use the template, ssh public and private keys are needed. It is important to not apply a passphrase to the key.
+In order to use the template, `SSH` public and private keys are needed. It is important to not apply a passphrase to the key.
 
 ==== SSH Key Generation
-If SSH keys do not currently exist then it is required to create them. Generate an RSA key pair by typing the following at a shell prompt:
+If `SSH` keys do not currently exist then it is required to create them. Generate an RSA key pair by typing the following at a shell prompt:
 
 [source,bash]
 ----

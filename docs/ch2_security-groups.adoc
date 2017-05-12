@@ -8,11 +8,11 @@ In this reference architecture, four groups are created. The purpose of the netw
  These settings are in each node types json file.
 
 ==== Bastion Security Group
-The Bastion network security group allows ssh. Any connectivity via `SSH` to the master, application or infrastructure nodes must go through the bastion host.
+The Bastion network security group allows `SSH`. Any connectivity via `SSH` to the master, application or infrastructure nodes must go through the bastion host.
 
 
 ==== Master Security Group
-The Master network security group allows ssh from the bastion, and communications to other masters.
+The Master network security group allows `SSH` from the bastion, and communications to other masters.
 The Master network security group allows inbound access on port 8443 from the internet to the virtual network.
 The traffic is then allowed to be forwarded to the master instances.
 

@@ -13,7 +13,7 @@ At this point the infrastructure and Red Hat OpenShift Container Platform have b
 * 2 Load Balancer Profiles
 * 2 Load Balancer DNS entries
 
-After the Azure Resource Manager template is submitted, and the ARM deployment
+After the Azure Resource Manager template is submitted, and the `ARM` deployment
 succeeds, the ansible install is started.
 
 A DNS entry must be created in a custom domain. This will consist of a DNS `CNAME` record
