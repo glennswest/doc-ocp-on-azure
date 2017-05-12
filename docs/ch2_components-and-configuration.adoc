@@ -36,7 +36,7 @@ This reference architecture breaks down the deployment into three separate phase
 
 For Phase 1, the provisioning of the environment is done using a series of
 Azure Resource Manager Templates (ARM) that are provided in the
-https://github.com/glennswest/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible[openshift-ansible-contrib] GitHub repo.
+https://github.com/openshift/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible[openshift-ansible-contrib] GitHub repo.
 Once the infrastructure is deployed by `ARM`, as the last action, the `ARM` templates will start
 the next phase by running a bash script that starts phase 2.
 
