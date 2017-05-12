@@ -4,7 +4,7 @@
 
 Red Hat OpenShift Container Platform 3 is built around a core of application containers powered by
 Docker, with orchestration and management provided by Kubernetes, on a foundation
- of Atomic Host and Red Hat Enterprise Linux. OpenShift Origin is the upstream community
+ of RHEL Atomic Host and Red Hat Enterprise Linux. OpenShift Origin is the upstream community
 project that brings it all together along with extensions, to accelerate
 application development and deployment.
 
