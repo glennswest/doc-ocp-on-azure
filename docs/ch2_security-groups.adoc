@@ -1,11 +1,10 @@
 === Network Security Groups
-
-In this reference architecture, four groups are created. The purpose of the network security groups are to
+In this reference architecture, four network security groups are created. The purpose of the network security groups are to
  restrict traffic from outside of the `VNet` to servers inside of the `VNet`. The network security groups
  also are used to restrict server to server communications inside the `VNet`. Network security groups provide
  an extra layer of security similar to a firewall. In the event a port is opened on an instance,
  the security group will not allow the communication to the port unless explicitly stated in a network security group.
- These settings are in each node types json file.
+ These settings are in each node types json file, located in https://github.com/openshift/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible/ (like master.json for master instances)
 
 ==== Bastion Security Group
 The Bastion network security group allows `SSH`. Any connectivity via `SSH` to the master, application or infrastructure nodes must go through the bastion host.
