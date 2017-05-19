@@ -18,7 +18,7 @@ OpenShift htpasswd identity provider.
 ==== SSH Prerequisite
 
 ===== SSH Configuration
-Before beginning the deployment of the `Azure` infrastucture and the deployment of OpenShift, the `SSH` 
+Before beginning the deployment of the `Azure` infrastucture and the deployment of OpenShift, the `SSH`
 private key must be converted into a base64 string. Otherwise, the Azure infrastructure cannot be configured
 manually or automatically.
 
@@ -45,10 +45,10 @@ Use a Base 64 Encoder app or website to perform the conversion
 
 ==== Red Hat Subscription Prerequisite
 A Red Hat account is required to use this template. This account must have appropriate
-subscriptions installed in the account in order to  use the template. The User Name and Password
-must be supplied to the template.
+subscriptions installed in the account in order to  use the template. Either a User Name
+and Password may be supplied, or a Organization ID and Activation Key.
 
-For the installation of `OCP` on `Azure` the following items are required:
+For the installation of `OCP` on `Azure` one of the following items are required:
 
 [subs=+quotes]
 ----
@@ -62,7 +62,7 @@ The next section will show how to locate the Pool ID.
 ===== Red Hat Subscription Pool ID
 In order to assign a subscription, a Pool ID is required. Using a system that currently has a valid subscription
 to Red Hat products, by using subscription-manager the Pool ID can be acquired. Perform the following command, and take
-note of the Pool ID. 
+note of the Pool ID.
 
 [subs=+quotes]
 ----
@@ -102,6 +102,33 @@ System Type:         Physical
 ----
 
 The Pool ID is also available under `RHSM` (Red Hat Subscription Manager) under the subscription overview, under the category of Pool IDs/Derived Pools.
+
+==== Organization Id and Activation Key
+If you wish to use a Activation Key, instead of User Name And Password, then you much generate them, before use.
+The activation key is a simple string, chosen by the end-user.
+
+Perform the following steps to obtain the id and key.
+
+===== Generating Activation Key
+1. Go to access.redhat.com and login. Click Subscriptions top left corner than the tab that says Activation keys.
+https://access.redhat.com/management/activation_keys
+
+2. Create your key via New Activation Key button.
+https://access.redhat.com/management/activation_keys/new
+
+Once in there give your key a name, set service level to standard or premium,
+and add the subscriptions containing OpenShift.
+
+===== Getting the Organization ID
+In order to find the OrgID, a RHEL server is required. Perform the following on a existing RHEL server.
+
+$ subscription-manger identity
+
+Find the value labeled org ID: <orgID> and save this somewhere for use during the deployment.
+
+===== Using the Organization ID and Activation Key
+When running the ARM Template, use the Organization ID as the RHN User Name, and use the
+Activation Key as the RHN Password.
 
 ==== Azure Active Directory Credentials
 In order to create the AAD client id, and password, the `nodejs Azure CLI` is required.
@@ -152,7 +179,7 @@ In order to create the AAD client id, and password, the `nodejs Azure CLI` is re
 # *azure role assignment create --objectId 00419334-174b-41e8-9b83-9b5011d8d352 -o contributor -c /subscriptions/77ece336-c110-470d-a446-757a69cb9485/*
 ----
 
-The following is a walk through of creating the service principal.  
+The following is a walk through of creating the service principal.
 
 ```
 info:    Executing command ad sp create
