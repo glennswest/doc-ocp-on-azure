@@ -4,7 +4,7 @@
 Azure VM Images provide the required information to launch an instance. In this guide, the the On-Demand Red Hat Enterprise Linux (RHEL)
 image in the Azure Gallery is used. The Red Hat RHEL Image carries an additional charge in addition to the base Linux VM price.
 
-For more information see https://azure.microsoft.com/en-us/pricing/details/virtual-machines/red-hat[Azure Documentation].
+NOTE: For more information see https://azure.microsoft.com/en-us/pricing/details/virtual-machines/red-hat[Azure Documentation].
 
 ==== Azure VM Sizes
 

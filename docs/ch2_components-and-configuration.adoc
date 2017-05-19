@@ -18,8 +18,7 @@ by the htpasswd Identity Provider.  OpenShift on `Azure` uses a combination of p
 Storage is used for the filesystem of instances but can also be used for persistent
 storage in containers.
 
-The network is configured to leverage two `Azure Load Balancers` for access to
-the OpenShift API, OpenShift console, and the OpenShift routers. The first
+The network is configured to leverage two `Azure Load Balancers`. The first
 load balancer is for the OpenShift API and console access originating from outside
 of the cluster. The second load balancer is for application access from outside the cluster.
 The OpenShift Console, and API may be accessed directly via the automatically created
@@ -35,7 +34,7 @@ This reference architecture breaks down the deployment into three separate phase
 * Phase 3: Post deployment activities
 
 For Phase 1, the provisioning of the environment is done using a series of
-Azure Resource Manager Templates (ARM) that are provided in the
+`Azure Resource Manager Templates` (`ARM`) provided in the
 https://github.com/openshift/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible[openshift-ansible-contrib] GitHub repo.
 Once the infrastructure is deployed by `ARM`, as the last action, the `ARM` templates will start
 the next phase by running a bash script that starts phase 2.
@@ -51,11 +50,9 @@ of configuring the DNS entry to point to the application load balancers and by m
 verifying the configuration. This is done by running tools like `oadm diagnostics` and the
 systems engineering teams `validation` Ansible playbook.
 
-
 NOTE: The scripts provided in the GitHub repo are not supported by Red Hat. They merely provide a mechanism that can be used to build out an OpenShift environment.
 
 === Azure Cloud Instance Details
-
 Within this reference environment, the instances are deployed in a single `Azure Region`
 which can be selected when running the `ARM` template.  Although the default region can
 be changed, the reference architecture deployment should only be
@@ -63,21 +60,20 @@ used in Regions with premium storage. Note that where a customer wishes higher a
 clusters should be created, and federation should be used. This architecture is emerging and will
 be described in future reference architecture.
 
-The master instances for the OpenShift environment are `Standard_DS4_v2`. The node instances
-are `Standard_DS4_v2` used for Docker containers and OpenShift. The infrastructure nodes use `Standard_DS4_v2` instances.
-The bastion host is a `Standard_DS1_v2`.
+Master, nodes and infrastructure nodes are created with the `Standard_DS4_v2` flavor size while
+the bastion host is created with the `Standard_DS1_v2` flavor.
 Instance sizing can be changed when the `ARM` template is run which is covered in later chapters.
 
 === Azure Load Balancer Details
 
-Two load balancers are used in the reference environment. The table below describes the load balancer
-`DNS` name, the instances in which the `Azure Load Balancer` is attached, and the port monitored by the load balanacer to state whether an instance is in or out of service.
+Two `Azure Load Balancers` (`ALB`) are used in this reference environment. The table below describes the load balancer
+`DNS` name, the instances in which the `ALB` is attached and the port monitored by the load balanacer to state whether an instance is in or out of service.
 
 .Azure Load Balancer
 |====
 ^|ALB ^| Assigned Instances ^| Port
 
-| _resourcegroupname_._region_.cloudapp.azure.com | master1-3 | 443
+| _resourcegroupname_._region_.cloudapp.azure.com | master1-3 | 8443
 | _wildcardzone_._publicip_.nip.io | infra-nodes1-3 | 80 and 443
 |====
 
@@ -153,7 +149,7 @@ while testing.
 An OpenShift cluster is deployed with-in one Azure Region. In order to get the best possible
 availability in Azure, availability sets are implemented.
 
-In Azure, virtual machines (VMs) can be placed in to a logical grouping called an availability set.
+In Azure, virtual machines (VMs) can be placed in to a logical grouping called an `availability set`.
 When creating VMs within an availability set, the Azure platform distributes the placement of those VMs
 across the underlying infrastructure. Should there be a planned maintenance event to the Azure platform or an
 underlying hardware / infrastructure fault, the use of availability sets ensures that at least one VM remains
@@ -174,21 +170,17 @@ If `SSH` keys do not currently exist then it is required to create them. Generat
 
 [source,bash]
 ----
-~]$ ssh-keygen -t rsa -N ''
-Generating public/private rsa key pair.
-Enter file in which to save the key (/home/USER/.ssh/id_rsa):
+~]$ ssh-keygen -t rsa -N '' -f /home/USER/.ssh/id_rsa
 ----
 
-Press Enter to confirm default location.
-
-After this, a message similar to this will be presented.
+A message similar to this will be presented indicating they key has been successful created
 
 [source,bash]
 ----
 Your identification has been saved in /home/USER/.ssh/id_rsa.
 Your public key has been saved in /home/USER/.ssh/id_rsa.pub.
 The key fingerprint is:
-e7:97:c7:e2:0e:f9:0e:fc:c4:d7:cb:e5:31:11:92:14 USER@penguin.example.com
+e7:97:c7:e2:0e:f9:0e:fc:c4:d7:cb:e5:31:11:92:14 USER@sysdeseng.rdu.redhat.com
 The key's randomart image is:
 +--[ RSA 2048]----+
 |             E.  |

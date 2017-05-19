@@ -15,11 +15,4 @@ A default storage profile is created, and installed. Any persistent volume claim
 vhd being created in the selected storage account. The vhd will be mounted and formated, and allocated to
 the container making the request.
 
-
-
-
-
-
-
-
 // vim: set syntax=asciidoc:
