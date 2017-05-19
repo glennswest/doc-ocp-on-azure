@@ -1,20 +1,20 @@
-===  Authentication
+=== Authentication
 There are several options when it comes to authentication of users in OpenShift Container Platform.
-OpenShift can leverage an existing identity provider within an organization such as `LDAP`
-or OpenShift can use external identity providers like GitHub, Google, and GitLab.
+OpenShift can leverage an existing identity provider within an organization such as *LDAP*
+or OpenShift can use external identity providers like *GitHub*, *Google*, and *GitLab*.
 The configuration of identification providers occurs on the OpenShift master instances.
 OpenShift allows for multiple identity providers to be specified.
-The reference architecture document uses htpasswd as the authentication provider
+The reference architecture document uses _htpasswd_ as the authentication provider
 but any of the other mechanisms would be an acceptable choice.
-Roles can be added to user accounts to allow for extra privileges such as the ability
+Roles can be customized and added to user accounts or groups to allow for extra privileges such as the ability
 to list nodes or assign persistent storage volumes to a project.
 
-For best practice on Authentication, consult the reference-architecture for
-https://access.redhat.com/documentation/en/red-hat-xpaas/0/red-hat-xpaas-sso-image/[Keycloak].
-Keycloak allows a fully federated central authentication service that can be used by both
+NOTE: For best practice on authentication, consult the
+https://access.redhat.com/documentation/en-us/red_hat_jboss_middleware_for_openshift/3/html-single/red_hat_jboss_sso_for_openshift/[Red Hat Single Sign-On (SSO) documentation].
+Red Hat Single Sign-On (SSO) allows a fully federated central authentication service that can be used by both
 developers and end-users across multiple identity providers, using a simple user interface.
 
-For more information on htpasswd and other authentication methods
-https://docs.openshift.com/container-platform/3.3/admin_solutions/authentication.html[see the OpenShift documentation].
+For more information on _htpasswd_ and other authentication methods
+https://docs.openshift.com/container-platform/3.5/install_config/configuring_authentication.html[see the OpenShift documentation].
 
 // vim: set syntax=asciidoc:
