@@ -93,7 +93,7 @@ To avoid reconfiguring DNS every time a new route is created, an external _wildc
 For example, create a wildcard DNS entry for `cloudapps.example.com` that has a low time-to-live value (TTL) and points to the public IP address of the _Router load balancer_:
 
 ```
-*.cloudapps.example.com. 300 IN CNAME 192.168.133.2
+*.cloudapps.example.com. 300 IN A 192.168.133.2
 ```
 
 === Software Version Details
