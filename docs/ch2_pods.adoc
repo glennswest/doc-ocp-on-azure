@@ -1,7 +1,12 @@
-===  OpenShift Pods
+=== OpenShift Pods
+OpenShift leverages the Kubernetes concept of a pod, which is one or more containers deployed together on one host, and the smallest compute unit that can be defined, deployed, and managed.
 
-OpenShift leverages the Kubernetes concept of a pod, which is one or more containers deployed together on one host, and the smallest compute unit that can be defined, deployed, and managed.  For example, a pod could be just a single php application connecting to a database outside of the OpenShift environment or a pod could be a php application that has an ephemeral database.  OpenShift pods have the ability to be scaled at runtime or at the time of launch using the OpenShift console or the `oc` CLI tool.  Any container running in the environment is considered a pod. The pods containing the OpenShift router and registry are required to be deployed in the OpenShift environment.
+A pod could be just a single container that runs a php application connecting to a database outside of the OpenShift environment, or a pod could be a container that runs a php application and a container that runs an ephemeral database. OpenShift pods have the ability to be scaled at runtime or at the time of launch using the OpenShift console, the OpenShift API or the `oc` CLI tool.
+
+NOTE: The OpenShift infrastructure components like the router and registry are deployed as pods in the OpenShift environment in the installation procedure or after the installation. Even though they are not required for the OpenShift environment to run, they provide very useful features so this reference architecture will assume they will be deployed.
 
 image::images/pods.png["Pods",align="center"]
+
+For more information about the OpenShift architecture and components, see the https://docs.openshift.com/container-platform/3.5/architecture/index.html[OpenShift Architecture]
 
 // vim: set syntax=asciidoc:
