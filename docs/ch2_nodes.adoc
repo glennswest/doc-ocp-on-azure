@@ -1,30 +1,41 @@
 === Nodes
-Nodes are `Azure` instances that serve a specific purpose for OpenShift. OpenShift masters are also considered nodes. Nodes deployed on `Azure`
-can be vertically scaled before or after the OpenShift installation using the `Azure` dashboard.  There are three types of nodes as described below.
+Nodes are Azure instances that serve a specific purpose for OpenShift. OpenShift masters are also considered nodes. Nodes deployed on Azure
+can be vertically scaled before or after the OpenShift installation using the Azure dashboard.  There are three types of nodes as described below.
 
 ==== Master nodes
-
 The master nodes contain the master components, including
-the API server, controller manager server and `etcd`. The master maintains the
-clusters configuration, manages nodes in its OpenShift cluster. The master assigns
-pods to nodes and synchronizes pod information with service configuration.  The
+the API server, web console, controller manager server and `etcd`. The master maintains the
+cluster configuration within `etcd`, manages nodes in its OpenShift cluster, assigns
+pods to nodes and synchronizes pod information with service configuration. The
 master is used to define routes, services, and volume claims for pods deployed within the
 OpenShift environment.
+The users interact with the OpenShift environment via the masters and using the API, web console or the `oc` command line interface.
+
+NOTE: Even if master nodes would be able to run pods, they are configured as `unschedulable` to ensure that the masters are not burdened with running pods
+
+==== Application nodes
+The application nodes are the instances where non-infrastructure based containers
+run. Depending on the application, Azure specific storage can be applied such as a `Azure VHD` which can be assigned using a `Persistent Volume Claim` for application data that needs to persist between container restarts. A configuration parameter is set on the master which ensures that OpenShift Container Platform user containers will be placed on the application nodes by default.
 
 ==== Infrastructure nodes
-The infrastructure nodes are used for the router and registry pods. These
-nodes could be used if the optional components Kibana and Hawkular metrics are required. The storage
-for the Docker registry that is deployed on the infrastructure nodes uses `Azure Blob Storage` which allows for multiple pods to use the same storage.
+The infrastructure nodes are just regular nodes but with different labels so they are only used to host the optional infrastructure components for OpenShift like the router, registry, metrics or the aggregated logging to isolate those components of the regular applications.
+The storage for the Docker registry that is deployed on the infrastructure nodes uses `Azure Blob Storage` which allows for multiple pods to use the same storage at the same time (`ReadWriteMany` or `RWX`)
 Since the registry does the lookup of the meta data, and then the download is handed off to azure to handle, this creates better scaling
 than other options.
 
-
-==== Application nodes
-The Application nodes are the instances where non-infrastructure based containers
-run. Depending on the application, `Azure` specific storage can be applied such as a `Azure VHD` which can be assigned using a `Persistent Volume Claim` for application data that needs to persist between container restarts. A configuration parameter is set on the master which ensures that OpenShift Container Platform user containers will be placed on the application nodes
-by default.
+NOTE: This reference architecture is emerging and components like the aggregated logging or metrics will be described in future revisions.
 
 ==== Node labels
-All OpenShift Container Platform nodes are assigned a label. This allows certain pods to be deployed on specific nodes. For example, nodes labeled `infra` are Infrastucture nodes. These nodes run the router and registry pods. Nodes with the label `app` are nodes used for end user Application pods. The configuration parameter `'defaultNodeSelector: "role=app"` in `/etc/origin/master/master-config.yaml` ensures all projects automatically are deployed on Application nodes.
+All OpenShift Container Platform nodes are assigned a `role` label. This allows the scheduler decide of certain pods to be deployed on specific nodes.
+
+|====
+^|Label ^| Nodes ^| Pods running
+
+| `role=master` | Master nodes | None
+| `role=app` | Application nodes | Application pods
+| `role=infra` | Infrastructure nodes | Infrastructure pods
+|====
+
+NOTE: The configuration parameter `'defaultNodeSelector: "role=app"` in `/etc/origin/master/master-config.yaml` ensures all projects automatically are deployed on application nodes.
 
 // vim: set syntax=asciidoc:
