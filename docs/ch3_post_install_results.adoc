@@ -1,28 +1,23 @@
 === Post Provisioning Results
-
 At this point the infrastructure and Red Hat OpenShift Container Platform have been deployed. Log into the `Azure` console and check the resources. In the `Azure` console, check for the following resources:
 
-* 3 Master nodes
-* 3 Infrastructure nodes
-* 3 or more Application nodes
-* 1 Unique Virtual Network
-* 3 Public IPs
-* 10 Network Interfaces
-* 4 Network Security Groups
-* 5 Storage accounts
-* 2 Load Balancer Profiles
-* 2 Load Balancer DNS entries
+* 3 master nodes
+* 3 infrastructure nodes
+* 3 or more application nodes
+* 1 unique virtual network
+* 3 public IPs
+* 10 network interfaces
+* 4 network security groups
+* 5 storage accounts
+* 2 load balancer profiles
+* 2 load balancer DNS entries
 
 After the Azure Resource Manager template is submitted, and the `ARM` deployment
-succeeds, the ansible install is started.
+succeeds, the ansible install is started automatically.
 
-A DNS entry must be created in a custom domain. This will consist of a DNS `CNAME` record
-that points to the wildcardzone name.
+A wildcard DNS entry must be created if a custom domain is required, by default the nip.io service is be used as explained in the <<ch2_dns.adoc,Microsoft Azure DNS>> section.
 
-
-
-
-NOTE: When installing using this method the browser certificate must be accepted three times. The certificate must be accepted three times due to the number of masters in the cluster. Failure to accept the certificate can cause disconnect issues and the appearance of network failures.
+NOTE: When installing using this method the browser certificate must be accepted three times due to the number of masters in the cluster. Failure to accept the certificate can cause disconnect issues and the appearance of network failures.
 
 image::images/assetlist.png[]
 
