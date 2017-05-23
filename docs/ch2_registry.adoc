@@ -8,7 +8,11 @@ persistent storage is used for the registry, otherwise any images
 built or pushed into the registry would disappear if the pod were to restart.
 
 Using the installation methods described in this document the registry is
-deployed using `Azure Blob Storage`
+deployed using `Azure Blob Storage`, an Azure service that provides object storage.
+In order to use `Azure Blob Storage` the registry configuration should be extended to support it. The procedure is detailed in the https://docs.openshift.com/container-platform/3.5/install_config/registry/extended_registry_configuration.html#docker-registry-configuration-reference-storage[OpenShift] and https://docs.docker.com/registry/storage-drivers/azure/[Docker] documentation, and it is to modify the registry _deploymentconfig_ to add the `Azure Blob Storage` service details:
+
+`oc env dc docker-registry -e REGISTRY_STORAGE=azure -e REGISTRY_STORAGE_AZURE_ACCOUNTNAME=<azure_storage_account_name> -e REGISTRY_STORAGE_AZURE_ACCOUNTKEY=<azure_storage_account_key> -e REGISTRY_STORAGE_AZURE_CONTAINER=registry`
+
 
 NOTE: For more information about the Azure Blob Storage, see: https://azure.microsoft.com/en-us/services/storage/blobs/
 
