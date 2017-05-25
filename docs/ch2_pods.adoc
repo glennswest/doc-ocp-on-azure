@@ -1,5 +1,5 @@
 === OpenShift Pods
-OpenShift leverages the Kubernetes concept of a pod, which is one or more containers deployed together on one host, and the smallest compute unit that can be defined, deployed, and managed.
+OpenShift leverages the *Kubernetes* concept of a pod, which is one or more containers deployed together on one host, and the smallest compute unit that can be defined, deployed, and managed.
 
 A pod could be just a single container that runs a php application connecting to a database outside of the OpenShift environment, or a pod could be a container that runs a php application and a container that runs an ephemeral database. OpenShift pods have the ability to be scaled at runtime or at the time of launch using the OpenShift console, the OpenShift API or the `oc` CLI tool.
 

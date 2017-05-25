@@ -1,5 +1,5 @@
 === Post Provisioning Results
-At this point the infrastructure and Red Hat OpenShift Container Platform have been deployed. Log into the `Azure` console and check the resources. In the `Azure` console, check for the following resources:
+At this point the infrastructure and Red Hat OpenShift Container Platform have been deployed. Log into the _Azure_ console and check the resources. In the _Azure_ console, check for the following resources:
 
 * 3 master nodes
 * 3 infrastructure nodes

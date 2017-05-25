@@ -1,11 +1,11 @@
 ==== Azure Storage
 For the use cases considered in this reference architecture, including OpenShift applications that connect to containerized databases or need some
-basic persistent storage, we need to consider multiple storage solutions in the cloud and different architectural approaches. Microsoft Azure offers
+basic persistent storage, we need to consider multiple storage solutions in the cloud and different architectural approaches. Azure offers
 a number of storage choices that offer high durability with three simultaneous replicas, including Standard and Premium storage.
 
 Furthermore, a use case requirement is to implement "shared storage" where the volume should allow simultaneous read and write operations. Upon reviewing multiple options supported by OpenShift and the underlying
-Red Hat Enterprise Linux infrastructure, a choice was made to use an `Azure VHD` based storage server to give the Azure OCP nodes the best match of performance
-and flexibility, and use the `Azure Blob Storage` for the registry storage.
+Red Hat Enterprise Linux infrastructure, a choice was made to use the _Azure VHD_ based storage server to give the Azure OCP nodes the best match of performance
+and flexibility, and use _Azure Blob Storage_ for the registry storage.
 
 NOTE: The reference architecture will be updated with further storage choices (such as Managed Disks) as they are evaluated.
 
@@ -16,9 +16,9 @@ storage accounts based on requests for PV. In order to make this work, the OpenS
 NOTE: For more information about the Azure configuration for OpenShift storage, see https://docs.openshift.com/container-platform/3.5/install_config/configuring_azure.html[Configuring for Azure] documentation
 
 This reference architecture creates an install a default storage class, so any persistent volume claim will result in a new
-`vhd` being created in the selected storage account. The `vhd` will be mounted and formated, and allocated to
+_VHD_ being created in the selected storage account. The _VHD_ will be created, mounted, formatted, and allocated to
 the container making the request.
 
-NOTE: For more information about `Azure VHD` see https://docs.microsoft.com/en-us/azure/storage/storage-about-disks-and-vhds-linux[About disks and VHDs for Azure Linux VMs] documentation and see https://docs.openshift.com/container-platform/3.5/install_config/persistent_storage/dynamically_provisioning_pvs.html[Dynamic Provisioning and Creating Storage Classes] for more information about storage classes
+NOTE: For more information about _Azure VHD_ see https://docs.microsoft.com/en-us/azure/storage/storage-about-disks-and-vhds-linux[About disks and VHDs for Azure Linux VMs] documentation and see https://docs.openshift.com/container-platform/3.5/install_config/persistent_storage/dynamically_provisioning_pvs.html[Dynamic Provisioning and Creating Storage Classes] for more information about storage classes
 
 // vim: set syntax=asciidoc:

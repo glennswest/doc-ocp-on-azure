@@ -5,37 +5,39 @@ The script and playbooks provided within the git repository deploys
 infrastructure, installs and configures OpenShift, and performs post installation
 tasks such as scaling the router and registry. The playbooks create specific
 roles, policies, and users required for cloud provider configuration in OpenShift, as well as
-storage accounts on Azure. In order to deploy OpenShift on Azure, an `ARM` template must be created. The `ARM`
-template takes the basic information, admin user name, password, Red Hat Subscription Manager username and password,
-`SSH` public and private keys, as well as offering the ability to size the virtual machines.
+storage accounts on Azure. In order to deploy OpenShift on Azure, an _ARM_ template must be created. The _ARM_
+template takes the basic information, admin user name, password, *Red Hat Subscription Manager* username and password,
+_SSH_ public and private keys, as well as offering the ability to size the virtual machines.
 
 ==== Authentication Prerequisites
 The template creates an OpenShift user using the supplied values `adminUsername` and `adminPassword`
-in the `ARM` template parameters when creating the infrastructure and it will be granted the `cluster-admin` role for the OpenShift environment.
+in the _ARM_ template parameters when creating the infrastructure and it will be granted the _cluster-admin_ role for the OpenShift environment.
 
 ==== SSH Prerequisites
 
 ===== SSH Configuration
-The SSH service will be configured during the deployment to allow connections using a public key. To make this work, the same public and private key that were created before will be used for the cloud-user in the instances.
-Before beginning the deployment of the Azure infrastructure and the deployment of OpenShift, the SSH
+The _SSH_ service will be configured during the deployment to allow connections using a public key. To make this work, the same public and private key that were created before will be used for the cloud-user in the instances.
+Before beginning the deployment of the Azure infrastructure and the deployment of OpenShift, the _SSH_
 *private key* must be converted into a base64 string. Otherwise, the Azure infrastructure cannot be configured
 manually or automatically.
 
-This task is performed locally, on the machine that will run the `ARM` template. In this example,
+NOTE: The reason to convert the private key to a base64 string is to avoid possible issues with multiple lines and carriage return characters
+
+This task is performed locally, on the machine that will run the _ARM_ template. In this example,
 the private key is converted to base64 encoding, and placed on the clipboard.
 
 * For RHEL/CentOS:
 
 [subs=+quotes]
 ----
-# *cat ~/.ssh/id_rsa | base64 | xclip -selection clipboard*
+$ *cat ~/.ssh/id_rsa | base64 | xclip -selection clipboard*
 ----
 
 * For OSX:
 
 [subs=+quotes]
 ----
-# *cat ~/.ssh/id_rsa | base64 | pbcopy*
+$ *cat ~/.ssh/id_rsa | base64 | pbcopy*
 ----
 
 * For Windows:
@@ -46,23 +48,16 @@ the private key is converted to base64 encoding, and placed on the clipboard.
 
 ==== Red Hat Subscription Prerequisites
 A Red Hat account is required to use this template. This account must have appropriate
-subscriptions available in the account in order to use the template. Either a User Name
-and Password may be supplied, or a Organization ID and Activation Key.
+subscriptions available in the account in order to use the template. Either a username
+and password may be supplied, or an organization ID and activation key.
 
-For the installation of `OCP` on `Azure` one of the following items are required:
-
-[subs=+quotes]
-----
-Red Hat Subscription Manager User: rhsm-se
-Red Hat Subscription Manager Password: SecretPass
-Pool ID: 1b152951269116311123bc522341e1
-----
+To be able to access the RPM packages the Pool ID for the subscriptions is required.
 
 The next section will show how to locate the Pool ID.
 
 ===== Red Hat Subscription Pool ID
-In order to assign a subscription, a Pool ID is required. Using a system that currently has a valid subscription
-to Red Hat products, by using subscription-manager the Pool ID can be acquired. Perform the following command, and take
+In order to assign a subscription, a _Pool ID_ is required. Using a system that currently has a valid subscription
+to Red Hat products, by using `subscription-manager` the _Pool ID_ can be acquired. Perform the following command, and take
 note of the _Pool ID_.
 
 [subs=+quotes]
@@ -74,18 +69,9 @@ note of the _Pool ID_.
 +-------------------------------------------+
 Subscription Name:   Red Hat OpenShift Container Platform, Premium (1-2 Sockets)
 Provides:            Red Hat OpenShift Enterprise Application Node
-                     Red Hat Software Collections (for RHEL Server)
-                     Red Hat Single Sign-On
-                     Red Hat Beta
-                     dotNET on RHEL Beta (for RHEL Server)
                      Red Hat OpenShift Container Platform
-                     JBoss Enterprise Web Server
-                     Oracle Java (for RHEL Server)
                      Red Hat OpenShift Enterprise Client Tools
-                     Red Hat CloudForms Beta
                      Red Hat Enterprise Linux Server
-                     dotNET on RHEL (for RHEL Server)
-                     Red Hat Software Collections Beta (for RHEL Server)
                      Red Hat Enterprise Linux Atomic Host
                      Red Hat OpenShift Enterprise Infrastructure
                      Red Hat CloudForms
@@ -99,7 +85,7 @@ Service Level:       Premium
 Service Type:        L1-L3
 Subscription Type:   Stackable
 Ends:                25/08/2017
-System Type:         Physical
+System Type:         Virtual
 ----
 
 NOTE: The Pool ID is also available in the https://access.redhat.com/management/subscriptions[*Subscriptions*] section of the Red Hat Customer Portal, by selecting the appropriate subscription that will open a detailed view of the subscription, including the _Pool ID_
@@ -112,7 +98,7 @@ The organization ID is the Red Hat ID for the customer organizations and it is r
 Perform the following steps to obtain the organization ID and activation key.
 
 ===== Generating Activation Key
-1. Go to the Red Hat Customer Portal located in http://access.redhat.com and login with your Red Hat username and password. Select "Subscriptions" section in the top left corner then the tab https://access.redhat.com/management/activation_keys["Activation keys"]
+1. Go to the *Red Hat Customer Portal* located in http://access.redhat.com and login with your Red Hat username and password. Select "Subscriptions" section in the top left corner then the tab https://access.redhat.com/management/activation_keys["Activation keys"]
 
 2. Create your key selecting the https://access.redhat.com/management/activation_keys/new["New Activation Key"] button
 
@@ -133,18 +119,18 @@ When running the ARM Template, use the Organization ID as the RHN User Name, and
 Activation Key as the RHN Password.
 
 ==== Azure Active Directory Credentials
-In order to create the `Azure Active Directory` (`AAD`) client id, and password, the nodejs `Azure CLI` package is required.
+In order to create the _Azure Active Directory_ (_AAD_) client id, and password, the Node.js _Azure CLI_ package is required.
 
 Follow this instructions to create it in a RHEL/CentOS/Fedora system:
 
-1. Install `nodejs`
+1. Install Node.js
 
 [subs=+quotes]
 ----
 $ *sudo yum -y install npm*
 ----
 
-2. Install the `Azure cli` nodejs package:
+2. Install the _Azure cli_ Node.js package:
 
 [subs=+quotes]
 ----
@@ -162,7 +148,7 @@ $ *azure login*
 
 [subs=+quotes]
 ----
-$ *azure ad sp create -n <service_principle_name> -p <password>*
+$ *azure ad sp create -n <service_principal_name> -p <password>*
 ----
 
 The following is an example output:
@@ -215,7 +201,7 @@ info:    account show command OK
 
 Save the command output `Tenant ID` value that will be used for the provisioning.
 
-6. Grant the service principle the access level of contributor to allow openshift to create/delete resources using the `Object ID` and `Tenant ID` parameters from the previous steps
+6. Grant the service principal the access level of _contributor_ to allow OpenShift to create/delete resources using the `Object ID` and `Tenant ID` parameters from the previous steps
 
 [subs=+quotes]
 ----
@@ -243,9 +229,9 @@ info:    role assignment create command OK
 ----
 
 === Introduction to the Azure Template
-Azure Resource Manager templates consist of json files. The main template file for this reference architecture is located in the `reference-architecture/azure-ansible/azuredeploy.json` file in the github repository.
-This file is the main `ARM` template that launches all the other templates under `azure-ansible`.
-There are four types of Virtual Machines created by the template (bastion, master node, infrastructure node and application node) and for each of these types there is a additional json file that defines each VM type.
+_Azure Resource Manager_ templates consist of json files that describes the objects that will be deployed in Azure. The main template file for this reference architecture is located in the `reference-architecture/azure-ansible/azuredeploy.json` file in the git repository.
+This file is the main _ARM_ template that launches all the other templates under `azure-ansible`.
+There are four types of virtual machines created by the template (bastion, master node, infrastructure node and application node) and for each of these types there is a additional json file that defines each VM type.
 
 |====
 ^|Virtual Machine type ^| Template file
@@ -256,32 +242,31 @@ There are four types of Virtual Machines created by the template (bastion, maste
 |Application node| `reference-architecture/azure-ansible/node.json`
 |====
 
-The `ARM` template for each type, automatically starts a bash shell script that does part of the initial setup.
+The _ARM_ template for each type, automatically starts a bash shell script that does part of the initial setup.
 The main shell script is the `reference-architecture/azure-ansible/bastion.sh` that handles the generation
 of the ansible host inventory, as well as the setup and running of ansible across all the hosts. The bastion host also provides isolation of all the hosts in the resource group from the public internet for the purpose of SSH access.
 
 === Provision the OpenShift environment
-In order to provision the OpenShift environment using the `ARM` template, the following information is required:
+In order to provision the OpenShift environment using the _ARM_ template, the following information is required:
 
 * A Microsoft Azure Subscription, with appropriate core and VM quota limits.
 * Resource Group - Used as the name of the OpenShift Cluster - All the assets of a single cluster use the Azure Resource Group to organize and group the assets. This name needs to be unique for each cluster per Azure Region (Location).
-* Admin Username and Admin Password - This is an admin user, used for multiple purposes.
-   a. As the `SSH` user to be able to connect to the bastion host, and administer the cluster.
+* Admin username and password - This will be the admin user, used for multiple purposes:
+   a. As the _SSH_ user to be able to connect to the bastion host, and administer the cluster.
    b. As an OpenShift administrative user, able to create and control OpenShift from the command line, or the user interface.
-   c. A gmail account, allowing the notification of the installation process of OpenShift.
-* SSH Key Data - This is the *public key* (`~/.ssh/id_rsa.pub`), generated for the user that will administer the server. During the creation and installation of OpenShift virtual machines, the key will automatically be added to each host. This assures proper security and access. This key must be backed up, as its the only principal way to access the cluster for administration.
-* SSH Private Data - This is the *private key* `~/.ssh/id_rsa` file contents that has been base64 encoded. This data should be backed up.
-* Wildcard Zone - DNS subdomain for applications in the OpenShift Cluster.
+* SSH Key Data - This is the *public key* (`~/.ssh/id_rsa.pub`), generated for the user that will be used to _SSH_ access to all the VMs. During the creation and installation of OpenShift virtual machines, the key will automatically be added to each host. This assures proper security and access. This key must be backed up, as its the only principal way to access the cluster for administration.
+* SSH Private Data - This is the *private key* `~/.ssh/id_rsa` file contents that has been base64 encoded. During the creation and installation of OpenShift virtual machines, the key will automatically be added to each host. This data should be backed up.
+* Wildcard Zone - Hostname for applications in the OpenShift cluster (required by the load balancer, but *nip.io* will be used)
 * Number of Nodes - The template supports the creation of 3 to 30 nodes during greenfield creation of a cluster. Note that the quota of the Azure account must support the number chosen.
 * Image - The template supports RHEL (Red Hat Enterprise Linux) 7.3 or later. The image will be upgraded during the installation process to the latest release.
 * Master VM Size (default: _Standard_DS4_v2_) - The default value gives 8 CPU Cores, 28 Gigabytes of memory, with 56 GB of premium storage local disk. This is used for OpenShift master nodes, as well as the bastion host.
-* Infranode VM Size (default: _Standard_D4_v2_) - The default value gives 8 CPU Cores, 28 Gigabytes of memory, with 56 GB of premium storage local disk. Infrastructure nodes run the OpenShift Router Containers, and the OpenShift Registry. As the infrastructure nodes provide the ingress for all applications, its recommended that _DS2_ be the smallest node used for the infrastructure nodes.
+* Infranode VM Size (default: _Standard_D4_v2_) - The default value gives 8 CPU Cores, 28 Gigabytes of memory, with 56 GB of premium storage local disk. Infrastructure nodes run the OpenShift Routers and the OpenShift Registry pods. As the infrastructure nodes provide the ingress for all applications, its recommended that _DS2_ be the smallest node used for the infrastructure nodes.
 * Node VM Size (default: _Standard_D4_v2_) - The default value gives 8 CPU Cores, 28 Gigabytes of memory, with 56 GB of premium storage local disk. Application nodes is where the application containers run.
 * RHN Username - This should be the username used for the Red Hat Subscription Account that has OpenShift Container Platform entitlements, or the _Organization ID_ if using activation keys.
 * RHN Password - This should be the password for the Red Hat Subscription Account, or the _activation key_ if using activation keys.
 * Subscription Pool ID - This is a number sequence that uniquely identifies the subscriptions that are to be used for the OpenShift installion.
-* AAD Client Id - This gives OpenShift the Active Directory ID, needed to be able to create, move and delete persistent volumes.
-* AAD Client Secret - The Active Directory Password to match the AAD Client ID. Required for OpenShift Cloud Provider.
+* AAD Client Id - This gives OpenShift the _Active Directory ID_, needed to be able to create, move and delete persistent volumes.
+* AAD Client Secret - The _Active Directory Password_ to match the AAD Client ID. Required for OpenShift Cloud Provider.
 
 With the above information ready, go to https://github.com/openshift/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible
 and click the "Deploy To Azure" button near the bottom of the page. This will then show the form, to allow the deployment to be started.

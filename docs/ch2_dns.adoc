@@ -1,5 +1,5 @@
 === Microsoft Azure DNS
-DNS is an integral part of a successful OpenShift Compute Platform environment. Azure has a DNSaaS called `Azure DNS`, per Microsoft;
+DNS is an integral part of a successful *OpenShift Container Platform* environment. Azure provides a DNS-as-a-Service called *Azure DNS*, per Microsoft;
 _"The Microsoft global network of name servers has the scale and redundancy to ensure ultra-high availability for your domains.
 With Azure DNS, you can be sure that your DNS will always be available."_
 
@@ -10,24 +10,27 @@ NOTE: For more information see https://docs.microsoft.com/en-us/azure/dns/[Azure
 
 ==== Public Zone
 When the reference architecture is deployed, Azure supplied domains are used. The domains consists of:
-_hostname.region.cloudapp.azure.com_.
+<hostname>.<region>.cloudapp.azure.com.
 
-For each OpenShift Cluster on Azure, there are three created domain names:
+For each OpenShift deployment on Azure, there are three created domain names:
 
-* _<resourcegroup>.<region>.cloudapp.azure.com_ - The API and OpenShift console load balancer
-* _<resourcegroup>b.<region>.cloudapp.azure.com_ - The bastion host for ssh access
-* _<wildcardzone>.<region>.cloudapp.azure.com_ - The DNS of the applications load balancer
+* <resourcegroup>.<region>.cloudapp.azure.com - The API and OpenShift console load balancer
+* <resourcegroup>b.<region>.cloudapp.azure.com - The bastion host for ssh access
+* <wildcardzone>.<region>.cloudapp.azure.com - The DNS of the applications load balancer
 
-IMPORTANT: Due to the current Azure limitations on creating subdomains and hence, wildcards, the nip.io service is used for the application load balancer. For more information about current Azure limitations with subdomains, check the following link https://feedback.azure.com/forums/216843-virtual-machines/suggestions/6119382-subdomain-cloudapp-net-etc-rather-than-having-a[subdomain cloudapp.net (etc.) rather than having a global namespace]
+IMPORTANT: Due to the current Azure limitations on creating subdomains and wildcards, the *nip.io* service is used for the application load balancer. For more information about current Azure limitations with subdomains, check the following link https://feedback.azure.com/forums/216843-virtual-machines/suggestions/6119382-subdomain-cloudapp-net-etc-rather-than-having-a[subdomain cloudapp.net (etc.) rather than having a global namespace]
 
 NOTE: In order to have a proper wildcard DNS entry with a proper subdomain like `*.apps.mycompany.com`, it is recommended to create a wildcard `A` record externally with your DNS domain provider and configure it to the applications load balancer IP like:
 `*.apps.mycompany.com. 300 IN  A 192.168.133.2`
 To reflect those modifications in OpenShift, modify the `routingConfig.subdomain` parameter in the `/etc/origin/master/master-config.yaml` file in all the masters and restart the atomic-openshift-master service, or modify the ansible hosts file and rerun the installation.
 
 ==== Internal resolution
-This reference architecture uses https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-name-resolution-for-vms-and-role-instances#azure-provided-name-resolution[Azure-provided name resolution] mechanism that
-creates an internal subdomain per resourcegroup like `fesj5eh111uernc5jfpnxi33kh.dx.internal.cloudapp.net`, creates an `A` DNS record of every
-instance deployed in that resourcegroup, and configures the proper resolution in the `/etc/resolv.conf` file, so instances can be reached
-using just the VM shortname
+This reference architecture uses https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-name-resolution-for-vms-and-role-instances#azure-provided-name-resolution[Azure-provided name resolution] mechanism which:
+
+* creates an internal subdomain per resourcegroup like _fesj5eh111uernc5jfpnxi33kh.dx.internal.cloudapp.net_
+* creates an _A DNS record_ on that internal subdomain of every instance deployed in that resourcegroup
+* configures the proper resolution in the `/etc/resolv.conf` file
+
+Using this, instances can be reached using just the VM shortname
 
 // vim: set syntax=asciidoc:

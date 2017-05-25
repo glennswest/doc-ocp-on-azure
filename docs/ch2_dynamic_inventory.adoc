@@ -1,12 +1,10 @@
 [[refarch_details]]
 
-<<<
-
 === Generated Inventory
 Ansible relies on inventory files and variables to perform playbook runs.
 As part of the reference architecture provided Ansible playbooks,
-the inventory is created during the boot of the bastion host. The `Azure Resource Manager Templates` (`ARM`) passes parameters via a script extension to RHEL on the bastion. On the bastion host
-a bastion.sh script generates the inventory file in /etc/ansible/hosts.
+the inventory is created during the boot of the bastion host. The _Azure Resource Manager_ templates (_ARM_) passes parameters via a script extension to RHEL on the bastion. On the bastion host
+a bastion.sh script generates the inventory file in `/etc/ansible/hosts`.
 
 [[app-listing]]
 .Dynamic Inventory Script within bastion.sh
@@ -59,7 +57,6 @@ openshift_master_cluster_method=native
 openshift_master_cluster_hostname=${RESOURCEGROUP}.${FULLDOMAIN}
 openshift_master_cluster_public_hostname=${RESOURCEGROUP}.${FULLDOMAIN}
 
-
 [masters]
 master1 openshift_hostname=master1 openshift_node_labels="{'role': 'master'}"
 master2 openshift_hostname=master2 openshift_node_labels="{'role': 'master'}"
@@ -83,14 +80,13 @@ infranode3 openshift_hostname=infranode3 openshift_node_labels="{'role': 'infra'
 node[01:${NODECOUNT}] openshift_node_labels="{'role': 'app', 'zone': 'default'}"
 ----
 
-NOTE: Those are the default values for the OpenShift installation, for more information about those parameters and their values, see the  https://docs.openshift.com/container-platform/3.5/install_config/install/advanced_install.html#configuring-ansible[OpenShift documentation]
+NOTE: Those are the values chosen for the OpenShift installation in this reference architecture, for more information about those parameters and their values, see the  https://docs.openshift.com/container-platform/3.5/install_config/install/advanced_install.html#configuring-ansible[OpenShift documentation]
 
-For the OpenShift installation, the Azure Resource Manager template collects the
+For the OpenShift installation, the _ARM_ template collects the
 needed parameters, creates the virtual machines, and passes the parameters to the virtual
 machines, where a node type specific script in bash will take the parameters and
 generate the needed playbooks and automation. During this process each VM is assigned
-an Ansible tag, that allows the playbooks to address the different node types.
-
+an ansible tag, that allows the playbooks to address the different node types.
 
 NOTE: For more information about the automation procedures on Azure, see  https://azure.microsoft.com/en-us/blog/automate-linux-vm-customization-tasks-using-customscript-extension/[Azure Linux Automation] blog post
 and for more information about the Ansible inventory, see http://docs.ansible.com/ansible/intro_inventory.html[Ansible Host Inventory]

@@ -1,18 +1,18 @@
 ====  Identity and Access Management
-For this reference account, an Azure Account is required. Ideally this is either a pay-as-you-go
+For this reference account, an Azure account is required. Ideally this is either a pay-as-you-go
 account, or a Microsoft Enterprise Agreement.
 
 You must have enough resources to deploy the reference architecture, otherwise the installation will fail.
 
-During the installation of OpenShift Container Platform using the reference architecture scripts and playbooks, six storage accounts
+During the installation of *OpenShift Container Platform* using the reference architecture scripts and playbooks, six storage accounts
 are created automatically per cluster:
 
-* `samas<resourcegroup>` - For masters storage
-* `sanod<resourcegroup>` - For application nodes storage
-* `sainf<resourcegroup>` - For infrastructure nodes storage
-* `sareg<resourcegroup>` - For registry persistent volume storage
-* `sapv1<resourcegroup>` - For the `generic storage class`
-* `sapv2<resourcegroup>` - For a non default storage class
+* _samas<resourcegroup>_ - For masters storage
+* _sanod<resourcegroup>_ - For application nodes storage
+* _sainf<resourcegroup>_ - For infrastructure nodes storage
+* _sareg<resourcegroup>_ - For registry persistent volume storage
+* _sapv1<resourcegroup>_ - For the `generic storage class`
+* _sapv2<resourcegroup>_ - For a non default storage class
 
 NOTE: For more information about the Azure identity management and storage accounts, see
 https://azure.microsoft.com/en-us/documentation/articles/fundamentals-identity/[The fundamentals of Azure identity management] and

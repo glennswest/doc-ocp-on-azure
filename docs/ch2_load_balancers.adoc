@@ -1,18 +1,26 @@
 ==== Azure Load Balancer
-Azure provides an `Azure Load Balancer` (`ALBs`) service which enables distribution of traffic
-across multiple instances in the Azure cloud.  Two `ALBs` are used in the deployment of
+Azure provides an _Azure Load Balancer_ (_ALB_) service which enables distribution of traffic
+across multiple instances in the Azure cloud.  Two _ALBs_ are used in the deployment of
 OpenShift:
 
-* To expose a single entry point for applications exposed to outside using the OpenShift routers
 * To expose a single entry point for the OpenShift API and console
+* To expose a single entry point for applications exposed to outside using the OpenShift routers
+
+.Azure Load Balancer
+|====
+^|ALB |DNS name ^| Assigned Instances ^| Port
+
+| External load balancer | <resourcegroupname>.<region>.cloudapp.azure.com | master1-3 | 8443
+| Router load balancer |  <wildcardzone>.<region>.cloudapp.azure.com | infra-nodes1-3 | 80 and 443
+|====
 
 There are clear advantages to doing this:
 
 * Keeps applications highly available.
-* It is secure, it works with the `Azure` cloud to leverage features such as separation of public / private cloud traffic
+* It is secure, it works with the Azure cloud to leverage features such as separation of public/private cloud traffic
 and health monitoring.
 
-Azure Load Balancer itself is fully-fault tolerant, and designed for implementing native azure highly-available applications.
+_Azure Load Balancer_ itself is fully-fault tolerant, and designed for implementing native azure highly-available applications.
 
 NOTE: For more information see the https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-overview[Azure Load Balancer documentation]
 

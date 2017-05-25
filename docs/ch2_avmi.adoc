@@ -1,35 +1,33 @@
 [[AVMI]]
 
 ==== Azure VM Images
-Azure VM Images provide the required information to launch an instance. In this guide, the the On-Demand Red Hat Enterprise Linux (RHEL)
-image in the Azure Gallery is used.
+_Azure Virtual Machines Images_ service provide different virtual machine images to launch instances. In this reference architecture, the the _On-Demand_ *Red Hat Enterprise Linux* (_RHEL_)
+image in the *Azure Marketplace* is used.
 
-IMPORTANT: The Red Hat RHEL Image carries an additional charge in addition to the base Linux VM price.
-
-For more information on Azure VM pricing for Red Hat Images see https://azure.microsoft.com/en-us/pricing/details/virtual-machines/red-hat[Azure Documentation].
+IMPORTANT: The *Red Hat Enterprise Linux* image carries an additional charge in addition to the base _Linux VM_ price. For more information on Azure pricing for Red Hat images see https://azure.microsoft.com/en-us/pricing/details/virtual-machines/red-hat[Azure Documentation].
 
 ==== Azure VM Sizes
 Azure offers https://docs.microsoft.com/en-us/azure/virtual-machines/linux/sizes[different VM sizes] that can be used to deploy the OpenShift environment.
-Further, all the nodes, have been selected with Microsoft Azure Premium Storage, to allow the best performance.
+Further, all the nodes, have been selected with _premium storage_, to allow the best performance.
 
 NOTE: The sizes provided in this reference architecture are a guide but it is advised to see the
 https://docs.openshift.com/container-platform/3.5/install_config/install/planning.html#sizing[OpenShift Container Platform 3 Sizing Considerations]
 for more information
 
 ===== Bastion
-The bastion host size is set by the `bastionVMSize` parameter
+The bastion host size is set by the _bastionVMSize_ parameter
 specified in the template file `reference-architecture/azure-ansible/azuredeploy.json` and the default value is set to _Standard_DS1_v2_
 
 ===== Masters
-The masters host size is set by the `masterVMSize` parameter
+The masters host size is set by the _masterVMSize_ parameter
 specified in the template file `reference-architecture/azure-ansible/azuredeploy.json` and the default value is set to _Standard_DS4_v2_
 
 ===== Infrastructure nodes
-The infrastructure nodes size is set by the `infranodeVMSize` parameter
+The infrastructure nodes size is set by the _infranodeVMSize_ parameter
 specified in the template file `reference-architecture/azure-ansible/azuredeploy.json` and the default value is set to _Standard_DS4_v2_
 
 ===== Application nodes
-The application nodes size is set by the `nodeVMSize` parameter
+The application nodes size is set by the _nodeVMSize_ parameter
 specified in the template file `reference-architecture/azure-ansible/azuredeploy.json` and the default value is set to _Standard_DS4_v2_
 
 Application node VM size is an important parameter for selecting how many containers as well as how big containers
