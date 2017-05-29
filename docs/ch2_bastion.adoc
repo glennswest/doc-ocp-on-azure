@@ -1,18 +1,18 @@
 === Bastion
 The bastion server implements mainly two distinct functions. One is that of a secure way to
-connect to all the nodes, and second that of the "installer" of the system. The information provided to the _ARM template_ is
+connect to all the nodes, and second that of the "installer" of the system. The information provided to the `ARM template` is
 passed to the bastion host and from there, playbooks and scripts are automatically generated
-and executed, resulting in the OpenShift system being installed.
+and executed, resulting in *{ocp}* being installed.
 
 As shown in the <<bastion-diagram>> the bastion server in this reference architecture
-provides a secure way to limit _SSH_ access to the Azure environment.
-The master and node security groups only allow for _SSH_ connectivity between
-nodes inside of the Security Group while the bastion allows _SSH_ access
-from everywhere. The bastion host is the only ingress point for _SSH_ in the cluster
-from external entities. When connecting to the OpenShift Container Platform infrastructure,
+provides a secure way to limit `SSH` access to the *{ma}* environment.
+The master and node security groups only allow for `SSH` connectivity between
+nodes inside of the Security Group while the bastion allows `SSH` access
+from everywhere. The bastion host is the only ingress point for `SSH` in the cluster
+from external entities. When connecting to the *{ocp}* infrastructure,
 the bastion forwards the request to the appropriate server.
 
-NOTE: Connecting to other VMs through the bastion server requires specific _SSH_ configuration which is outlined in the deployment section of the reference architecture guide.
+NOTE: Connecting to other VMs through the bastion server requires specific `SSH` configuration which is outlined in the deployment section of the reference architecture guide.
 
 [[bastion-diagram]]
 .bastion diagram

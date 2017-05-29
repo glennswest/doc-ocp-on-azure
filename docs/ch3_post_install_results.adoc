@@ -1,5 +1,5 @@
 === Post Provisioning Results
-At this point the infrastructure and Red Hat OpenShift Container Platform have been deployed. Log into the _Azure_ console and check the resources. In the _Azure_ console, check for the following resources:
+At this point the infrastructure and *{rhocp}* have been deployed. Log into the `Azure web console` and check the resources. In the `Azure web console`, check for the following resources:
 
 * 3 master nodes
 * 3 infrastructure nodes
@@ -12,7 +12,7 @@ At this point the infrastructure and Red Hat OpenShift Container Platform have b
 * 2 load balancer profiles
 * 2 load balancer DNS entries
 
-After the Azure Resource Manager template is submitted, and the `ARM` deployment
+After the `Azure Resource Manager` template is submitted, and the `ARM` deployment
 succeeds, the ansible install is started automatically.
 
 A wildcard DNS entry must be created if a custom domain is required, by default the nip.io service is be used as explained in the <<ch2_dns.adoc,Microsoft Azure DNS>> section.

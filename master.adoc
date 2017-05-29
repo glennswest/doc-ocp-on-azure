@@ -21,6 +21,11 @@ ifdef::backend-pdf[]
 :pagenums: :pygments-style: bw :source-highlighter: pygments
 endif::[]
 
+// Attributes
+:rhocp: Red Hat OpenShift Container Platform
+:ocp: OpenShift Container Platform
+:ma: Microsoft Azure
+
 //[abstract]
 //empty on purpose so that legal can be on separate page and not conflict with toc
 [preface]

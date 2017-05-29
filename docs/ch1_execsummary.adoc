@@ -2,21 +2,21 @@
 
 == Executive Summary
 
-*Red Hat OpenShift Container Platform 3* is built around a core of application containers powered by
+*{ocp}* is built around a core of application containers powered by
 *Docker*, with orchestration and management provided by *Kubernetes*, on a foundation
 of *RHEL Atomic Host* and *Red Hat Enterprise Linux*. *OpenShift Origin* is the upstream community
 project that brings it all together along with extensions, to accelerate
 application development and deployment.
 
 This reference document provides a comprehensive example demonstrating how
-*OpenShift Container Platform 3* can be set up to take advantage of the native high availability
-capabilities of *Kubernetes* and *Microsoft Azure* (Azure) in order to create a highly
-available *OpenShift Container Platform 3* environment. The configuration consists of three _OpenShift Container Platform
- masters_, three _OpenShift Container Platform infrastructure nodes_, three to thirty _OpenShift Container Platform application nodes_,
-and native *Microsoft Azure* integration. In addition to the configuration, operational management tasks are shown to demonstrate functionality.
+*{ocp}* can be set up to take advantage of the native high availability
+capabilities of *Kubernetes* and *{ma}* in order to create a highly
+available *{ocp}* environment. The configuration consists of three *{ocp}*
+ masters, three *{ocp}* infrastructure nodes, three to thirty *{ocp}* application nodes,
+and native *{ma}* integration. In addition to the configuration, operational management tasks are shown to demonstrate functionality.
 
-Please note the reference architecture deploys *OpenShift Container Platform* in the *Microsoft Azure public cloud*, not the *Microsoft Azure Stack* version nor the *Microsoft National Clouds* regional cloud version.
+Please note the reference architecture deploys *{ocp}* in the *{ma}* *public cloud*, not the *{ma}* *Stack* version nor the *Microsoft National Clouds* regional cloud version.
 
-NOTE: The number of application nodes deployed by this reference architecture has been tested from 3 to 30. The sizing and limits supported by OpenShift Container Platform is explained in https://docs.openshift.com/container-platform/3.5/install_config/install/planning.html#sizing[Planning] document
+NOTE: The number of application nodes deployed by this reference architecture has been tested from 3 to 30. The sizing and limits supported by *{ocp}* is explained in https://docs.openshift.com/container-platform/3.5/install_config/install/planning.html#sizing[Planning] document
 
 // vim: set syntax=asciidoc:

@@ -1,10 +1,10 @@
-===  Azure Virtual Network (VNet)
-An _Azure VNet_ provides the ability to set up custom virtual networking which includes subnets, and
+=== *{ma}* Virtual Network (VNet)
+An `Azure VNet` provides the ability to set up custom virtual networking which includes subnets, and
 IP address ranges. In this reference implementation
-guide, a dedicated _VNet_ is created with all its accompanying services to provide a
-stable network for the OpenShift deployment.
+guide, a dedicated `VNet` is created with all its accompanying services to provide a
+stable network for the *{ocp}* deployment.
 
-A _VNet_ is created as a logical representation of a networking environment in the Azure
+A `VNet` is created as a logical representation of a networking environment in the *{ma}*
 cloud. The following subnets and CIDR listed below are used.
 
 IMPORTANT: Substitute the values if needed
@@ -21,25 +21,25 @@ are defined in the template `https://github.com/openshift/openshift-ansible-cont
 | Infra Subnet | 10.0.2.0/24
 |====
 
-The _VNet_ is created and a human readable tag is assigned. Three subnets are created in the _VNet_.
+The `VNet` is created and a human readable tag is assigned. Three subnets are created in the `VNet`.
 The bastion instance is on the Master Subnet.
-The two internal load balancers allow access to the OpenShift API and console and the routing of application
+The two internal load balancers allow access to the *{ocp}* API and console and the routing of application
 traffic. All the VMs are able to communicate to the internet for packages, container images, and
-Github repositories.
+external git repositories.
 
 NOTE: For more information see https://azure.microsoft.com/en-us/documentation/articles/virtual-networks-overview/[Azure Virtual Networks documentation]
 
 === OpenShift SDN
-OpenShift uses a software-defined networking (_SDN_) approach to provide a unified cluster network that enables communication between pods across the OpenShift Container Platform cluster. This pod network is established and maintained by the OpenShift SDN, which configures an overlay network using Open vSwitch (OVS).
+*{ocp}* uses a software-defined networking (`SDN`) approach to provide a unified cluster network that enables communication between pods across the *{ocp}* cluster. This pod network is established and maintained by the OpenShift SDN, which configures an overlay network using Open vSwitch (OVS).
 
 There are three different plug-ins for configuring the pod network
 
-* The _redhat/ovs-subnet_ plug-in which provides a "flat" pod network where every pod can communicate with every other pod and service.
-* The _redhat/ovs-multitenant_ plug-in which provides OpenShift project level isolation for pods and services. Each project receives a unique Virtual Network ID (VNID) that identifies traffic from pods assigned to the project. Pods from different projects cannot send packets to or receive packets from pods and services of a different project.
-* The _redhat/ovs-networkpolicy_ plug-in (currently in Tech Preview) allows project administrators to configure their own isolation policies using NetworkPolicy objects.
+* The `redhat/ovs-subnet` plug-in which provides a "flat" pod network where every pod can communicate with every other pod and service.
+* The `redhat/ovs-multitenant` plug-in which provides *{ocp}* project level isolation for pods and services. Each project receives a unique Virtual Network ID (VNID) that identifies traffic from pods assigned to the project. Pods from different projects cannot send packets to or receive packets from pods and services of a different project.
+* The `redhat/ovs-networkpolicy` plug-in (currently in Tech Preview) allows project administrators to configure their own isolation policies using NetworkPolicy objects.
 
-The plugin used in this reference architecture is the _redhat/ovs-multitenant_ that allows multitenant isolation for pods per project.
+The plugin used in this reference architecture is the `redhat/ovs-multitenant` that allows multitenant isolation for pods per project.
 
-For more information about OpenShift networking, see https://docs.openshift.com/container-platform/3.5/architecture/additional_concepts/sdn.html[OpenShift SDN] documentation.
+For more information about *{ocp}* networking, see https://docs.openshift.com/container-platform/3.5/architecture/additional_concepts/sdn.html[OpenShift SDN] documentation.
 
 // vim: set syntax=asciidoc:

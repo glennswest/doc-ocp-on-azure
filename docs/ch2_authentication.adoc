@@ -1,15 +1,15 @@
 === Authentication
-There are several options when it comes to authentication of users in *OpenShift Container Platform*.
-OpenShift can leverage an existing identity provider within an organization such as _LDAP_
+There are several options when it comes to authentication of users in *{ocp}*.
+*{ocp}* can leverage an existing identity provider within an organization such as `LDAP`
 or can use external identity providers like *GitHub*, *Google*, and *GitLab*.
-The configuration of identification providers occurs on the _OpenShift Container Platform master instances_.
-*OpenShift Container Platform* allows for multiple identity providers to be specified.
-The reference architecture document uses _htpasswd_ as the authentication provider
+The configuration of identification providers occurs on the *{ocp}* master instances.
+*{ocp}* allows for multiple identity providers to be specified.
+The reference architecture document uses `htpasswd` as the authentication provider
 but any of the other mechanisms would be an acceptable choice.
 Roles can be customized and added to user accounts or groups to allow for extra privileges such as the ability
 to list nodes or assign persistent storage volumes to a project.
 
-NOTE: For more information on _htpasswd_ and other authentication methods see the
+NOTE: For more information on `htpasswd` and other authentication methods see the
 https://docs.openshift.com/container-platform/3.5/install_config/configuring_authentication.html[Configuring authentication] documentation.
 
 NOTE: For best practice on authentication, consult the
