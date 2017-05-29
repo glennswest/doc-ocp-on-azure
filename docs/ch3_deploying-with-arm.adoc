@@ -40,25 +40,21 @@ $ *cat ~/.ssh/id_rsa | base64 | xclip -selection clipboard*
 $ *cat ~/.ssh/id_rsa | base64 | pbcopy*
 ----
 
-* For Windows:
-[subs=+quotes]
-----
-*Use a Base 64 Encoder app or website to perform the conversion*
-----
+* For Windows use a Base 64 Encoder app or website to perform the conversion
 
 ==== Red Hat Subscription Prerequisites
-A Red Hat account is required to use this template. This account must have appropriate
+A *Red Hat account* is required to use this template. This account must have appropriate
 subscriptions available in the account in order to use the template. Either a username
-and password may be supplied, or an organization ID and activation key.
+and password may be supplied, or an `organization ID` and `activation key`.
 
-To be able to access the RPM packages the Pool ID for the subscriptions is required.
+To be able to access the RPM packages the `Pool ID` for the subscriptions is required.
 
-The next section will show how to locate the Pool ID.
+The next section will show how to locate the `Pool ID`.
 
 ===== Red Hat Subscription Pool ID
 In order to assign a subscription, a `Pool ID` is required. Using a system that currently has a valid subscription
-to Red Hat products, by using `subscription-manager` the _Pool ID_ can be acquired. Perform the following command, and take
-note of the`Pool ID`.
+to Red Hat products, by using `subscription-manager` the `Pool ID` can be acquired. Perform the following command, and take
+note of the `Pool ID`.
 
 [subs=+quotes]
 ----
@@ -88,24 +84,24 @@ Ends:                25/08/2017
 System Type:         Virtual
 ----
 
-NOTE: The Pool ID is also available in the https://access.redhat.com/management/subscriptions[*Subscriptions*] section of the Red Hat Customer Portal, by selecting the appropriate subscription that will open a detailed view of the subscription, including the _Pool ID_
+NOTE: The `Pool ID` is also available in the https://access.redhat.com/management/subscriptions[*Subscriptions*] section of the *Red Hat Customer Portal*, by selecting the appropriate subscription that will open a detailed view of the subscription, including the `Pool ID`
 
 ==== Organization ID and Activation Key
-Instead using user/password combination, an activation key and organization ID can be used.
-The activation key is a simple string, chosen by the end-user that contains the subscriptions the user attaches to it to avoid using passwords in the registration procedure.
-The organization ID is the Red Hat ID for the customer organizations and it is required when using activation keys to identify the activation keys within the organization.
+Instead using username/password combination, an `activation key` and `organization ID` can be used.
+The `activation key` is a simple string, chosen by the end-user that contains the subscriptions the user attaches to it to avoid using passwords in the registration procedure.
+The `organization ID` is the Red Hat `ID` for the customer organizations and it is required when using activation keys to identify the activation keys within the organization.
 
-Perform the following steps to obtain the organization ID and activation key.
+Perform the following steps to obtain the `organization ID` and activation key.
 
 ===== Generating Activation Key
-1. Go to the *Red Hat Customer Portal* located in http://access.redhat.com and login with your Red Hat username and password. Select "Subscriptions" section in the top left corner then the tab https://access.redhat.com/management/activation_keys["Activation keys"]
+1. Go to the *Red Hat Customer Portal* located in http://access.redhat.com and login with your Red Hat username and password. Select *[Subscriptions]* section in the top left corner then the tab https://access.redhat.com/management/activation_keys["Activation keys"]
 
 2. Create your key selecting the https://access.redhat.com/management/activation_keys/new["New Activation Key"] button
 
 Once in there give your key a name, set service level to standard or premium, and add the subscriptions containing *{ocp}*.
 
 ===== Getting the Organization ID
-In order to find the OrgID, a RHEL server is required. Perform the following on a existing RHEL server.
+In order to find the `organization ID`, a `RHEL` server is required. Perform the following on a existing `RHEL` server.
 
 [subs=+quotes]
 ----
@@ -119,44 +115,44 @@ org ID: 6616399
 Find the value labeled `org ID:` and save this somewhere for use during the deployment.
 
 ===== Using the Organization ID and Activation Key
-When running the ARM Template, use the Organization ID as the RHN User Name, and use the
-Activation Key as the RHN Password.
+When running the `ARM` template, use the `organization ID` as the RHN User Name, and use the
+`activation key` as the RHN Password.
 
 ==== Azure Active Directory Credentials
-In order to create the `Azure Active Directory` (`AAD`) client id, and password, the Node.js `Azure CLI` package is required.
+In order to create the `Azure Active Directory` (`AAD`) client id, and password, the *Node.js* `Azure CLI` package is required.
 
 Follow this instructions to create it in a RHEL/CentOS/Fedora system:
 
-1. Install Node.js
-
+1. Install *Node.js*
++
 [subs=+quotes]
 ----
 $ *sudo yum -y install npm*
 ----
-
-2. Install the `Azure CLI` Node.js package:
-
++
+2. Install the `Azure CLI` *Node.js* package:
++
 [subs=+quotes]
 ----
 $ *sudo npm install -g azure-cli*
 ----
-
++
 3. Login to *{ma}*:
-
++
 [subs=+quotes]
 ----
 $ *azure login*
 ----
-
++
 4. Create a service principal:
-
++
 [subs=+quotes]
 ----
 $ *azure ad sp create -n <service_principal_name> -p <password>*
 ----
-
++
 The following is an example output:
-
++
 [subs=+quotes]
 ----
 $ *azure ad sp create -n openshiftcloudprovider -p Pass@word1*
@@ -170,22 +166,22 @@ data:                             198c4803-1236-4c3f-ad90-46e5f3b4cd2a
 data:                             http://myhomepage
 info:    ad sp create command OK
 ----
-
++
 Save the `Object Id` and the `Service Principal Names GUID` values from the command output.
-
++
 * The `Object Id` will be used to create the role assignment.
 * The `Service Principal Names GUID` will be used as the `aadClientId` parameter value (Application ID/Client ID) in the template.
 * The password entered as part of the CLI command will be the `aadClientSecret` paramter value in the template.
-
++
 5. Show the *{ma}* account data:
-
++
 [subs=+quotes]
 ----
 $ *azure account show*
 ----
-
++
 The following is an example output:
-
++
 [subs=+quotes]
 ----
 $ *azure account show*
@@ -202,18 +198,18 @@ data:    User name                   : ssysone@something.com
 data:
 info:    account show command OK
 ----
-
++
 Save the command output `Tenant ID` value that will be used for the provisioning.
-
++
 6. Grant the service principal the access level of `contributor` to allow *{ocp}* to create/delete resources using the `Object ID` and `Tenant ID` parameters from the previous steps
-
++
 [subs=+quotes]
 ----
 $ *azure role assignment create --objectId <objectID> -o contributor -c /subscriptions/<tenant_id>/*
 ----
-
++
 The following is an example output:
-
++
 [subs=+quotes]
 ----
 # *azure role assignment create --objectId 00419334-174b-41e8-9b83-9b5011d8d352 -o contributor -c /subscriptions/77ece336-c110-470d-a446-757a69cb9485/*
@@ -262,7 +258,7 @@ In order to provision the *{ocp}* environment using the `ARM` template, the foll
 * SSH Private Data - This is the *private key* `~/.ssh/id_rsa` file contents that has been base64 encoded. During the creation and installation of *{ocp}* virtual machines, the key will automatically be added to each host. This data should be backed up.
 * Wildcard Zone - Hostname for applications in the *{ocp}* cluster (required by the load balancer, but *nip.io* will be used)
 * Number of Nodes - The template supports the creation of 3 to 30 nodes during greenfield creation of a cluster. Note that the quota of the *{ma}* account must support the number chosen.
-* Image - The template supports RHEL (Red Hat Enterprise Linux) 7.3 or later. The image will be upgraded during the installation process to the latest release.
+* Image - The template supports `RHEL` (Red Hat Enterprise Linux) 7.3 or later. The image will be upgraded during the installation process to the latest release.
 * Master VM Size (default: `Standard_DS4_v2`) - The default value gives 8 CPU Cores, 28 Gigabytes of memory, with 56 GB of premium storage local disk. This is used for *{ocp}* master nodes, as well as the bastion host.
 * Infranode VM Size (default: `Standard_DS4_v2`) - The default value gives 8 CPU Cores, 28 Gigabytes of memory, with 56 GB of premium storage local disk. Infrastructure nodes run the *{ocp}* routers and the *{ocp}* registry pods. As the infrastructure nodes provide the ingress for all applications, its recommended that _DS2_ be the smallest node used for the infrastructure nodes.
 * Node VM Size (default: `Standard_DS4_v2`) - The default value gives 8 CPU Cores, 28 Gigabytes of memory, with 56 GB of premium storage local disk. Application nodes is where the application containers run.

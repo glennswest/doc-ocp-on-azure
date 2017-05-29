@@ -69,8 +69,8 @@ useful logs in the home directory of the user (`/home/ocpadmin`):
 .Installation logs
 |====
 ^|File name ^|Content
-| ansible-preinstall-ping.out  | Check connectitity of all hosts
-| openshift-install.out        | Main *{ocp}* installation
+| `ansible-preinstall-ping.out`  | Check connectitity of all hosts
+| `openshift-install.out`        | Main *{ocp}* installation
 |====
 
 === Inventory

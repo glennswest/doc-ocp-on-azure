@@ -20,7 +20,7 @@ For each *{ocp}* deployment on *{ma}*, there are three created domain names:
 
 IMPORTANT: Due to the current *{ma}* limitations on creating subdomains and wildcards, the *nip.io* service is used for the application load balancer. For more information about current *{ma}* limitations with subdomains, check the following link https://feedback.azure.com/forums/216843-virtual-machines/suggestions/6119382-subdomain-cloudapp-net-etc-rather-than-having-a[subdomain cloudapp.net (etc.) rather than having a global namespace]
 
-NOTE: In order to have a proper wildcard DNS entry with a proper subdomain like `*.apps.mycompany.com`, it is recommended to create a wildcard `A` record externally with your DNS domain provider and configure it to the applications load balancer IP like:
+NOTE: In order to have a proper wildcard DNS entry with a proper subdomain like `*.apps.mycompany.com`, it is recommended to create a wildcard A record externally with your `DNS` domain provider and configure it to the applications load balancer IP like:
 `*.apps.mycompany.com. 300 IN  A 192.168.133.2`
 To reflect those modifications in *{ocp}*, modify the `routingConfig.subdomain` parameter in the `/etc/origin/master/master-config.yaml` file in all the masters and restart the atomic-openshift-master service, or modify the ansible hosts file and rerun the installation.
 

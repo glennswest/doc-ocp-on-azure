@@ -11,7 +11,7 @@ are created automatically per cluster:
 * `sanod<resourcegroup>` - For application nodes storage
 * `sainf<resourcegroup>` - For infrastructure nodes storage
 * `sareg<resourcegroup>` - For registry persistent volume storage
-* `sapv1<resourcegroup>` - For the `generic storage class`
+* `sapv1<resourcegroup>` - For the `generic` storage class
 * `sapv2<resourcegroup>` - For a non default storage class
 
 NOTE: For more information about the *{ma}* identity management and storage accounts, see

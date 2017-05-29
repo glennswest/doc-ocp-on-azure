@@ -3,7 +3,7 @@
 === Generated Inventory
 Ansible relies on inventory files and variables to perform playbook runs.
 As part of the reference architecture provided Ansible playbooks,
-the inventory is created during the boot of the bastion host. The `Azure Resource Manager` templates (`ARM`) passes parameters via a script extension to RHEL on the bastion. On the bastion host
+the inventory is created during the boot of the bastion host. The `Azure Resource Manager` templates (`ARM`) passes parameters via a script extension to `RHEL` on the bastion. On the bastion host
 a bastion.sh script generates the inventory file in `/etc/ansible/hosts`.
 
 [[app-listing]]

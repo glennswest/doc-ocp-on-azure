@@ -502,7 +502,7 @@ Observe the output of `oc get all`
 
 ==== Explore the Docker Registry
 The OpenShift Ansible playbooks configure three infrastructure nodes that have one registry running. In order to understand the configuration and mapping process of the registry pods, the command `oc describe` is used.
-`oc describe` details how registries are configured and mapped to the `Azure Blob Storage` using the "REGISTRY_STORAGE_*" environment variables.
+`oc describe` details how registries are configured and mapped to the `Azure Blob Storage` using the `REGISTRY_STORAGE_*` environment variables.
 
 NOTE: Perform the following steps from the local workstation.
 
@@ -524,7 +524,7 @@ Environment Variables:
 ... [OUTPUT ABBREVIATED] ...
 ----
 
-To see if the docker images are being stored in the `Azure Blob Storage` properly, save the `REGISTRY_STORAGE_AZURE_ACCOUNTKEY` value from the command output before and perform the following command on the host you installed the `Azure CLI` Node.js package:
+To see if the docker images are being stored in the `Azure Blob Storage` properly, save the `REGISTRY_STORAGE_AZURE_ACCOUNTKEY` value from the command output before and perform the following command on the host you installed the `Azure CLI` *Node.js* package:
 
 [subs=+quotes]
 ----
@@ -663,7 +663,7 @@ As a reminder, to find the required information to ensure the application is sti
 
 [subs=+quotes]
 ----
-$ oc get projects
+$ *oc get projects*
 NAME               DISPLAY NAME   STATUS
 openshift                         Active
 openshift-infra                   Active
@@ -672,10 +672,10 @@ test-app1                         Active
 default                           Active
 management-infra                  Active
 
-$ oc project test-app1
+$ *oc project test-app1*
 Now using project "test-app1" on server "https://resourcegroupname.region.cloudapp.azure.com".
 
-$ oc status
+$ *oc status*
 In project test-app1 on server https://resourcegroupname.region.cloudapp.azure.com
 
 http://test-app1.apps.13.93.162.100.nip.io to pod port 8080-tcp (svc/php-prod)

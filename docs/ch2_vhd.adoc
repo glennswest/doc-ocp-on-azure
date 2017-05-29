@@ -4,7 +4,7 @@ basic persistent storage, we need to consider multiple storage solutions in the 
 a number of storage choices that offer high durability with three simultaneous replicas, including Standard and Premium storage.
 
 Furthermore, a use case requirement is to implement "shared storage" where the volume should allow simultaneous read and write operations. Upon reviewing multiple options supported by *{ocp}* and the underlying
-Red Hat Enterprise Linux infrastructure, a choice was made to use the `Azure VHD` based storage server to give the *{ma}* OCP nodes the best match of performance
+Red Hat Enterprise Linux infrastructure, a choice was made to use the `Azure VHD` based storage server to give the *{ma}* *{ocp}* nodes the best match of performance
 and flexibility, and use `Azure Blob Storage` for the registry storage.
 
 NOTE: The reference architecture will be updated with further storage choices (such as Managed Disks) as they are evaluated.
