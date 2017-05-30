@@ -1,7 +1,7 @@
 === *{ma}* DNS
 DNS is an integral part of a successful *{ocp}* environment. *{ma}* provides a DNS-as-a-Service called *Azure DNS*, per Microsoft;
-_"The Microsoft global network of name servers has the scale and redundancy to ensure ultra-high availability for your domains.
-With *{ma}* DNS, you can be sure that your DNS will always be available."_
+"The Microsoft global network of name servers has the scale and redundancy to ensure ultra-high availability for your domains.
+With *{ma}* DNS, you can be sure that your DNS will always be available."
 
 *{ma}* provides the DNS for public zone, as well as internal host resolution. These are configured automatically
 during the execution of the reference architecture scripts.
