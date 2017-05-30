@@ -1,4 +1,4 @@
-==== *{ma}* Load Balancer
+==== Microsoft Azure Load Balancer
 *{ma}* provides an `Azure Load Balancer` (`ALB`) service which enables distribution of traffic
 across multiple instances in the *{ma}* cloud.  Two `ALB` are used in the deployment of
 *{ocp}*:
