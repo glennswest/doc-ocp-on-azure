@@ -32,6 +32,6 @@ The HAProxy template router enable routes created by developers to be used by ex
 NOTE: For high availability purposes, this reference architecture deploys two router pods and creates an `Azure Load Balancer` which performs a health check
 and forwards traffic to router pods on port 80 and 443.
 
-IMPORTANT: Due to the current *{ma}* limitations on subdomains, the default wildcard entry uses the nip.io service. This can be modified after the installation and it is explained in the <<ch2_dns.adoc,Microsoft Azure DNS>> section
+IMPORTANT: Due to the current *{ma}* limitations on subdomains, the default wildcard entry uses the nip.io service. This can be modified after the installation and it is explained in the <<dns,Microsoft Azure DNS>> section
 
 // vim: set syntax=asciidoc:

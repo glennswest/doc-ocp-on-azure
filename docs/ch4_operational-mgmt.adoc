@@ -347,7 +347,7 @@ volumeConfig:
 ----
 
 === Yum Repositories
-In section <<required-channels,Required Channels>> the specific repositories for a successful *{ocp}* installation were defined. All systems except for the bastion host should have the same repositories configured. To verify subscriptions match those defined in Required Channels perform the following. The repositories below are enabled during the rhsm-repos playbook during the installation. The installation will be unsuccessful if the repositories are missing from the system.
+In section <<required_channels,Required Channels>> the specific repositories for a successful *{ocp}* installation were defined. All systems except for the bastion host should have the same repositories configured. To verify subscriptions match those defined in Required Channels perform the following. The repositories below are enabled during the rhsm-repos playbook during the installation. The installation will be unsuccessful if the repositories are missing from the system.
 
 `SSH` into the first infrastructure node (infranode1) and verify the command output matches the information below.
 
