@@ -620,7 +620,7 @@ As mentioned earlier in the document an `Azure Resource Group` was created. The 
 NOTE: Perform the following steps from the `Azure web console`.
 
 On the main *{ma}* console, click on *[Resource Group]*. Next on the left hand navigation panel select the *[Your Resource Groups]*.
-Select the _Resource Grou_* recently created and explore the *[Summary]* tabs. Next, on the right hand navigation panel, explore the *[Virtual Machines]*, *[Storage Accounts]*, *[Load Balancers]*, and *[Networks]* tabs
+Select the `Resource Group` recently created and explore the *[Summary]* tabs. Next, on the right hand navigation panel, explore the *[Virtual Machines]*, *[Storage Accounts]*, *[Load Balancers]*, and *[Networks]* tabs
 More detail can be looked at with the configuration by exploring the ansible playbooks and `ARM` json files to see exactly what was configured.
 
 === Testing Failure
