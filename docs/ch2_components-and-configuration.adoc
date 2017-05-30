@@ -73,6 +73,64 @@ Instance sizing can be changed when the `ARM` template is run which is covered i
 NOTE: For higher availability, multiple clusters should be created, and federation should be used.
 This architecture is emerging and will be described in future reference architecture.
 
+==== *{ma}* Cloud Instance Storage Details
+Linux VMs in *{ma}* are created by default with two virtual disks attached, where the first one is the `operating system disk` and the second one is a `temporary disk` where the data persistence is not guaranteed and it is used by default to store a swap file created by the https://docs.microsoft.com/en-us/azure/virtual-machines/linux/agent-user-guide[`Azure Linux Agent`].
+
+As a best practice, the instances where can be able to run containers, a dedicated disk (`datadisk`) is configured to store the container image layers as well as a dedicated disk to store the `emptyDir` volumes in *{ocp}*. The disk setup is provided in the `ARM` template of each virtual machine type like `master.json` in the git repository for *{ocp}* master instances.
+
+`Data disks` can be created up to 1023 GB where `operating system disk` and `temporary disk` size depend on the size of the virtual machine, where the default `Standard_DS4_v2` used in this reference architecture for masters and nodes is:
+
+.Instance Storage details for masters and nodes by default
+|====
+^|Type ^|Name ^|Mountpoint ^|Size ^|Purpose
+
+| `operating system disk` | sda | `/boot` & `/` | 32GB | Root filesystem
+| `temporary disk` | sdb | `/mnt/resource` | 128 GB | Temporary storage
+| `data disk` | sdc | `/var/lib/origin/openshift.local.volumes` | 128 GB | *{ocp}* `emptyDir` volumes
+| `data disk` | sdd | none | 128 GB | Docker images storage
+|====
+
+The following is a sample output in a *{ocp}* master virtual machine deployed using this reference architecture where the mountpoints as well as the disks can be seen as described:
+
+[subs=+quotes]
+----
+$ *lsblk*
+NAME                              MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+fd0                                 2:0    1    4K  0 disk
+sda                                 8:0    0   32G  0 disk
+├─sda1                              8:1    0  500M  0 part /boot
+└─sda2                              8:2    0 31,5G  0 part /
+sdb                                 8:16   0   28G  0 disk
+└─sdb1                              8:17   0   28G  0 part /mnt/resource
+sdc                                 8:32   0  128G  0 disk
+└─sdc1                              8:33   0  128G  0 part /var/lib/origin/openshift.local.volumes
+sdd                                 8:48   0  128G  0 disk
+└─sdd1                              8:49   0  128G  0 part
+  ├─docker--vg-docker--pool_tmeta 253:0    0  132M  0 lvm
+  │ └─docker--vg-docker--pool     253:2    0   51G  0 lvm
+  └─docker--vg-docker--pool_tdata 253:1    0   51G  0 lvm
+    └─docker--vg-docker--pool     253:2    0   51G  0 lvm
+sr0                                11:0    1  1,1M  0 rom
+----
+
+TIP: Swap is disabled automatically in the installation with the git repository scripts in nodes where pods will run as a https://docs.openshift.com/container-platform/3.5/admin_guide/overcommit.html#disabling-swap-memory[best practice]
+
+NOTE: For more detail about the `emptyDir` and container image storage, see the <<docs/ch4_operational-mgmt.adoc,Management of Maximum Pod Size>> section
+
+The bastion host only has the default `operating system disk` and `temporary disk`, where in the `Standard_DS1_v2` virtual machine size are:
+
+.Instance Storage details for bastion by default
+|====
+^|Type ^|Name ^|Mountpoint ^|Size ^|Purpose
+
+| `operating system disk` | sda | `/boot` & `/` | 32GB | Root filesystem
+| `temporary disk` | sdb | `/mnt/resource` | 128 GB | Temporary storage
+|====
+
+All the disks created by this reference architecture for the virtual machines use the `Azure Premium Disk` to performance reasons (high throughput and IOPS).
+
+NOTE: For more information, see https://docs.microsoft.com/en-us/azure/storage/storage-about-disks-and-vhds-linux[about disks and VHDs for Azure Linux VMs]
+
 === *{ma}* Load Balancer Details
 Two `Azure Load Balancers` (`ALB`) are used in this reference environment. The table below describes the `ALB`, the load balancer
 `DNS` name, the instances in which the `Azure Load Balancers` (`ALB`) is attached, and the port monitored by the load balancer to state whether an instance is in or out of service.
@@ -93,9 +151,10 @@ To avoid reconfiguring DNS every time a new route is created, an external wildca
 
 For example, create a wildcard DNS entry for `cloudapps.example.com` that has a low time-to-live value (TTL) and points to the public IP address of the `Router load balancer`:
 
-```
+[subs=+quotes]
+----
 *.cloudapps.example.com. 300 IN A 192.168.133.2
-```
+----
 
 === Software Version Details
 The following tables provide the installed software versions for the different servers that make up the *{rhocp}* highly available reference environment.
