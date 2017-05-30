@@ -24,6 +24,6 @@ and health monitoring.
 
 NOTE: For more information see the https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-overview[Azure Load Balancer documentation]
 
-`Azure Load Balancer` implements parts of the <<Routing Layer>>.
+`Azure Load Balancer` implements parts of the <<Routing-Layer>>.
 
 // vim: set syntax=asciidoc:
