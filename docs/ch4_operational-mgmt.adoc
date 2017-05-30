@@ -1,3 +1,4 @@
+[[Operational-Management]]
 == Operational Management
 With the successful deployment of *{ocp}*, the following section demonstrates how to confirm proper functionality of the *{rhocp}*.
 
@@ -292,6 +293,9 @@ projectConfig:
 
 NOTE: If making any changes to the master configuration then the master API service must be restarted or the configuration change will not take place. Any changes and the subsequent restart must be done on all masters.
 
+
+[[max_pod_size]]
+
 === Management of Maximum Pod Size
 Quotas are set on ephemeral volumes within pods to prohibit a pod from becoming too large and impacting the node. There are three places where sizing restrictions should be set. When persistent volume claims are not set a pod has the ability to grow as large as the underlying filesystem will allow. The required modifications are set by automatically.
 
@@ -343,7 +347,7 @@ volumeConfig:
 ----
 
 === Yum Repositories
-In section <<docs/ch2_components-and-configuration.adoc#Required Channels,Required Channels>> the specific repositories for a successful *{ocp}* installation were defined. All systems except for the bastion host should have the same repositories configured. To verify subscriptions match those defined in Required Channels perform the following. The repositories below are enabled during the rhsm-repos playbook during the installation. The installation will be unsuccessful if the repositories are missing from the system.
+In section <<required-channels,Required Channels>> the specific repositories for a successful *{ocp}* installation were defined. All systems except for the bastion host should have the same repositories configured. To verify subscriptions match those defined in Required Channels perform the following. The repositories below are enabled during the rhsm-repos playbook during the installation. The installation will be unsuccessful if the repositories are missing from the system.
 
 `SSH` into the first infrastructure node (infranode1) and verify the command output matches the information below.
 

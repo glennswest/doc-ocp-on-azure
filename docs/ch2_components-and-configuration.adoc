@@ -113,7 +113,7 @@ sr0                                11:0    1  1,1M  0 rom
 
 TIP: Swap is disabled automatically in the installation with the git repository scripts in nodes where pods will run as a https://docs.openshift.com/container-platform/3.5/admin_guide/overcommit.html#disabling-swap-memory[best practice]
 
-NOTE: For more detail about the `emptyDir` and container image storage, see the <<docs/ch4_operational-mgmt.adoc,Management of Maximum Pod Size>> section
+NOTE: For more detail about the `emptyDir` and container image storage, see the <<max_pod_size,Management of Maximum Pod Size>> section
 
 The bastion host only has the default `operating system disk` and `temporary disk`, where in the `Standard_DS1_v2` virtual machine size are:
 
@@ -167,6 +167,7 @@ The following tables provide the installed software versions for the different s
 | Ansible | 2.2.1
 |====
 
+[[required_channels]]
 === Required Channels
 A subscription to the following channels is required in order to deploy this reference environment's configuration.
 
