@@ -27,7 +27,7 @@ The *{ocp}* web console and API can be accessed directly via the automatically c
 DNS entry while the application access is accessed using the *nip.io* service that provides
 a wildcard `DNS` A record to forward traffic to the `Router load balancer`.
 
-NOTE: See <<docs/ch2_dns.adoc,Microsoft Azure DNS>> section for more information about the DNS configuration
+NOTE: See <<dns,Microsoft Azure DNS>> section for more information about the DNS configuration
 
 image::images/OSE-on-Azure.png[]
 
