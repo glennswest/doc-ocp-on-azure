@@ -16,6 +16,6 @@ This reference architecture covered the following topics:
 * Validating the environment
 * Testing failover
 
-For any questions or concerns, please email refarch-feedback@redhat.com and ensure to visit the http://red.ht/1IEYbQT[Red Hat Reference Architecture page to find about all of our Red Hat solution offerings.
+For any questions or concerns, please email refarch-feedback@redhat.com and ensure to visit the http://red.ht/1IEYbQT[Red Hat Reference Architecture page to find about all of our Red Hat solution offerings].
 
 // vim: set syntax=asciidoc:
