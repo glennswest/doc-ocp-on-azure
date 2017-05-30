@@ -1,5 +1,5 @@
-=== *{ma}* DNS
-DNS is an integral part of a successful *{ocp}* environment. *{ma}* provides a DNS-as-a-Service called *Azure DNS*, per Microsoft;
+=== Microsoft Azure DNS
+DNS is an integral part of a successful *{ocp}* environment. *{ma}* provides a DNS-as-a-Service called `Azure DNS`, per Microsoft;
 "The Microsoft global network of name servers has the scale and redundancy to ensure ultra-high availability for your domains.
 With *{ma}* DNS, you can be sure that your DNS will always be available."
 
