@@ -9,7 +9,7 @@ cloud. The following subnets and CIDR listed below are used.
 
 IMPORTANT: Substitute the values if needed
 to ensure no conflict with an existing CIDR or subnet in the environment. The values
-are defined in the template `https://github.com/openshift/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible/azuredeploy.json`
+are defined in the template https://github.com/openshift/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible/azuredeploy.json
 
 .VNet Networking
 |====
