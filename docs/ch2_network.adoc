@@ -14,7 +14,6 @@ are defined in the template `https://github.com/openshift/openshift-ansible-cont
 .VNet Networking
 |====
 ^|CIDR/Subnet ^| Values
-
 | CIDR | 10.0.0.0/16
 | Master Subnet | 10.0.0.0/24
 | Node Subnet | 10.0.1.0/24
