@@ -14,7 +14,7 @@ architecture will focus on cloud provider specific storage.
 NOTE: This reference architecture is emerging and components like Container-Native Storage (`CNS`),
 and Container-Ready Storage(`CRS`) will be described in future revisions.
 
-==== Persistent Volumes
+=== Persistent Volumes
 Container storage is defined by the concept of `persistent volumes` (`pv`) which
 are *{ocp}* objects that allow for storage to be defined and then used by
 pods for data persistence. Requesting of `persistent volumes` is done
@@ -27,7 +27,7 @@ NOTE: For more information about the `persistent volumes` and its lifecycle, see
 
 `Persistent volumes` can be preprovisioned by the *{ocp}* administrator by creating them in the underlying infrastructure and in *{ocp}* manually, or the administrator can configure *{ocp}* to create automatically the proper `persistent volumes` when users request them using the `dynamic provisioning` and `storage classes` capabilities of *{ocp}*.
 
-==== Storage Classes
+=== Storage Classes
 The `StorageClass` resource object describes and classifies different types of
 storage that can be requested, as well as provides a means for passing parameters
 to the backend for dynamically provisioned storage on demand. `StorageClass`
@@ -39,7 +39,7 @@ underlying storage volume sources. Because of this the naming of the `storage cl
 defined in the `StorageClass` object should be useful in understanding the type of
 storage it maps to (ie., `HDD` vs `SDD` or `Premium_LRS` vs `Standard_LRS`).
 
-=== Cloud Provider Specific Storage
+== Cloud Provider Specific Storage
 Cloud provider specific storage is storage that is provided from *{ma}*. This type of storage
 is presented as an `Data disk VHD` and can be mounted by one pod at a time. It is needed to configure *{ocp}* with *{ma}* settings like the `resourceGroup` or `subscriptionID` in the `/etc/azure/azure.conf` file on masters and nodes as well as in the *{ocp}* masters and nodes configuration file to be able to use `VHD` as `persistent storage` for pods. The settings needed are automatically configured as part of the installation process using the code provided in the https://github.com/openshift/openshift-ansible-contrib[openshift-ansible-contrib] git repository.
 
@@ -51,7 +51,7 @@ that `VHD` storage can only use the access mode of `Read-Write-Once` (`RWO`).
 
 The `VHDs` used in  *{ma}* are `.vhd` files stored as page blobs in a standard or premium storage account in *{ma}* where standard delivers cost-effective storage and premium delivers high-performance, low-latency storage.
 
-==== Creating a Storage Class
+=== Creating a Storage Class
 When requesting cloud provider specific storage in *{ma}* for *{ocp}*, there are two options to define a `storage class`:
 
 * Create a `service account` in the same `resource group` where the *{ocp}* cluster has been deployed in *{ma}* where all the `VHDs` will be created.
@@ -109,7 +109,7 @@ $ *oc create -f my-storage-class.yaml*
 Multiple `StorageClassess` objects can be defined depending on the storage needs of the
 pods within *{ocp}*.
 
-==== Creating and using a Persistent Volumes Claim
+=== Creating and using a Persistent Volumes Claim
 
 The example below shows a dynamically provisioned
 volume being requested from the `StorageClass` named `mystorageclass`.
