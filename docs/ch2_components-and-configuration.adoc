@@ -1,5 +1,3 @@
-[[refarch_details]]
-
 == Components and Configuration
 This chapter describes the reference architecture environment that is deployed providing
  a highly available *{ocp}* environment on *{ma}*.
