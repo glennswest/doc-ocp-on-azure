@@ -502,7 +502,7 @@ Observe the output of `oc get all`
 
 ==== Explore the Docker Registry
 The OpenShift Ansible playbooks configure three infrastructure nodes that have one registry running. In order to understand the configuration and mapping process of the registry pods, the command `oc describe` is used.
-`oc describe` details how registries are configured and mapped to the `Azure Blob Storage` using the `REGISTRY_STORAGE_*` environment variables.
+`oc describe` details how registries are configured and mapped to the `Azure Blob Storage` using the `REGISTRY_STORAGE` environment variables.
 
 NOTE: Perform the following steps from the local workstation.
 
