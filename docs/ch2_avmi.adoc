@@ -1,23 +1,37 @@
 [[AVMI]]
 
-==== Azure VM Images
-Azure VM Images provide the required information to launch an instance. In this guide, the the On-Demand Red Hat Enterprise Linux (RHEL)
-image in the Azure Gallery is used. The Red Hat RHEL Image carries an additional charge in addition to the base Linux VM price.
+==== *{ma}* VM Images
+`Azure Virtual Machines Images` provide different virtual machine images to launch instances. In this reference architecture, the `On-Demand` *Red Hat Enterprise Linux* (`RHEL`) image in the *Azure Marketplace* is used.
 
-NOTE: For more information see https://azure.microsoft.com/en-us/pricing/details/virtual-machines/red-hat[Azure Documentation].
+IMPORTANT: The *Red Hat Enterprise Linux* image carries an additional charge in addition to the base `Linux VM` price. For more information on *{ma}* pricing for Red Hat images see https://azure.microsoft.com/en-us/pricing/details/virtual-machines/red-hat[Azure Documentation].
 
-==== Azure VM Sizes
+==== *{ma}* VM Sizes
+*{ma}* offers https://docs.microsoft.com/en-us/azure/virtual-machines/linux/sizes[different VM sizes] that can be used to deploy the *{ocp}* environment.
+Further, all the nodes, have been selected with `premium storage`, to allow the best performance.
 
-The bastion host size is controlled by the master size
-specified in the template. The Infra nodes can be specified separately. Node VM
-size is an important parameter for selecting how many containers as well as how big containers
-will be. The current default for nodes allocates 28 Gigabytes of memory. This gives
-around 26 gigabytes for application usage. If the containers are memory intensive
-then it is advised to either increase the node count, or increase the node memory size.
-For these applications, choosing a "Standard_D14_v2" will give 112 gigabytes of memory or another VM size with more memory if needed.
+NOTE: The sizes provided in this reference architecture are a guide but it is advised to see the
+https://docs.openshift.com/container-platform/3.5/install_config/install/planning.html#sizing[OpenShift Container Platform 3 Sizing Considerations]
+for more information
 
-Further, all the nodes, have been selected with Microsoft Azure Premium Storage, to
-allow the best performance.
+===== Bastion
+The bastion host size is set by the `bastionVMSize` parameter
+specified in the template file `reference-architecture/azure-ansible/azuredeploy.json` and the default value is set to `Standard_DS1_v2`
 
+===== Masters
+The masters host size is set by the `masterVMSize` parameter
+specified in the template file `reference-architecture/azure-ansible/azuredeploy.json` and the default value is set to `Standard_DS4_v2`
+
+===== Infrastructure nodes
+The infrastructure nodes size is set by the `infranodeVMSize` parameter
+specified in the template file `reference-architecture/azure-ansible/azuredeploy.json` and the default value is set to `Standard_DS4_v2`
+
+===== Application nodes
+The application nodes size is set by the `nodeVMSize` parameter
+specified in the template file `reference-architecture/azure-ansible/azuredeploy.json` and the default value is set to `Standard_DS4_v2`
+
+Application node VM size is an important parameter for selecting how many containers as well as how big containers
+will be. The current default value for application nodes size allocates 8 CPU cores and 28 Gigabytes of memory for each VM.
+If the containers are memory intensive then it is advised to either increase the node count, or increase the node memory size.
+For these applications, choosing a `Standard_D14_v2` size will give 112 Gigabytes of memory or another VM size with more memory if needed.
 
 // vim: set syntax=asciidoc:

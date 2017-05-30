@@ -4,11 +4,10 @@ In this reference architecture, four network security groups are created. The pu
  also are used to restrict server to server communications inside the `VNet`. Network security groups provide
  an extra layer of security similar to a firewall. In the event a port is opened on an instance,
  the security group will not allow the communication to the port unless explicitly stated in a network security group.
- These settings are in each node types json file, located in https://github.com/openshift/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible/ (like master.json for master instances)
+ These settings are in each node types json file, located in https://github.com/openshift/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible/ (like `master.json` for master instances)
 
 ==== Bastion Security Group
 The Bastion network security group allows `SSH`. Any connectivity via `SSH` to the master, application or infrastructure nodes must go through the bastion host.
-
 
 ==== Master Security Group
 The Master network security group allows `SSH` from the bastion, and communications to other masters.
@@ -16,8 +15,6 @@ The Master network security group allows inbound access on port 8443 from the in
 The traffic is then allowed to be forwarded to the master instances.
 
 ==== Router/Infra Security Group
-
-The Router/Infra network security group allows inbound access on port 80 and 443. If the applications running on the OpenShift cluster are using different ports this can be adjusted as needed.
-
+The Router/Infra network security group allows inbound access on port 80 and 443. If the applications running on the *{ocp}* cluster are using different ports this can be adjusted as needed.
 
 // vim: set syntax=asciidoc:

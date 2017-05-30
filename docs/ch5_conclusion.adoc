@@ -1,15 +1,15 @@
 == Conclusion
 
-Red Hat solutions involving the OpenShift Container Platform are created to deliver a production-ready foundation that simplifies the deployment process, shares the latest best practices, and provides a stable highly available environment on which to run production applications.
+Red Hat solutions involving the *{ocp}* are created to deliver a production-ready foundation that simplifies the deployment process, shares the latest best practices, and provides a stable highly available environment on which to run production applications.
 
 This reference architecture covered the following topics:
 
-* A completely provisioned infrastructure in `Azure`
-* Infrastructure nodes in Router and Registry pods scaled accordingly
-* Native integration with `Azure` services.
-** `Azure Load Balancer` load balancing for the Master instances and for the Infrastructure instances
-** `Azure` VHD storage for persistent storage of container images
-** `Azure Premium Storage` for /var/lib/docker on each node
+* A completely provisioned infrastructure in *{ma}* public cloud
+* *{ocp}* router and registry deployed in dedicated infrastructure nodes
+* Native integration with *{ma}* services as:
+** `Azure Load Balancer` for load balancing the API and console and for the applications running in *{ocp}*
+** `Azure VHD` storage for persistent storage of container images
+** `Azure Premium Storage` for docker storage on each node
 ** `Azure Blob Storage` for registry to increase scaling
 ** `Azure Availability Zones` to increase reliability
 * Creation of applications

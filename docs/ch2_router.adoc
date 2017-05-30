@@ -1,26 +1,37 @@
 === OpenShift Router
+Pods inside of an *{ocp}* cluster are only reachable via their IP addresses on
+the cluster network. To be able to access pods from outside the *{ocp}* cluster, *{ocp}* provides a few options:
 
-Pods inside of an OpenShift cluster are only reachable via their IP addresses on
-the cluster network. An edge load balancer can be used to accept traffic from
-outside networks and proxy the traffic to pods inside the OpenShift cluster.
+* Router
+* Load Balancer Service
+* Service ExternalIP
+* Service NodePort
+* Virtual IPs
+* Non-Cloud Edge Router Load Balancer
+* Edge Load Balancer
 
-An OpenShift administrator can deploy routers in an OpenShift cluster. These
-enable routes created by developers to be used by external clients.
-
-OpenShift routers provide external hostname mapping and load balancing to
-services over protocols that pass distinguishing information directly to the
+*{ocp}* routers provide external hostname mapping and load balancing to
+services exposed by users over protocols that pass distinguishing information directly to the
 router; the hostname must be present in the protocol in order for the router
-to determine where to send it. Routers support the following protocols:
+to determine where to send it. Routers currently support the following protocols:
 
 * HTTP
 * HTTPS (with SNI)
 * WebSockets
 * TLS with SNI
 
-The router utilizes the wildcard zone specified during the installation and configuration
-of OpenShift. This wildcard zone is used by the router to create routes for a service running within the
-OpenShift environment to a publically accessible URL. The wildcard zone itself is a wildcard entry
-in `Azure DNS` which is linked using a CNAME to an `Azure Load Balancer` which performs a health check
+There are two different router plug-ins that can be deployed in *{ocp}*:
+
+* HAProxy template router
+* F5 router
+
+NOTE: This reference architecture uses HAProxy template routers as the main mechanism to access the pods from outside the *{ocp}* cluster. For more information on the different options, see https://docs.openshift.com/container-platform/3.5/dev_guide/getting_traffic_into_cluster.html[Getting Traffic into the Cluster documentation] and https://docs.openshift.com/container-platform/3.5/install_config/router/index.html[Router Overview]
+
+The HAProxy template router enable routes created by developers to be used by external clients. To avoid reconfiguration of the DNS servers every time a route is created, the suggested method is to define a wildcard DNS entry that will redirect every hostname to the router.
+
+NOTE: For high availability purposes, this reference architecture deploys two router pods and creates an `Azure Load Balancer` which performs a health check
 and forwards traffic to router pods on port 80 and 443.
+
+IMPORTANT: Due to the current *{ma}* limitations on subdomains, the default wildcard entry uses the nip.io service. This can be modified after the installation and it is explained in the <<ch2_dns.adoc,Microsoft Azure DNS>> section
 
 // vim: set syntax=asciidoc:

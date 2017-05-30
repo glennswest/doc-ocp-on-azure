@@ -1,30 +1,45 @@
-===  Azure Virtual Network (VNet)
-
+=== *{ma}* Virtual Network (VNet)
 An `Azure VNet` provides the ability to set up custom virtual networking which includes subnets, and
 IP address ranges. In this reference implementation
 guide, a dedicated `VNet` is created with all its accompanying services to provide a
-stable network for the OpenShift v3 deployment.
+stable network for the *{ocp}* deployment.
 
-A `VNet` is created as a logical representation of a networking environment in the `Azure`
-cloud. The following subnets and CIDR listed below are used. Substitute the values
+A `VNet` is created as a logical representation of a networking environment in the *{ma}*
+cloud. The following subnets and CIDR listed below are used.
+
+IMPORTANT: Substitute the values if needed
 to ensure no conflict with an existing CIDR or subnet in the environment. The values
-are defined in `https://github.com/openshift/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible/azuredeploy.json`.
+are defined in the template `https://github.com/openshift/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible/azuredeploy.json`
 
 .VNet Networking
 |====
-^|CIDR / Subnet ^| Values
+^|CIDR/Subnet ^| Values
 
 | CIDR | 10.0.0.0/16
-| Master Subnet 1 | 10.0.0.0/24
-| Node Subnet 2 | 10.0.1.0/24
-| Infra Subnet 3 | 10.0.2.0/24
+| Master Subnet | 10.0.0.0/24
+| Node Subnet | 10.0.1.0/24
+| Infra Subnet | 10.0.2.0/24
 |====
 
 The `VNet` is created and a human readable tag is assigned. Three subnets are created in the `VNet`.
 The bastion instance is on the Master Subnet.
-The two internal `Load Balancers` allow access to the OpenShift masters and the routing of application
-traffic. The Nodes are able to communicate to the internet for packages, container images, and
-Github repositories.
+The two internal load balancers allow access to the *{ocp}* API and console and the routing of application
+traffic. All the VMs are able to communicate to the internet for packages, container images, and
+external git repositories.
 
-For more information see https://azure.microsoft.com/en-us/documentation/articles/virtual-networks-overview/
+NOTE: For more information see https://azure.microsoft.com/en-us/documentation/articles/virtual-networks-overview/[Azure Virtual Networks documentation]
+
+=== OpenShift SDN
+*{ocp}* uses a software-defined networking (`SDN`) approach to provide a unified cluster network that enables communication between pods across the *{ocp}* cluster. This pod network is established and maintained by the OpenShift SDN, which configures an overlay network using Open vSwitch (OVS).
+
+There are three different plug-ins for configuring the pod network
+
+* The `redhat/ovs-subnet` plug-in which provides a "flat" pod network where every pod can communicate with every other pod and service.
+* The `redhat/ovs-multitenant` plug-in which provides *{ocp}* project level isolation for pods and services. Each project receives a unique Virtual Network ID (VNID) that identifies traffic from pods assigned to the project. Pods from different projects cannot send packets to or receive packets from pods and services of a different project.
+* The `redhat/ovs-networkpolicy` plug-in (currently in Tech Preview) allows project administrators to configure their own isolation policies using NetworkPolicy objects.
+
+The plugin used in this reference architecture is the `redhat/ovs-multitenant` that allows multitenant isolation for pods per project.
+
+For more information about *{ocp}* networking, see https://docs.openshift.com/container-platform/3.5/architecture/additional_concepts/sdn.html[OpenShift SDN] documentation.
+
 // vim: set syntax=asciidoc:
