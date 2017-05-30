@@ -558,8 +558,8 @@ Containers: 2
  Stopped: 0
 Images: 4
 Server Version: 1.10.3
-Storage Driver: _devicemapper_
- Pool Name: _docker--vol-docker--pool_
+Storage Driver: devicemapper
+ Pool Name: docker--vol-docker--pool
  Pool Blocksize: 524.3 kB
  Base Device Size: 3.221 GB
  Backing Filesystem: xfs
@@ -798,7 +798,7 @@ Change to the default *{ocp}* project and check the registry pod location
 ----
 $ *oc get pods -o wide -n default*
 NAME                       READY     STATUS    RESTARTS   AGE       IP           NODE
-docker-registry-4-9r033    1/1       Running   0          2h        10.128.6.5   _infranode3_
+docker-registry-4-9r033    1/1       Running   0          2h        10.128.6.5   infranode3
 registry-console-1-zwzsl   1/1       Running   0          5d        10.131.4.2   infranode2
 router-1-09x4g             1/1       Running   0          5d        10.0.2.5     infranode2
 router-1-6135c             1/1       Running   0          5d        10.0.2.4     infranode1
