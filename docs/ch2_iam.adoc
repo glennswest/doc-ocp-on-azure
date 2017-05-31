@@ -1,6 +1,6 @@
 ====  Identity and Access Management
 For this reference account, a *{ma}* account is required. Ideally this is either a pay-as-you-go
-account, or a Microsoft Enterprise Agreement.
+account, or a *Microsoft Enterprise Agreement*.
 
 You must have enough resources to deploy the reference architecture, otherwise the installation will fail.
 
