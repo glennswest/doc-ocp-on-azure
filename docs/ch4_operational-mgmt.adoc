@@ -313,6 +313,22 @@ $ *grep "/var/lib/origin/openshift.local.volumes" /etc/fstab*
 /dev/sdc1 /var/lib/origin/openshift.local.volumes xfs gquota 0 0
 ----
 
+*OpenShift Emptydir Quota*
+
+During installation a value for `perFSGroup` is set within the node configuration. The `perFSGroup` setting restricts the ephemeral `emptyDir` volume from growing larger than 512Mi. This `emptyDir` quota is done on the master, infrastructure, and application nodes.
+
+`SSH` into the first infrastructure node (infranode1) to verify `/etc/origin/node/node-config.yml` matches the information below.
+
+[subs=+quotes]
+----
+$ *ssh <user>@<resourcegroup>b.<region>.cloudapp.azure.com*
+$ *ssh <user>@infranode1*
+$ *sudo grep -B2 perFSGroup /etc/origin/node/node-config.yaml*
+volumeConfig:
+  localQuota:
+     perFSGroup: 512Mi
+----
+
 *Docker Storage Setup*
 
 The `/etc/sysconfig/docker-storage-setup` file is created at launch time by the bash script on every node. This file tells the Docker service to use a specific volume group for containers. The extra Docker storage options ensures that a container can grow no larger than 3G. Docker storage setup is performed on all master, infrastructure, and application nodes.
@@ -328,22 +344,6 @@ DEVS=/dev/sdd
 VG=docker-vg
 DATA_SIZE=95%VG
 EXTRA_DOCKER_STORAGE_OPTIONS="--storage-opt dm.basesize=3G"
-----
-
-*OpenShift Emptydir Quota*
-
-During installation a value for `perFSGroup` is set within the node configuration. The `perFSGroup` setting restricts the ephemeral `emptyDir` volume from growing larger than 512Mi. This `emptyDir` quota is done on the master, infrastructure, and application nodes.
-
-`SSH` into the first infrastructure node (infranode1) to verify `/etc/origin/node/node-config.yml` matches the information below.
-
-[subs=+quotes]
-----
-$ *ssh <user>@<resourcegroup>b.<region>.cloudapp.azure.com*
-$ *ssh <user>@infranode1*
-$ *sudo grep -B2 perFSGroup /etc/origin/node/node-config.yaml*
-volumeConfig:
-  localQuota:
-     perFSGroup: 512Mi
 ----
 
 === Yum Repositories
@@ -388,7 +388,7 @@ Once logged, to deploy an example application:
 ==== Log into CLI and Deploy an Application
 Perform the following steps from the local workstation.
 
-Install the `oc` CLI by visiting the public URL of the *{ocp}* deployment. For example, https://resourcegroupname.region.cloudapp.azure.com/console/command-line and click latest release. When directed to https://access.redhat.com, login with the valid Red Hat customer credentials and download the client relevant to the current workstation operating system. Follow the instructions located on the production documentation site for https://docs.openshift.com/container-platform/3.5/cli_reference/get_started_cli.html[getting started with the cli].
+Install the `oc` CLI by visiting the public URL of the *{ocp}* deployment. For example, https://resourcegroupname.region.cloudapp.azure.com/console/command-line and click latest release. When directed to https://access.redhat.com, login with the valid Red Hat customer credentials and download the client relevant to the current workstation operating system. Follow the instructions located on documentation site for https://docs.openshift.com/container-platform/3.5/cli_reference/get_started_cli.html[getting started with the cli].
 
 A token is required to login to *{ocp}*. The token is presented on the https://resourcegroupname.region.cloudapp.azure.com/console/command-line page. Click to show token hyperlink and perform the following on the workstation in which the `oc` client was installed.
 
@@ -478,7 +478,7 @@ The reason it is failing is because the permissions for that user are incorrect.
 NOTE: For more information about the roles and permissions, see https://docs.openshift.com/container-platform/3.5/architecture/additional_concepts/authorization.html[Authorization documentation]
 
 ==== List Router and Registry
-List the router and registry by changing to the `default` project.
+List the router and registry pods by changing to the `default` project.
 
 NOTE: Perform the following steps from the local workstation.
 
@@ -505,8 +505,8 @@ po/router-1-t84cy            1/1             Running       0                    
 Observe the output of `oc get all`
 
 ==== Explore the Docker Registry
-The OpenShift Ansible playbooks configure three infrastructure nodes that have one registry running. In order to understand the configuration and mapping process of the registry pods, the command `oc describe` is used.
-`oc describe` details how registries are configured and mapped to the `Azure Blob Storage` using the `REGISTRY_STORAGE` environment variables.
+The *{ocp}* ansible playbooks configure three infrastructure nodes that have one registry running. In order to understand the configuration and mapping process of the registry pods, the command `oc describe` is used.
+`oc describe` details how registries are configured and mapped to the `Azure Blob Storage` using the `REGISTRY_STORAGE_*` environment variables.
 
 NOTE: Perform the following steps from the local workstation.
 

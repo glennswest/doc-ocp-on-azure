@@ -1,7 +1,7 @@
 === OpenShift Pods
 *{ocp}* leverages the *Kubernetes* concept of a pod, which is one or more containers deployed together on one host, and the smallest compute unit that can be defined, deployed, and managed.
 
-A pod could be just a single container that runs a php application connecting to a database outside of the *{ocp}* environment, or a pod could be a container that runs a php application and a container that runs an ephemeral database. Pods have the ability to be scaled at runtime or at the time of launch using the *{ocp}* web console, the *{ocp}* API or the `oc` CLI tool.
+A pod could be just a single container that runs a php application connecting to a database outside of the *{ocp}* environment, or a pod could be two containers, one of them runs a php application and the other one runs an ephemeral database. Pods have the ability to be scaled at runtime or at the time of launch using the *{ocp}* web console, the *{ocp}* API or the `oc` CLI tool.
 
 NOTE: The *{ocp}* infrastructure components like the router and registry are deployed as pods in the *{ocp}* environment in the installation procedure or after the installation. Even though they are not required for the *{ocp}* environment to run, they provide very useful features so this reference architecture will assume they will be deployed.
 

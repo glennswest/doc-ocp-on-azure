@@ -15,7 +15,7 @@ At this point the infrastructure and *{rhocp}* have been deployed. Log into the 
 After the `Azure Resource Manager` template is submitted, and the `ARM` deployment
 succeeds, the ansible install is started automatically.
 
-A wildcard DNS entry must be created if a custom domain is required, by default the nip.io service is be used as explained in the <<dns,Microsoft Azure DNS>> section.
+A wildcard DNS entry must be created if a custom domain is required, by default the *nip.io* service is be used as explained in the <<dns,Microsoft Azure DNS>> section.
 
 NOTE: When installing using this method the browser certificate must be accepted three times due to the number of masters in the cluster. Failure to accept the certificate can cause disconnect issues and the appearance of network failures.
 

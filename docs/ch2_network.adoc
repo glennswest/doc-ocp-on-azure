@@ -13,7 +13,8 @@ are defined in the template https://github.com/openshift/openshift-ansible-contr
 
 .VNet Networking
 |====
-^|CIDR/Subnet ^| Values
+^|CIDR/Subnet ^|Values
+
 | CIDR | 10.0.0.0/16
 | Master Subnet | 10.0.0.0/24
 | Node Subnet | 10.0.1.0/24
@@ -29,13 +30,13 @@ external git repositories.
 NOTE: For more information see https://azure.microsoft.com/en-us/documentation/articles/virtual-networks-overview/[Azure Virtual Networks documentation]
 
 === OpenShift SDN
-*{ocp}* uses a software-defined networking (`SDN`) approach to provide a unified cluster network that enables communication between pods across the *{ocp}* cluster. This pod network is established and maintained by the OpenShift SDN, which configures an overlay network using Open vSwitch (OVS).
+*{ocp}* uses a software-defined networking (`SDN`) approach to provide a unified cluster network that enables communication between pods across the *{ocp}* cluster. This pod network is established and maintained by the OpenShift SDN, which configures an overlay network using *Open vSwitch* (`OVS`).
 
-There are three different plug-ins for configuring the pod network
+There are three different plug-ins available in *{ocp}* 3.5 for configuring the pod network:
 
 * The `redhat/ovs-subnet` plug-in which provides a "flat" pod network where every pod can communicate with every other pod and service.
-* The `redhat/ovs-multitenant` plug-in which provides *{ocp}* project level isolation for pods and services. Each project receives a unique Virtual Network ID (VNID) that identifies traffic from pods assigned to the project. Pods from different projects cannot send packets to or receive packets from pods and services of a different project.
-* The `redhat/ovs-networkpolicy` plug-in (currently in Tech Preview) allows project administrators to configure their own isolation policies using NetworkPolicy objects.
+* The `redhat/ovs-multitenant` plug-in which provides *{ocp}* project level isolation for pods and services. Each project receives a unique Virtual Network ID (`VNID`) that identifies traffic from pods assigned to the project. Pods from different projects cannot send packets to or receive packets from pods and services of a different project.
+* The `redhat/ovs-networkpolicy` plug-in (currently in Tech Preview) allows project administrators to configure their own isolation policies using `NetworkPolicy` objects.
 
 The plugin used in this reference architecture is the `redhat/ovs-multitenant` that allows multitenant isolation for pods per project.
 

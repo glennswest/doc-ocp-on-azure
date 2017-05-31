@@ -27,7 +27,7 @@ There are two different router plug-ins that can be deployed in *{ocp}*:
 
 NOTE: This reference architecture uses HAProxy template routers as the main mechanism to access the pods from outside the *{ocp}* cluster. For more information on the different options, see https://docs.openshift.com/container-platform/3.5/dev_guide/getting_traffic_into_cluster.html[Getting Traffic into the Cluster documentation] and https://docs.openshift.com/container-platform/3.5/install_config/router/index.html[Router Overview]
 
-The HAProxy template router enable routes created by developers to be used by external clients. To avoid reconfiguration of the DNS servers every time a route is created, the suggested method is to define a wildcard DNS entry that will redirect every hostname to the router.
+The HAProxy template router enable routes created by developers to be used by external clients. To avoid reconfiguration of the `DNS` servers every time a route is created, the suggested method is to define a wildcard `DNS` entry that will redirect every hostname to the router.
 
 NOTE: For high availability purposes, this reference architecture deploys two router pods and creates an `Azure Load Balancer` which performs a health check
 and forwards traffic to router pods on port 80 and 443.
