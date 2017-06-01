@@ -273,7 +273,7 @@ member f7bbfc4285f239ba is healthy: got healthy result from https://10.0.0.6:237
 NOTE: In this configuration the `etcd` services are distributed among the *{ocp}* master nodes.
 
 === Default Node Selector
-As explained in section 2.12.4 node labels are an important part of the *{ocp}* environment. By default of the reference architecture installation, the default node selector is set to "role=apps" in `/etc/origin/master/master-config.yaml` on all of the master nodes.  This configuration parameter is set during the installation of OpenShift on all masters.
+As explained in <<nodes,Nodes>> section, node labels are an important part of the *{ocp}* environment. By default of the reference architecture installation, the default node selector is set to `role=apps` in `/etc/origin/master/master-config.yaml` on all of the master nodes. This configuration parameter is set during the installation of OpenShift on all masters.
 
 `SSH` into the first master node (master1) to verify the `defaultNodeSelector` is defined.
 

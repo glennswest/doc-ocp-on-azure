@@ -13,21 +13,17 @@ NOTE: The sizes provided in this reference architecture are a guide but it is ad
 https://docs.openshift.com/container-platform/3.5/install_config/install/planning.html#sizing[OpenShift Container Platform 3 Sizing Considerations]
 for more information
 
-===== Bastion
-The bastion host size is set by the `bastionVMSize` parameter
-specified in the template file `reference-architecture/azure-ansible/azuredeploy.json` and the default value is set to `Standard_DS1_v2`
+The VM sizes are specified as parameters in the template file `reference-architecture/azure-ansible/azuredeploy.json` and the following table shows the specific parameter of each VM type and its default value:
 
-===== Masters
-The masters host size is set by the `masterVMSize` parameter
-specified in the template file `reference-architecture/azure-ansible/azuredeploy.json` and the default value is set to `Standard_DS4_v2`
+.Default VM sizes
+|====
+^|Type ^|Parameter ^|Default size
 
-===== Infrastructure nodes
-The infrastructure nodes size is set by the `infranodeVMSize` parameter
-specified in the template file `reference-architecture/azure-ansible/azuredeploy.json` and the default value is set to `Standard_DS4_v2`
-
-===== Application nodes
-The application nodes size is set by the `nodeVMSize` parameter
-specified in the template file `reference-architecture/azure-ansible/azuredeploy.json` and the default value is set to `Standard_DS4_v2`
+| Bastion | `bastionVMSize` | `Standard_DS1_v2`
+| Masters | `masterVMSize` | `Standard_DS4_v2`
+| Infrastructure nodes | `infranodeVMSize` | `Standard_DS4_v2`
+| Application nodes | `nodeVMSize` | `Standard_DS4_v2`
+|====
 
 Application node VM size is an important parameter for selecting how many containers as well as how big containers
 will be. The current default value for application nodes size allocates 8 CPU cores and 28 Gigabytes of memory for each VM.

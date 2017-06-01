@@ -5,14 +5,19 @@ account, or a *Microsoft Enterprise Agreement*.
 You must have enough resources to deploy the reference architecture, otherwise the installation will fail.
 
 During the installation of *{ocp}* using the reference architecture scripts and playbooks, six storage accounts
-are created automatically per cluster:
+are created automatically per cluster. The following table shows the name of every storage account and its purpose:
 
-* `samas<resourcegroup>` - For masters storage
-* `sanod<resourcegroup>` - For application nodes storage
-* `sainf<resourcegroup>` - For infrastructure nodes storage
-* `sareg<resourcegroup>` - For registry persistent volume storage
-* `sapv1<resourcegroup>` - For the `generic` storage class
-* `sapv2<resourcegroup>` - For a non default storage class
+.Storage accounts
+|====
+^|Name ^|Purpose
+
+| `samas<resourcegroup>` | Masters storage
+| `sanod<resourcegroup>` | Application nodes storage
+| `sainf<resourcegroup>` | Infrastructure nodes storage
+| `sareg<resourcegroup>` | Registry persistent volume storage
+| `sapv1<resourcegroup>` | The `generic` storage class
+| `sapv2<resourcegroup>` | A non default storage class
+|====
 
 NOTE: For more information about the *{ma}* identity management and storage accounts, see
 https://azure.microsoft.com/en-us/documentation/articles/fundamentals-identity/[The fundamentals of Azure identity management] and
