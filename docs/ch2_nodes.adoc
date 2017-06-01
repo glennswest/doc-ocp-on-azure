@@ -1,3 +1,4 @@
+[[nodes]]
 === Nodes
 Nodes are *{ma}* instances that serve a specific purpose for *{ocp}*. *{ocp}* masters are also configured as nodes as they are part of the `SDN`. Nodes deployed on *{ma}*
 can be vertically scaled before or after the *{ocp}* installation using the *{ma}* dashboard. There are three types of nodes as described below.
