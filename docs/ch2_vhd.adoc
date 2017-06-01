@@ -1,18 +1,24 @@
-====  Azure Storage - Azure VHD
+==== *{ma}* Storage
+For the use cases considered in this reference architecture, including *{ocp}* applications that connect to containerized databases or need some
+basic persistent storage, we need to consider multiple storage solutions in the cloud and different architectural approaches. *{ma}* offers
+a number of storage choices that offer high durability with three simultaneous replicas, including Standard and Premium storage.
 
-For the use cases considered in this reference architecture, including OpenShift applications that connect to containerized databases or need some
-basic persistent storage, we need to consider multiple storage solutions in the cloud and different architectural approaches. Microsoft Azure offers
-a number of  storage choices that offer high durability with three simultaneous replicas, including Standard and Premium storage.
+Furthermore, a use case requirement is to implement "shared storage" where the volume should allow simultaneous read and write operations. Upon reviewing multiple options supported by *{ocp}* and the underlying
+Red Hat Enterprise Linux infrastructure, a choice was made to use the `Azure VHD` based storage server to give the *{ma}* *{ocp}* nodes the best match of performance
+and flexibility, and use `Azure Blob Storage` for the registry storage.
 
-Furthermore, a use case requirement is to implement “shared storage”. Upon reviewing multiple options supported by OpenShift and the underlying
-Red Hat Enterprise Linux infrastructure, a choice was made to use an Azure VHD based storage server to give the Azure OCP nodes the best match of performance
-and flexibility. The reference architecture will be updated with further storage choices (such as Managed Disks) as they are evaluated.
+NOTE: The reference architecture will be updated with further storage choices (such as Managed Disks) as they are evaluated.
 
-The azure cloud provider plugin for OpenShift will dynamically allocate storage in the pre-created
-storage accounts based on requests for PV. (OCP Version 3.5).
+===== *{ma}* VHD
+The *{ma}* cloud provider plugin for *{ocp}* will dynamically allocate storage in the pre-created
+storage accounts based on requests for PV. In order to make this work, the *{ocp}* environment should be configured properly, including creating a `/etc/azure/azure.conf` file with the *{ma}* account data, modifying the `/etc/origin/master/master-config.yaml` and `/etc/origin/node/node-config.yaml` files and restart the `atomic-openshift-node` and `atomic-openshift-master` services. The scripts provided with this reference architecture do this procedure automatically.
 
-A default storage profile is created, and installed. Any persistent volume claim will result in a new
-vhd being created in the selected storage account. The vhd will be mounted and formated, and allocated to
+NOTE: For more information about the *{ma}* configuration for *{ocp}* storage, see https://docs.openshift.com/container-platform/3.5/install_config/configuring_azure.html[Configuring for Azure] documentation
+
+This reference architecture creates an install a default storage class, so any persistent volume claim will result in a new
+`VHD` being created in the selected storage account. The `VHD` will be created, mounted, formatted, and allocated to
 the container making the request.
+
+NOTE: For more information about `Azure VHD` see https://docs.microsoft.com/en-us/azure/storage/storage-about-disks-and-vhds-linux[About disks and VHDs for Azure Linux VMs] documentation and see https://docs.openshift.com/container-platform/3.5/install_config/persistent_storage/dynamically_provisioning_pvs.html[Dynamic Provisioning and Creating Storage Classes] for more information about storage classes
 
 // vim: set syntax=asciidoc:

@@ -2,6 +2,6 @@
 <productnumber>2017</productnumber>
 <subtitle></subtitle>
 <abstract>
-     <para>The purpose of this document is to provide guidelines on deploying OpenShift 3 on Microsoft Azure.</para>
+     <para>The purpose of this document is to provide guidelines on deploying OpenShift Container Platform 3 on Microsoft Azure.</para>
  </abstract>
  <xi:include href="Common_Content/Legal_Notice.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />

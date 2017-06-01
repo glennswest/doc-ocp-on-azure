@@ -1,18 +1,23 @@
 === Registry
+*{ocp}* can build container images from source code, deploy them, and
+manage their lifecycle. To enable this it is required to deploy the
+https://docs.openshift.com/container-platform/3.5/architecture/infrastructure_components/image_registry.html[Integrated OpenShift Container Platform Registry]
 
-OpenShift can build Docker images from source code, deploy them, and
-manage their lifecycle. To enable this, OpenShift provides an internal,
-integrated Docker registry that can be deployed in the OpenShift environment
-to manage images.
-
-The registry stores Docker images and metadata. For production environment, 
-persistent storage is used for the registry, otherwise any images
+The registry stores container images and metadata. For production environment,
+persistent storage is recommended to be used by the registry, otherwise any images
 built or pushed into the registry would disappear if the pod were to restart.
 
 Using the installation methods described in this document the registry is
-deployed using Azure Blob Storage.
+deployed using `Azure Blob Storage`, an *{ma}* service that provides object storage.
+In order to use `Azure Blob Storage` the registry configuration should be extended. The procedure is detailed in the https://docs.openshift.com/container-platform/3.5/install_config/registry/extended_registry_configuration.html#docker-registry-configuration-reference-storage[OpenShift] and https://docs.docker.com/registry/storage-drivers/azure/[Docker] documentation, and it is to modify the registry `deploymentconfig` to add the `Azure Blob Storage` service details as:
 
-See: https://azure.microsoft.com/en-us/services/storage/blobs/
+[subs=+quotes]
+----
+$ *oc env dc docker-registry -e REGISTRY_STORAGE=azure -e REGISTRY_STORAGE_AZURE_ACCOUNTNAME=<azure_storage_account_name> -e REGISTRY_STORAGE_AZURE_ACCOUNTKEY=<azure_storage_account_key> -e REGISTRY_STORAGE_AZURE_CONTAINER=registry*
+----
 
+This will be done automatically as part of the installation by the scripts provided in the git repository.
+
+NOTE: For more information about the *{ma}* Blob Storage, see: https://azure.microsoft.com/en-us/services/storage/blobs/
 
 // vim: set syntax=asciidoc:
