@@ -103,7 +103,7 @@ In order to find the `organization ID`, a `RHEL` server is required. Perform the
 
 [subs=+quotes]
 ----
-$ *subscription-manger identity*
+$ *subscription-manager identity*
 system identity: 8c85ab6d-495c-451e-b38e-5f09bc3342a0
 name: bastion
 org name: 6616399
