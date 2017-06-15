@@ -202,20 +202,20 @@ data:
 info:    account show command OK
 ----
 +
-Save the command output `Tenant ID` value that will be used for the provisioning.
+Save the command output `ID` value that will be used for the provisioning.
 +
-6. Grant the service principal the access level of `contributor` to allow *{ocp}* to create/delete resources using the `Object ID` and `Tenant ID` parameters from the previous steps
+6. Grant the service principal the access level of `contributor` to allow *{ocp}* to create/delete resources using the `Object ID` and `ID` parameters from the previous steps
 +
 [subs=+quotes]
 ----
-$ *azure role assignment create --objectId <objectID> -o contributor -c /subscriptions/<tenant_id>/*
+$ *azure role assignment create --objectId <objectID> -o contributor -c /subscriptions/<id>/*
 ----
 +
 The following is an example output:
 +
 [subs=+quotes]
 ----
-# *azure role assignment create --objectId 00419334-174b-41e8-9b83-9b5011d8d352 -o contributor -c /subscriptions/77ece336-c110-470d-a446-757a69cb9485/*
+# *azure role assignment create --objectId 00419334-174b-41e8-9b83-9b5011d8d352 -o contributor -c /subscriptions/2581564b-56b4-4512-a140-012d49dfc02c/*
 info:    Executing command role assignment create
 + Finding role with specified name
 /data:    RoleAssignmentId     : /subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/providers/Microsoft.Authorization/roleAssignments/490c9dd5-0bfa-4b4c-bbc0-aa9af130dd06
