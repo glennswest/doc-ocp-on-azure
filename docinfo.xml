@@ -5,3 +5,42 @@
      <para>The purpose of this document is to provide guidelines on deploying OpenShift Container Platform 3 on Microsoft Azure.</para>
  </abstract>
  <xi:include href="Common_Content/Legal_Notice.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+<revhistory>
+  <revision>
+    <revnumber>1.0.2</revnumber>
+    <date>2017-06-23</date>
+    <authorinitials>edu@redhat.com</authorinitials>
+    <revremark>
+      <itemizedlist mark=''>
+        <listitem>
+          Added more information about security groups
+        </listitem>
+      </itemizedlist>
+    </revremark>
+  </revision>
+  <revision>
+    <revnumber>1.0.1</revnumber>
+    <date>2017-06-01</date>
+    <authorinitials>edu@redhat.com</authorinitials>
+    <revremark>
+      <itemizedlist mark='none'>
+        <listitem>
+          Added some sections to clarify some concepts
+        </listitem>
+      </itemizedlist>
+    </revremark>
+  </revision>
+  <revision>
+    <revnumber>1.0</revnumber>
+    <date>2017-01-25</date>
+    <authorinitials>gwest@redhat.com</authorinitials>
+    <revremark>
+      <itemizedlist mark='none'>
+        <listitem>
+          Initial creation of document
+        </listitem>
+      </itemizedlist>
+    </revremark>
+  </revision>
+</revhistory>
