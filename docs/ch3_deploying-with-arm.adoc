@@ -103,7 +103,7 @@ In order to find the `organization ID`, a `RHEL` server is required. Perform the
 
 [subs=+quotes]
 ----
-$ *subscription-manger identity*
+$ *subscription-manager identity*
 system identity: 8c85ab6d-495c-451e-b38e-5f09bc3342a0
 name: bastion
 org name: 6616399
@@ -202,20 +202,20 @@ data:
 info:    account show command OK
 ----
 +
-Save the command output `Tenant ID` value that will be used for the provisioning.
+Save the command output `ID` value that will be used for the provisioning.
 +
-6. Grant the service principal the access level of `contributor` to allow *{ocp}* to create/delete resources using the `Object ID` and `Tenant ID` parameters from the previous steps
+6. Grant the service principal the access level of `contributor` to allow *{ocp}* to create/delete resources using the `Object ID` and `ID` parameters from the previous steps
 +
 [subs=+quotes]
 ----
-$ *azure role assignment create --objectId <objectID> -o contributor -c /subscriptions/<tenant_id>/*
+$ *azure role assignment create --objectId <objectID> -o contributor -c /subscriptions/<id>/*
 ----
 +
 The following is an example output:
 +
 [subs=+quotes]
 ----
-# *azure role assignment create --objectId 00419334-174b-41e8-9b83-9b5011d8d352 -o contributor -c /subscriptions/77ece336-c110-470d-a446-757a69cb9485/*
+# *azure role assignment create --objectId 00419334-174b-41e8-9b83-9b5011d8d352 -o contributor -c /subscriptions/2581564b-56b4-4512-a140-012d49dfc02c/*
 info:    Executing command role assignment create
 + Finding role with specified name
 /data:    RoleAssignmentId     : /subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/providers/Microsoft.Authorization/roleAssignments/490c9dd5-0bfa-4b4c-bbc0-aa9af130dd06
@@ -253,13 +253,13 @@ of the ansible host inventory, as well as the setup and running of ansible acros
 In order to provision the *{ocp}* environment using the `ARM` template, the following information is required:
 
 * A *{ma}* subscription, with appropriate core and VM quota limits.
-* *Resource Group* - Used as the name of the *{ocp}* Cluster - All the assets of a single cluster use the `Azure Resource Group` to organize and group the assets. This name needs to be unique for each cluster per `Azure Region` (Location).
-* Admin username and password - This will be the admin user, used for multiple purposes:
+* *Resource Group* - Used as the name of the *{ocp}* Cluster - All the assets of a single cluster use the `Azure Resource Group` to organize and group the assets. This name needs to be unique for each cluster per `Azure Region` (Location). As some resources will be created using the resource group name, it must be 3-18 characters in length and use numbers and lower-case letters only.
+* *Admin username and password* - This will be the admin user, used for multiple purposes:
    a. As the `SSH` user to be able to connect to the bastion host, and administer the cluster.
    b. As an *{ocp}* administrative user, able to create and control *{ocp}* from the command line, or the user interface.
 * *SSH Key Data* - This is the *public key* (`~/.ssh/id_rsa.pub`), generated for the user that will be used to `SSH` access to all the VMs. During the creation and installation of *{ocp}* virtual machines, the key will automatically be added to each host. This assures proper security and access. This key must be backed up, as its the only principal way to access the cluster for administration.
 * *SSH Private Data* - This is the *private key* `~/.ssh/id_rsa` file contents that has been base64 encoded. During the creation and installation of *{ocp}* virtual machines, the key will automatically be added to each host. This data should be backed up.
-* *Wildcard Zone* - Hostname for applications in the *{ocp}* cluster (required by the load balancer, but *nip.io* will be used)
+* *Wildcard Zone* - Subdomain for applications in the *{ocp}* cluster (required by the load balancer, but *nip.io* will be used). It is just the subdomain, not the full FQDN. Example wildcardzone parameter will be "refarchapps" and the FQDN will be created as  `refarchapps.<region>.cloudapp.azure.com`
 * *Number of Nodes* - The template supports the creation of 3 to 30 nodes during greenfield creation of a cluster. Note that the quota of the *{ma}* account must support the number chosen.
 * *Image* - The template supports `RHEL` (Red Hat Enterprise Linux) 7.3 or later. The image will be upgraded during the installation process to the latest release.
 * *Master VM Size* (default: `Standard_DS4_v2`) - The default value gives 8 CPU Cores, 28 Gigabytes of memory, with 56 GB of premium storage local disk. This is used for *{ocp}* master nodes, as well as the bastion host.

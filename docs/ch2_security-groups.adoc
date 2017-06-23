@@ -1,20 +1,65 @@
-=== Network Security Groups
-In this reference architecture, four network security groups are created. The purpose of the network security groups are to
- restrict traffic from outside of the `VNet` to servers inside of the `VNet`. The network security groups
+=== *{ma}* Network security groups
+The purpose of the *{ma}* Network security groups (`NSG`) is to
+ restrict traffic from outside of the `VNet` to servers inside of the `VNet`. The Network security groups
  also are used to restrict server to server communications inside the `VNet`. Network security groups provide
- an extra layer of security similar to a firewall. In the event a port is opened on an instance,
- the security group will not allow the communication to the port unless explicitly stated in a network security group.
- These settings are in each node types json file, located in https://github.com/openshift/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible/ (like `master.json` for master instances)
+ an extra layer of security similar to a firewall: in the event a port is opened on an instance,
+ the security group will not allow the communication to the port unless explicitly stated in a Network security group.
+
+`NSG` are grouped depending on the traffic flow (inbound or outbound) and every `NSG` contains rules where every rule specify:
+
+* priority
+* source
+* destination
+* service (network port and network protocol)
+* action on the traffic (allow or deny)
+
+`NSG` rules are processed by priority meaning the first rule matching the traffic it is applied.
+
+All the security groups contains default rules to block connectivity coming from outside the `VNet`, where the default rules allow and disallow traffic as follows:
+
+* Virtual network: Traffic originating and ending in a virtual network is allowed both in inbound and outbound directions.
+* Internet: Outbound traffic is allowed, but inbound traffic is blocked.
+* Load balancer: Allow *{ma}* load balancer to probe the health of the `VMs`.
+
+Once the Network security group is created, it should be associated to an infrastructure component where using the resource manager mechanism to deploy infrastructure in *{ma}* they can be associated to a NIC or a subnet.
+
+NOTE: In this reference architecture, every `VM` is associated to a single NIC, and the Network security groups are associated to NICs, therefore there will be a 1:1:1 relationship between `VM`, NIC and Network security group. For more information about the *{ma}* Network security groups, see https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-nsg[Filter network traffic with Network security groups]
+
+The Network security groups are specified on each node type `json` file, located in https://github.com/openshift/openshift-ansible-contrib/tree/master/reference-architecture/azure-ansible/ (like `master.json` for master instances)
 
 ==== Bastion Security Group
-The Bastion network security group allows `SSH`. Any connectivity via `SSH` to the master, application or infrastructure nodes must go through the bastion host.
+The bastion Network security group allows `SSH` connectivity from the outside to the bastion host. Any connectivity via `SSH` to the master, application or infrastructure nodes must go through the bastion host.
 
-==== Master Security Group
-The Master network security group allows `SSH` from the bastion, and communications to other masters.
-The Master network security group allows inbound access on port 8443 from the internet to the virtual network.
-The traffic is then allowed to be forwarded to the master instances.
+The Network security group applied to the bastion host NIC is called `bastionnsg` and contains the following rules:
 
-==== Router/Infra Security Group
-The Router/Infra network security group allows inbound access on port 80 and 443. If the applications running on the *{ocp}* cluster are using different ports this can be adjusted as needed.
+|====
+^| `NSG` rule name ^|Type ^|Source ^|Destination ^|Service ^|Action
+
+| default-allow-ssh | Inbound | Any | Any | SSH (TCP/22) | Allow
+|====
+
+==== Master Nodes Security Group
+The master nodes Network security group allows inbound access on port 8443 from the internet to the virtual network.
+The traffic is then allowed to be forwarded to the master nodes.
+
+The Network security group applied to every master node instances' NIC are called `master1nsg`, `master2nsg` and `master3nsg` and contain the following rules:
+
+|====
+^| `NSG` rule name ^|Type ^|Source ^|Destination ^|Service ^|Action
+
+| default-allow-openshift-master | Inbound | Any | Any | Custom (TCP/8443) | Allow
+|====
+
+==== Infrastructure nodes Security Group
+The infrastructure nodes Network security group allows inbound access on port 80 and 443. If the applications running on the *{ocp}* cluster are using different ports this can be adjusted as needed.
+
+The Network security group applied to every infrastructure node instances' NIC are called `infranode1nsg`, `infranode2nsg` and `infranode3nsg` and contain the following rules:
+
+|====
+^| `NSG` rule name ^|Type ^|Source ^|Destination ^|Service ^|Action
+
+| default-allow-openshift-router-http | Inbound | Any | Any | HTTP (TCP/80) | Allow
+| default-allow-openshift-router-https | Inbound | Any | Any | HTTPS (TCP/443) | Allow
+|====
 
 // vim: set syntax=asciidoc:
