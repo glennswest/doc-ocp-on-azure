@@ -24,7 +24,7 @@
     <date>2017-06-01</date>
     <authorinitials>Eduardo Minguez (edu@redhat.com)</authorinitials>
     <revremark>
-      <itemizedlist mark='none'>
+      <itemizedlist mark=''>
         <listitem>
           Added some sections to clarify some concepts
         </listitem>
@@ -36,7 +36,7 @@
     <date>2017-01-25</date>
     <authorinitials>Glenn West (gwest@redhat.com)</authorinitials>
     <revremark>
-      <itemizedlist mark='none'>
+      <itemizedlist mark=''>
         <listitem>
           Initial creation of document
         </listitem>
