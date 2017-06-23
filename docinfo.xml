@@ -10,7 +10,7 @@
   <revision>
     <revnumber>1.0.2</revnumber>
     <date>2017-06-23</date>
-    <authorinitials>Eduardo Minguez</authorinitials>
+    <authorinitials>Eduardo Minguez (edu@redhat.com)</authorinitials>
     <revremark>
       <itemizedlist mark=''>
         <listitem>
@@ -22,7 +22,7 @@
   <revision>
     <revnumber>1.0.1</revnumber>
     <date>2017-06-01</date>
-    <authorinitials>Eduardo Minguez</authorinitials>
+    <authorinitials>Eduardo Minguez (edu@redhat.com)</authorinitials>
     <revremark>
       <itemizedlist mark='none'>
         <listitem>
@@ -34,7 +34,7 @@
   <revision>
     <revnumber>1.0</revnumber>
     <date>2017-01-25</date>
-    <authorinitials>Glenn West</authorinitials>
+    <authorinitials>Glenn West (gwest@redhat.com)</authorinitials>
     <revremark>
       <itemizedlist mark='none'>
         <listitem>
