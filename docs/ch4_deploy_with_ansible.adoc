@@ -1,5 +1,5 @@
 == Provisioning ARM Template by using Ansible
-The ARM templates may aksi be deployed via Ansible when you wish to have a repeatable
+The ARM templates may be deployed via Ansible when you wish to have a repeatable
 method of creating a cluster, or you wish to create multiple clusters.
 
 In the reference scripts, a additional directory is provided, `ansibledeployocp`. This provides
