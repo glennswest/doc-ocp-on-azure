@@ -15,6 +15,12 @@ available *{ocp}* environment. The configuration consists of three *{ocp}*
  masters, three *{ocp}* infrastructure nodes, three to thirty *{ocp}* application nodes,
 and native *{ma}* integration. In addition to the configuration, operational management tasks are shown to demonstrate functionality.
 
+There are two ways use the template. First method is to use the web template, presented in Chapter 3, or the second method is to use a ansible playbook
+to create the instance, presented in Chapter 4. The web method is best used for one-time deployment, and the ansible method is useful for repeatable
+deployment of one or multiple clusters.
+
+
+
 Please note the reference architecture deploys *{ocp}* in the *{ma}* *public cloud*, not the *{ma}* *Stack* version nor the *Microsoft National Clouds* regional cloud version.
 
 NOTE: The number of application nodes deployed by this reference architecture has been tested from 3 to 30. The sizing and limits supported by *{ocp}* is explained in https://docs.openshift.com/container-platform/3.5/install_config/install/planning.html#sizing[Planning] document

@@ -232,9 +232,12 @@ info:    role assignment create command OK
 ----
 
 === Introduction to the *{ma}* Template
-`Azure Resource Manager` templates consist of json files that describes the objects that will be deployed in *{ma}*. The main template file for this reference architecture is located in the `reference-architecture/azure-ansible/azuredeploy.json` file in the git repository.
+`Azure Resource Manager` templates consist of json files that describes the objects
+that will be deployed in *{ma}*. The main template file for this reference architecture
+is located in the `reference-architecture/azure-ansible/azuredeploy.json` file in the git repository.
 This file is the main `ARM` template that launches all the other templates under `azure-ansible`.
-There are four types of virtual machines created by the template (bastion, master node, infrastructure node and application node) and for each of these types there is a additional json file that defines each VM type.
+There are four types of virtual machines created by the template (bastion, master node,
+infrastructure node and application node) and for each of these types there is a additional json file that defines each VM type.
 
 |====
 ^|Virtual Machine type ^| Template file
