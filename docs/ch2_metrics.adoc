@@ -1,0 +1,19 @@
+=== *{rhocp}* Metrics
+
+*{rhocp}* environments can be enriched by deploying an optional component called *{rhocp}* metrics that collect metrics exposed by the `kubelet` from pods running in the environment and provides the ability to view CPU, memory, and network-based metrics and display the values in the user interface.
+
+NOTE: *{rhocp}* metrics is a required component for the `horizontal pod autoscaling` feature that allows the user to configure autoscaling pods on a certain capacity thresholds. For more information about pod autoscaling, see https://docs.openshift.com/container-platform/3.5/dev_guide/pod_autoscaling.html#req-for-using-hpas[Pod Autoscaling].
+
+*{rhocp}* metrics it is composed by a few pods running on *{rhocp}* itself:
+
+* Heapster: Heapster scrapes the metrics for CPU, memory and network usage on every pod, then exports them into Hawkular Metrics.
+* Hawkular Metrics: A metrics engine which stores the data persistently in a Cassandra database.
+* Cassandra: Database where the metrics data is stored.
+
+It is important to understand https://docs.openshift.com/container-platform/3.5/install_config/cluster_metrics.html#capacity-planning-for-openshift-metrics[capacity planning] when deploying metrics into an OpenShift environment.
+
+*{rhocp}* metrics components can be customized for longer data persistence, pods limits, replicas of individual components, custom certificates, etc. Within this reference environment, dynamic persistent storage is used to allow for metrics data to be preserved for 7 days and one set of metric pods (Cassandra/Hawkular/Heapster) is deployed optionally on the infrastructure nodes depending on the "metrics" parameter of the `ARM template`.
+
+NOTE: For more information about different customization parameters, see https://docs.openshift.com/container-platform/3.5/install_config/cluster_metrics.html[Enabling Cluster Metrics] documentation.
+
+// vim: set syntax=asciidoc:
