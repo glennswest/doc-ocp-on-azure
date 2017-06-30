@@ -94,25 +94,37 @@ $ vim vars.yaml
 
 NOTE: The parameters detailed description can be found in the official documentation
 
-[subs=+quotes]
-----
-sshkeydata: id_rsa.pub content
-sshprivatedata: id_rsa content in base64 without \n characters (cat ~/.ssh/id_rsa | base64 | tr -d '\n')
-adminusername: User that will be created to login via ssh and as OCP cluster-admin
-adminpassword: Password for the user created (in plain text)
-rhsmusernamepasswordoractivationkey: This should be "usernamepassword" or "activationkey"
+
+===== sshkeydata
+id_rsa.pub content
+===== sshprivatedata
+id_rsa content in base64 without \n characters (cat ~/.ssh/id_rsa | base64 | tr -d '\n')
+===== adminusername
+User that will be created to login via ssh and as OCP cluster-admin
+===== adminpassword
+Password for the user created (in plain text)
+===== rhsmusernamepasswordoractivationkey
+This should be "usernamepassword" or "activationkey"
 If "usernamepassword", then the username and password should be specified
 If "activationkey", then the activation key and organization id should be specified
-rhnusername: The RHN username where the instances will be registered
-rhnusername: "activationkey" if activation key method has been chosen
-rhnpassword: The RHN password where the instances will be registered in plain text
-rhnpassword: "organizationid" if activation key method has been chosen
+===== rhnusername
+The RHN username where the instances will be registered
+===== rhnusername
+"activationkey" if activation key method has been chosen
+===== rhnpassword
+The RHN password where the instances will be registered in plain text
+===== rhnpassword
+"organizationid" if activation key method has been chosen
 subscriptionpoolid: The subscription pool id the instances will use
-resourcegroupname: The Azure resource name that will be created
-aadclientid: Active Directory ID needed to be able to create, move and delete persistent volumes
-aadclientsecret: The Active Directory Password to match the AAD Client ID
-wildcardzone: Subdomain for applications in the OpenShift cluster (required by the load balancer, but nip.io will be used). It is just the subdomain, not the full FQDN. +
-----
+===== resourcegroupname
+The Azure resource name that will be created
+===== aadclientid
+Active Directory ID needed to be able to create, move and delete persistent volumes
+===== aadclientsecret
+The Active Directory Password to match the AAD Client ID
+===== wildcardzone
+Subdomain for applications in the OpenShift cluster (required by the load balancer, but nip.io will be used). It is just the subdomain, not the full FQDN. +
+
 
 Optional (default values are set in `playbooks/roles/azure-deploy/default/main.yaml`)
 

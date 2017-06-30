@@ -1,0 +1,179 @@
+== Persistent Storage
+Container storage by default is not persistent. For example, if a new container
+build occurs then data is lost because the storage is non-persistent or if a container terminates then
+of the all changes to its local filesystem are lost. *{ocp}* offers many
+different types of persistent storage to avoid those situations. Persistent storage ensures that data that
+should persist between builds and container migrations is available.
+
+NOTE: For more information about the available storage options in *{ocp}* see https://docs.openshift.com/container-platform/3.5/architecture/additional_concepts/storage.html#types-of-persistent-volumes[Types of Persistent Volumes]
+
+When choosing a persistent storage backend ensure that the backend supports the
+scaling, speed, and redundancy that the project requires. This reference
+architecture will focus on cloud provider specific storage.
+
+NOTE: This reference architecture is emerging and components like Container-Native Storage (`CNS`),
+and Container-Ready Storage(`CRS`) will be described in future revisions.
+
+=== Persistent Volumes
+Container storage is defined by the concept of `persistent volumes` (`pv`) which
+are *{ocp}* objects that allow for storage to be defined and then used by
+pods for data persistence. Requesting of `persistent volumes` is done
+by using a `persistent volume claim` (`pvc`) object. This claim, when successfully fulfilled
+by the system will also mount the persistent storage to a specific directory
+within a pod or multiple pods. This directory is referred to as the `mountPath`
+and facilitated using a concept known as `bind-mount`.
+
+NOTE: For more information about the `persistent volumes` and its lifecycle, see https://docs.openshift.com/container-platform/3.5/architecture/additional_concepts/storage.html#lifecycle-of-a-volume-and-claim[Lifecycle of a Volume and Claim]
+
+`Persistent volumes` can be preprovisioned by the *{ocp}* administrator by creating them in the underlying infrastructure and in *{ocp}* manually, or the administrator can configure *{ocp}* to create automatically the proper `persistent volumes` when users request them using the `dynamic provisioning` and `storage classes` capabilities of *{ocp}*.
+
+=== Storage Classes
+The `StorageClass` resource object describes and classifies different types of
+storage that can be requested, as well as provides a means for passing parameters
+to the backend for dynamically provisioned storage on demand. `StorageClass`
+objects can also serve as a management mechanism for controlling different levels
+of storage and access to the storage. `Cluster Administrators (cluster-admin)`
+or `Storage Administrators (storage-admin)` define and create the `StorageClass`
+objects that users can use without needing any intimate knowledge about the
+underlying storage volume sources. Because of this the naming of the `storage class`
+defined in the `StorageClass` object should be useful in understanding the type of
+storage it maps to (ie., `HDD` vs `SDD` or `Premium_LRS` vs `Standard_LRS`).
+
+=== Cloud Provider Specific Storage
+Cloud provider specific storage is storage that is provided from *{ma}*. This type of storage
+is presented as an `Data disk VHD` and can be mounted by one pod at a time. It is needed to configure *{ocp}* with *{ma}* settings like the `resourceGroup` or `subscriptionID` in the `/etc/azure/azure.conf` file on masters and nodes as well as in the *{ocp}* masters and nodes configuration file to be able to use `VHD` as `persistent storage` for pods. The settings needed are automatically configured as part of the installation process using the code provided in the https://github.com/openshift/openshift-ansible-contrib[openshift-ansible-contrib] git repository.
+
+NOTE: For more information about the required settings, see https://docs.openshift.com/container-platform/3.5/install_config/configuring_azure.html[Configuring Azure]
+
+Cloud provider storage can be created manually and assigned as a `persistent volume` or a
+`persistent volume` can be created dynamically using a `StorageClass` object. Note
+that `VHD` storage can only use the access mode of `Read-Write-Once` (`RWO`).
+
+The `VHDs` used in  *{ma}* are `.vhd` files stored as page blobs in a standard or premium storage account in *{ma}* where standard delivers cost-effective storage and premium delivers high-performance, low-latency storage.
+
+==== Creating a Storage Class
+When requesting cloud provider specific storage in *{ma}* for *{ocp}*, there are two options to define a `storage class`:
+
+* Create a `service account` in the same `resource group` where the *{ocp}* cluster has been deployed in *{ma}* where all the `VHDs` will be created.
+* Provide a `skuName` and `location` to *{ocp}* where all storage accounts associated with the resource group are searched to find one that matches.
+
+TIP: In this reference architecture the first options has been chosen as it is simpler and avoids searching for matching `service accounts` where they will be provided before using them.
+
+Besides the `/etc/azure/azure.conf` configuration file, it is required to create a `storage account` per `storage class` created in *{ocp}* in order to be able to use `dynamic provisioning` of volumes for the pod storage.
+
+NOTE: This reference architecture creates automatically two different `storage accounts` for pod storage that will be used in different `storage classes` to demonstrate the process.
+
+There are two *{ma}* `storage accounts` created as part of the installation process using the `ARM` template:
+
+* `sapv1<resourcegroup>` - For the `generic` storage class (using premium storage)
+* `sapv2<resourcegroup>` - For a non default storage class (using standard storage)
+
+To create more storage accounts, the azure-cli can be used as:
+
+[subs=+quotes]
+----
+$ *azure storage account create --sku-name <sku> --kind "Storage" -g <resourcegroup> -l <region> <storage account name>*
+----
+
+This example shows how to create a `sapv3sysdeseng` `storage class` using `standard storage` in the `westus` region:
+
+[subs=+quotes]
+----
+$ *azure storage account create --sku-name "LRS" --kind "Storage" -g sysdeseng sapv3sysdeseng -l "westus"*
+info:    Executing command storage account create
++ Checking availability of the storage account name
++ Creating storage account
+info:    storage account create command OK
+----
+
+Once the `storage account` has been created, a `StorageClass` *{ocp}* object can be created to map it as:
+
+[subs=+quotes]
+----
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: mystorageclass
+provisioner: kubernetes.io/azure-disk
+parameters:
+  storageAccount: sapv3sysdeseng
+----
+
+The cluster-admin or storage-admin can then create the `StorageClass` object using the yaml file.
+
+[subs=+quotes]
+----
+$ *oc create -f my-storage-class.yaml*
+----
+
+Multiple `StorageClassess` objects can be defined depending on the storage needs of the
+pods within *{ocp}*.
+
+==== Creating and using a Persistent Volumes Claim
+
+The example below shows a dynamically provisioned
+volume being requested from the `StorageClass` named `mystorageclass`.
+
+[subs=+quotes]
+----
+$ *vi db-claim.yaml*
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+ name: db
+ annotations:
+   volume.beta.kubernetes.io/storage-class: mystorageclass
+spec:
+ accessModes:
+  - ReadWriteOnce
+ resources:
+   requests:
+     storage: 10Gi
+
+$ *oc create -f db-claim.yaml*
+persistentvolumeclaim "db" created
+$ *oc get pvc db*
+NAME      STATUS    VOLUME                                     CAPACITY   ACCESSMODES   AGE
+db        Bound     pvc-be63668e-451e-11e7-b30b-000d3a36dea3   10Gi       RWO           1m
+----
+
+The `cluster-admin` role can also view more information about the `persistent volume`
+
+[subs=+quotes]
+----
+$ *oc describe pv pvc-be63668e-451e-11e7-b30b-000d3a36dea3*
+Name:		pvc-be63668e-451e-11e7-b30b-000d3a36dea3
+Labels:		<none>
+StorageClass:	mystorageclass
+Status:		Bound
+Claim:		testdev/db
+Reclaim Policy:	Delete
+Access Modes:	RWO
+Capacity:	10Gi
+Message:
+Source:
+    Type:		AzureDisk (an Azure Data Disk mount on the host and bind mount to the pod)
+    DiskName:		kubernetes-dynamic-pvc-be63668e-451e-11e7-b30b-000d3a36dea3.vhd
+    DiskURI:		https://sapv3sysdeseng.blob.core.windows.net/vhds/kubernetes-dynamic-pvc-be63668e-451e-11e7-b30b-000d3a36dea3.vhd
+    FSType:		ext4
+    CachingMode:	None
+    ReadOnly:		false
+No events.
+----
+
+==== Deleting a PVC (Optional)
+There may become a point in which a `pvc` is no longer necessary for a project. The
+following can be done to remove the `pvc`.
+
+[subs=+quotes]
+----
+$ *oc delete pvc db*
+persistentvolumeclaim "db" deleted
+$ *oc get pvc db*
+No resources found.
+Error from server: persistentvolumeclaims "db" not found
+----
+
+NOTE: *{ma}* does not support the Recycle reclaim policy, so all the data will be erased
+
+// vim: set syntax=asciidoc:
