@@ -1,11 +1,11 @@
-== Provisioning ARM Template by using Ansible
+=== Provisioning ARM Template by using Ansible
 The ARM templates may be deployed via Ansible playbook when you wish to have a repeatable
 method of creating a cluster, or you wish to create multiple clusters.
 
 In the reference scripts, a additional directory is provided, `ansibledeployocp`. This provides
 example playbooks to directly create clusters using Ansible in a Linux environment.
 
-=== Steps to install using Ansible
+==== Steps to install using Ansible
 First, install git and ansible.
 [subs=+quotes]
 ----
@@ -81,7 +81,7 @@ info:    ad sp create command OK
 
 The `secret` is the serviceprinciple password.
 
-=== Parameters required
+==== Parameters required
 
 The ansible playbook needs some parameters to be specified. There is a `vars.yaml`
 example file included in this repository that should be customized with your environment data.
@@ -122,14 +122,14 @@ Optional (default values are set in `playbooks/roles/azure-deploy/default/main.y
 * `nodevmsize` Application nodes VM size
 * `location` westus by default
 
-=== Running the deploy
+==== Running the deploy
 
 [subs=+quotes]
 ----
 ansible-playbook -e @vars.yaml playbooks/deploy.yml
 ----
 
-==== Sample output
+===== Sample output
 
 [subs=+quotes]
 ----

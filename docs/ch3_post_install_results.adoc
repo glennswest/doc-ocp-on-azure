@@ -23,12 +23,14 @@ image::images/assetlist.png[]
 
 // vim: set syntax=asciidoc:
 
-== Provisioning ARM Template by using Ansible
-While the ARM template may be provisioned by using the web interface described,
-or by using the Azure CLI, another method is to using Ansible. In the reference
-scripts, a additional directory is provided, `ansibledeployocp`. This provides
-example playbook to directly create clusters using ansible in a linux environment.
+=== Provisioning ARM Template by using Ansible
+The ARM templates may be deployed via Ansible playbook when you wish to have a repeatable
+method of creating a cluster, or you wish to create multiple clusters.
 
+In the reference scripts, a additional directory is provided, `ansibledeployocp`. This provides
+example playbooks to directly create clusters using Ansible in a Linux environment.
+
+==== Steps to install using Ansible
 First, install git and ansible.
 [subs=+quotes]
 ----
@@ -51,7 +53,7 @@ Next, install the dependencies using the prepare playbook:
 ansible-playbook playbooks/prepare.yml
 ----
 
-Azure credentials needs to be stored in a file at ~/.azure/credentials with the
+*{ma}* credentials needs to be stored in a file at `~/.azure/credentials` with the
 following format (do not use quotes or double quotes):
 
 [subs=+quotes]
@@ -63,7 +65,7 @@ client_id=33333333-3333-3333-3333-333333333
 secret=ServicePrincipalPassword
 ----
 
-Where `subscription_id` and `tenant` parameters can be obtained from the azure cli:
+Where `subscription_id` and `tenant` parameters can be obtained from the *{ma}* cli:
 
 [subs=+quotes]
 ----
@@ -104,7 +106,7 @@ info:    ad sp create command OK
 
 The `secret` is the serviceprinciple password.
 
-=== Parameters required
+==== Parameters required
 
 The ansible playbook needs some parameters to be specified. There is a `vars.yaml`
 example file included in this repository that should be customized with your environment data.
@@ -115,47 +117,47 @@ $ cp vars.yaml.example vars.yaml
 $ vim vars.yaml
 ----
 
-NOTE: The parameters detailed description can be found in the official documentation
+NOTE: The parameters detailed description can be found in the official documentation in Chapter 3.3
 
-sshkeydata: id_rsa.pub content
-sshprivatedata: id_rsa content in base64 without \n characters (cat ~/.ssh/id_rsa | base64 | tr -d '\n')
-adminusername: User that will be created to login via ssh and as OCP cluster-admin
-adminpassword: Password for the user created (in plain text)
-rhsmusernamepasswordoractivationkey: This should be "usernamepassword" or "activationkey"
-If "usernamepassword", then the username and password should be specified
-If "activationkey", then the activation key and organization id should be specified
-rhnusername: The RHN username where the instances will be registered
-rhnusername: "activationkey" if activation key method has been chosen
-rhnpassword: The RHN password where the instances will be registered in plain text
-rhnpassword: "organizationid" if activation key method has been chosen
-subscriptionpoolid: The subscription pool id the instances will use
-resourcegroupname: The Azure resource name that will be created
-aadclientid: Active Directory ID needed to be able to create, move and delete persistent volumes
-aadclientsecret: The Active Directory Password to match the AAD Client ID
-wildcardzone: Subdomain for applications in the OpenShift cluster (required by the load balancer, but nip.io will be used). It is just the subdomain, not the full FQDN.
+
+* `sshkeydata` id_rsa.pub content
+* `sshprivatedata` id_rsa content in base64 without \n characters (cat ~/.ssh/id_rsa | base64 | tr -d '\n')
+* `adminusername` User that will be created to login via ssh and as *{rhocp}* cluster-admin
+* `adminpassword` Password for the user created (in plain text)
+* `rhsmusernamepasswordoractivationkey`
+   This should be "usernamepassword" or "activationkey". If "usernamepassword", then the username and password should be specified
+   If "activationkey", then the activation key and organization id should be specified
+* `rhnusername` The RHN username where the instances will be registered or "activationkey" if activation key method has been chosen
+* `rhnpassword` The RHN password where the instances will be registered in plain text
+* `rhnpassword` "organizationid" if activation key method has been chosen else password.
+* `subscriptionpoolid` The subscription pool id the instances will use
+* `resourcegroupname` The *{ma}* resource name that will be created
+* `aadclientid` Active Directory ID needed to be able to create, move and delete persistent volumes
+* `aadclientsecret` The Active Directory Password to match the AAD Client ID
+* `wildcardzone` Subdomain for applications in the OpenShift cluster (required by the load balancer, but nip.io will be used). It is just the subdomain, not the full FQDN. +
+
 
 Optional (default values are set in `playbooks/roles/azure-deploy/default/main.yaml`)
 
-templatelink: The ARM template that will be deployed
-numberofnodes: From 3 to 30 nodes
-image: The operating system image that will be used to create the instances
-mastervmsize: Master nodes VM size
-infranodesize: Infrastructure nodes VM size
-nodevmsize: Application nodes VM size
-location: westus by default
+* `templatelink` The ARM template that will be deployed
+* `numberofnodes` From 3 to 30 nodes
+* `image` The operating system image that will be used to create the instances
+* `mastervmsize` Master nodes VM size
+* `infranodesize` Infrastructure nodes VM size
+* `nodevmsize` Application nodes VM size
+* `location` westus by default
 
-=== Running the deploy
+==== Running the deploy
 
 [subs=+quotes]
 ----
 ansible-playbook -e @vars.yaml playbooks/deploy.yml
 ----
 
-==== Sample output
+===== Sample output
 
 [subs=+quotes]
 ----
-$ scripts/run.sh
 
 PLAY [localhost] ****************************************************************************************************************************************
 
