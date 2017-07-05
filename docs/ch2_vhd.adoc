@@ -1,4 +1,4 @@
-==== *{ma}* Storage
+=== *{ma}* Storage
 For the use cases considered in this reference architecture, including *{ocp}* applications that connect to containerized databases or need some
 basic persistent storage, we need to consider multiple storage solutions in the cloud and different architectural approaches. *{ma}* offers
 a number of storage choices that offer high durability with three simultaneous replicas, including Standard and Premium storage.
@@ -9,7 +9,7 @@ and flexibility, and use `Azure Blob Storage` for the registry storage.
 
 NOTE: The reference architecture will be updated with further storage choices (such as Managed Disks) as they are evaluated.
 
-===== *{ma}* VHD
+==== *{ma}* VHD
 The *{ma}* cloud provider plugin for *{ocp}* will dynamically allocate storage in the pre-created
 storage accounts based on requests for PV. In order to make this work, the *{ocp}* environment should be configured properly, including creating a `/etc/azure/azure.conf` file with the *{ma}* account data, modifying the `/etc/origin/master/master-config.yaml` and `/etc/origin/node/node-config.yaml` files and restart the `atomic-openshift-node` and `atomic-openshift-master` services. The scripts provided with this reference architecture do this procedure automatically.
 
