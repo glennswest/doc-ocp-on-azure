@@ -381,7 +381,7 @@ $ cp vars.yaml.example vars.yaml
 $ vim vars.yaml
 ----
 
-NOTE: The parameters detailed description can be found in the official documentation in Chapter 3.3
+NOTE: The parameters detailed description can be found in the in <<Parameters Required>>
 
 
 * `sshkeydata` id_rsa.pub content
@@ -415,7 +415,7 @@ Optional (default values are set in `playbooks/roles/azure-deploy/default/main.y
 
 [subs=+quotes]
 ----
-ansible-playbook -e @vars.yaml playbooks/deploy.yml
+$ *ansible-playbook -e @vars.yaml playbooks/deploy.yml*
 
 PLAY [localhost] ****************************************************************************************************************************************
 
