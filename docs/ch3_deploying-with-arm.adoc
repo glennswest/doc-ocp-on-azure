@@ -370,19 +370,18 @@ info:    ad sp create command OK
 
 The `secret` is the serviceprincipal password.
 
-==== Parameters required
+==== Ansible Parameters required
 
 The ansible playbook needs some parameters to be specified. There is a `vars.yaml`
 example file included in this repository that should be customized with your environment data.
+
+PARAMETERS
 
 [subs=+quotes]
 ----
 $ cp vars.yaml.example vars.yaml
 $ vim vars.yaml
 ----
-
-NOTE: The parameters detailed description can be found in the in <<Parameters Required>>
-
 
 * `sshkeydata` id_rsa.pub content
 * `sshprivatedata` id_rsa content in base64 without \n characters (cat ~/.ssh/id_rsa | base64 | tr -d '\n')
@@ -433,7 +432,7 @@ localhost                  : ok=3    changed=2    unreachable=0    failed=0
 ----
 
 
-=== Post Ansible Deployment
+=== Post Deployment
 Once the playbooks have successfully completed the next steps will be to perform the steps defined in <<Operational-Management>>.
 In the event that *{ocp}* failed to install, follow the steps in Appendix C: <<Installation-Failure>> to restart the installation of *{ocp}*.
 
