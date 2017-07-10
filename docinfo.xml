@@ -9,7 +9,7 @@
 <revhistory>
   <revision>
     <revnumber>1.0.3</revnumber>
-    <date>2017-04-05</date>
+    <date>2017-07-10</date>
     <authorinitials>Glenn West (gwest@redhat.com)</authorinitials>
     <revremark>
       <itemizedlist mark=''>
@@ -19,6 +19,7 @@
       </itemizedlist>
     </revremark>
   </revision>
+  <revision>
     <revnumber>1.0.2</revnumber>
     <date>2017-06-23</date>
     <authorinitials>Eduardo Minguez (edu@redhat.com)</authorinitials>
