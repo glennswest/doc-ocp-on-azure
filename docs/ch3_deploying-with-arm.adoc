@@ -370,7 +370,7 @@ info:    ad sp create command OK
 
 The `secret` is the serviceprincipal password.
 
-==== Ansible Parameters required
+*Ansible Parameters required*
 
 The ansible playbook needs some parameters to be specified. There is a `vars.yaml`
 example file included in this repository that should be customized with your environment data.
@@ -410,7 +410,7 @@ Optional (default values are set in `playbooks/roles/azure-deploy/default/main.y
 * `nodevmsize` Application nodes VM size
 * `location` westus by default
 
-==== Running the deploy
+*Running the deploy*
 
 [subs=+quotes]
 ----
