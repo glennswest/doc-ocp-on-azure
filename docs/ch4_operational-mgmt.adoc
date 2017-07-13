@@ -925,6 +925,17 @@ ruby-ex-1-build   0/1       Completed   0          9m
 ruby-ex-1-zwmxd   1/1       Running     0          58s
 ----
 
+After canceling the CPU hog command, the events will show how the deploymentconfig returns to a single replica:
+
+[subs=+quotes]
+----
+$ *oc get events -w*
+LASTSEEN                        FIRSTSEEN                       COUNT     NAME      KIND                      SUBOBJECT   TYPE      REASON                    SOURCE                         MESSAGE
+2017-07-13 13:34:05 +0000 UTC   2017-07-13 13:34:05 +0000 UTC   1         ruby-ex   HorizontalPodAutoscaler             Normal    SuccessfulRescale   {horizontal-pod-autoscaler }   New size: 1; reason: All metrics below target
+2017-07-13 13:34:05 +0000 UTC   2017-07-13 13:34:05 +0000 UTC   1         ruby-ex   DeploymentConfig             Normal    ReplicationControllerScaled   {deploymentconfig-controller }   Scaled replication controller "ruby-ex-1" from 2 to 1
+2017-07-13 13:34:05 +0000 UTC   2017-07-13 13:34:05 +0000 UTC   1         ruby-ex-1   ReplicationController             Normal    SuccessfulDelete   {replication-controller }   Deleted pod: ruby-ex-1-zwmxd
+----
+
 === Logging exploration
 
 *{rhocp} aggregated logging* components enable additional features in the *{rhocp}* web interface. If the environment has been deployed choosing to deploy logging, there will be a new link in the pod logs section named "View Archive" that will redirect to the Kibana web interface for the user to see the pods logs, create queries, filters, etc.
