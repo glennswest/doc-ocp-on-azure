@@ -273,6 +273,9 @@ In order to provision the *{ocp}* environment using the `ARM` template, the foll
 * *Subscription Pool ID* - This is a number sequence that uniquely identifies the subscriptions that are to be used for the *{ocp}* installation.
 * *AAD Client Id* - This gives *{ocp}* the `Active Directory ID`, needed to be able to create, move and delete persistent volumes.
 * *AAD Client Secret* - The `Active Directory Password` to match the AAD Client ID. Required to create persistent volumes.
+* *Metrics* - Deploy *{rhocp}* metrics components (true by default)
+* *Logging* - Deploy *{rhocp}* aggregated logging components (true by default)
+* *OPS Logging* - Deploy *{rhocp}* ops aggregated logging components (false by default)
 
 === Provision *{ocp}* environment
 There are two ways to provision the *{ocp}* environment. Using a Web Interface, by filling out a form
@@ -298,23 +301,22 @@ example playbooks to directly create clusters using Ansible in a Linux environme
 First, install git and ansible.
 [subs=+quotes]
 ----
-yum -y install ansible git
+$ *sudo yum -y install ansible git*
 ----
 
 Then clone the openshift-ansible-contrib repository to a RHEL based host.
 
 [subs=+quotes]
 ----
-git clone https://github.com/openshift/openshift-ansible-contrib
-cd openshift-ansible-contrib/reference-architecture/azure-ansible/ansibledeployocp/
+$ *git clone https://github.com/openshift/openshift-ansible-contrib*
+$ *cd openshift-ansible-contrib/reference-architecture/azure-ansible/ansibledeployocp/*
 ----
-
 
 Next, install the dependencies using the prepare playbook:
 
 [subs=+quotes]
 ----
-ansible-playbook playbooks/prepare.yml
+$ *ansible-playbook playbooks/prepare.yml*
 ----
 
 *{ma}* credentials needs to be stored in a file at `~/.azure/credentials` with the
@@ -333,10 +335,10 @@ Where `subscription_id` and `tenant` parameters can be obtained from the *{ma}* 
 
 [subs=+quotes]
 ----
-sudo yum install -y nodejs
-sudo npm install -g azure-cli
-azure login
-azure account show
+$ *sudo yum install -y nodejs*
+$ *sudo npm install -g azure-cli*
+$ *azure login*
+$ *azure account show*
 info:    Executing command account show
 data:    Name                        : Acme Inc.
 data:    ID                          : 00000000-0000-0000-0000-000000000000
@@ -355,7 +357,7 @@ The `client_id` is the "Service Principal Name" parameter when you create the se
 
 [subs=+quotes]
 ----
-$ azure ad sp create -n azureansible -p ServicePrincipalPassword
+$ *azure ad sp create -n azureansible -p ServicePrincipalPassword*
 
 info:    Executing command ad sp create
 + Creating application ansiblelab
@@ -379,8 +381,8 @@ PARAMETERS
 
 [subs=+quotes]
 ----
-$ cp vars.yaml.example vars.yaml
-$ vim vars.yaml
+$ *cp vars.yaml.example vars.yaml*
+$ *vim vars.yaml*
 ----
 
 * `sshkeydata` id_rsa.pub content
@@ -397,8 +399,7 @@ $ vim vars.yaml
 * `resourcegroupname` The *{ma}* resource name that will be created
 * `aadclientid` Active Directory ID needed to be able to create, move and delete persistent volumes
 * `aadclientsecret` The Active Directory Password to match the AAD Client ID
-* `wildcardzone` Subdomain for applications in the OpenShift cluster (required by the load balancer, but nip.io will be used). It is just the subdomain, not the full FQDN. +
-
+* `wildcardzone` Subdomain for applications in the OpenShift cluster (required by the load balancer, but nip.io will be used). It is just the subdomain, not the full FQDN.
 
 Optional (default values are set in `playbooks/roles/azure-deploy/default/main.yaml`)
 
@@ -409,6 +410,9 @@ Optional (default values are set in `playbooks/roles/azure-deploy/default/main.y
 * `infranodesize` Infrastructure nodes VM size
 * `nodevmsize` Application nodes VM size
 * `location` westus by default
+* `metrics` - Deploy *{rhocp}* metrics components (true by default)
+* `logging` - Deploy *{rhocp}* aggregated logging components (true by default)
+* `opslogging` - Deploy *{rhocp}* ops aggregated logging components (false by default)
 
 *Running the deploy*
 
