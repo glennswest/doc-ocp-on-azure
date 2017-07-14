@@ -9,13 +9,13 @@ Scott Collier, content provider
 
 Jason DeTiberus, content provider
 
+Eduardo Minguez, content provider
+
 Matt Woodson, content reviewer
 
 Harold Wong, content reviewer
 
 Thomas Wiest, content reviewer
-
-Eduardo Minguez, content reviewer
 
 //TODO: Just adding a few names for now, will update with addt'l names if needed
 
