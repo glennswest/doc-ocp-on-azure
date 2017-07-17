@@ -827,4 +827,126 @@ docker-registry-4-kd40f    1/1       Running   0          1m        10.130.4.3  
 
 Follow the procedures above to ensure a Docker image can still be pushed to the registry now that infranode3 is down.
 
+=== Metrics exploration
+
+*{rhocp} metrics* components enable additional features in the *{rhocp}* web interface. If the environment has been deployed choosing to deploy metrics, there will be a new tab in the pod section named "Metrics" where it shows usage data of CPU, memory and network resources for a period of time:
+
+image::images/metricsdetailspod.png[Metrics details]
+
+NOTE: If metrics don't show, check if the hawkular certificate has been trusted. Visit the metrics route using the browser and accept the self signed certificate warning and refresh the metrics tab to check if metrics are shown. Future revisions of this reference architecture document will include how to create proper certificates to avoid trusting self signed certificates.
+
+Using the CLI, the cluster-admin can observe the usage of the pods and nodes using the following commands as well:
+
+[subs=+quotes]
+----
+$ *oc adm top pod --heapster-namespace="openshift-infra" --heapster-scheme="https" --all-namespaces*
+NAMESPACE         NAME                                   CPU(cores)   MEMORY(bytes)
+openshift-infra   hawkular-cassandra-1-h9mrq             161m         1423Mi
+logging           logging-fluentd-g5jqw                  8m           92Mi
+logging           logging-es-ops-b44n3gav-1-zkl3r        19m          861Mi
+... [OUTPUT ABBREVIATED] ...
+$ *oc adm top node --heapster-namespace="openshift-infra" --heapster-scheme="https"*
+NAME         CPU(cores)   CPU%      MEMORY(bytes)   MEMORY%
+infranode3   372m         9%        4657Mi          33%
+master3      68m          1%        1923Mi          13%
+node02       43m          1%        1437Mi          5%
+... [OUTPUT ABBREVIATED] ...
+----
+
+==== Using the Horizontal Pod Autoscaler
+
+In order to be able to use the `HorizontalPodAutoscaler` feature, the metrics components should be deployed and limits should be configured for the pod in order to set the target percentage when the pod will be scaled.
+
+The following commands shows how to create a new project, deploy an example pod and set some limits:
+
+[subs=+quotes]
+----
+$ *oc new-project autoscaletest*
+Now using project "autoscaletest" on server "https://myocp.eastus2.cloudapp.azure.com:8443".
+... [OUTPUT ABBREVIATED] ...
+
+$ *oc new-app centos/ruby-22-centos7~https://github.com/openshift/ruby-ex.git*
+--> Found Docker image d9c9735 (10 days old) from Docker Hub for "centos/ruby-22-centos7"
+... [OUTPUT ABBREVIATED] ...
+
+$ *oc patch dc/ruby-ex -p \'{"spec":{"template":{"spec":{"containers":[{"name":"ruby-ex","resources":{"limits":{"cpu":"80m"}}}]}}}}'*
+"ruby-ex" patched
+
+$ *oc get pods*
+NAME              READY     STATUS      RESTARTS   AGE
+ruby-ex-1-210l9   1/1       Running     0          2m
+ruby-ex-1-build   0/1       Completed   0          4m
+
+$ *oc describe pod ruby-ex-1-210l9*
+Name:			ruby-ex-1-210l9
+... [OUTPUT ABBREVIATED] ...
+    Limits:
+      cpu:	80m
+    Requests:
+      cpu:		80m
+----
+
+Once the pod is running, create the autoscaler:
+
+[subs=+quotes]
+----
+$ *oc autoscale dc/ruby-ex --min 1 --max 10 --cpu-percent=50*
+deploymentconfig "ruby-ex" autoscaled
+$ *oc get horizontalpodautoscaler*
+NAME      REFERENCE                  TARGET    CURRENT   MINPODS   MAXPODS   AGE
+ruby-ex   DeploymentConfig/ruby-ex   50%       0%        1         10        53s
+----
+
+Access the pod and create some CPU load, as:
+
+[subs=+quotes]
+----
+$ *oc rsh ruby-ex-1-210l9*
+
+sh-4.2$ *while true; do echo "cpu hog" >> mytempfile; rm -f mytempfile; done*
+----
+
+Observe the events and the pods running and after a while a new replica will be created:
+
+[subs=+quotes]
+----
+$ *oc get events -w*
+LASTSEEN                        FIRSTSEEN                       COUNT     NAME      KIND                      SUBOBJECT   TYPE      REASON                    SOURCE                         MESSAGE
+2017-07-13 13:28:35 +0000 UTC   2017-07-13 13:26:30 +0000 UTC   7         ruby-ex   HorizontalPodAutoscaler               Normal    DesiredReplicasComputed   {horizontal-pod-autoscaler }   Computed the desired num of replicas: 0 (avgCPUutil: 0, current replicas: 1)
+2017-07-13 13:29:05 +0000 UTC   2017-07-13 13:29:05 +0000 UTC   1         ruby-ex   HorizontalPodAutoscaler             Normal    DesiredReplicasComputed   {horizontal-pod-autoscaler }   Computed the desired num of replicas: 2 (avgCPUutil: 67, current replicas: 1)
+2017-07-13 13:29:05 +0000 UTC   2017-07-13 13:29:05 +0000 UTC   1         ruby-ex   DeploymentConfig             Normal    ReplicationControllerScaled   {deploymentconfig-controller }   Scaled replication controller "ruby-ex-1" from 1 to 2
+2017-07-13 13:29:05 +0000 UTC   2017-07-13 13:29:05 +0000 UTC   1         ruby-ex   HorizontalPodAutoscaler             Normal    SuccessfulRescale   {horizontal-pod-autoscaler }   New size: 2; reason: CPU utilization above target
+2017-07-13 13:29:05 +0000 UTC   2017-07-13 13:29:05 +0000 UTC   1         ruby-ex-1-zwmxd   Pod                 Normal    Scheduled   {default-scheduler }   Successfully assigned ruby-ex-1-zwmxd to node02
+
+$ *oc get pods*
+NAME              READY     STATUS      RESTARTS   AGE
+ruby-ex-1-210l9   1/1       Running     0          8m
+ruby-ex-1-build   0/1       Completed   0          9m
+ruby-ex-1-zwmxd   1/1       Running     0          58s
+----
+
+After canceling the CPU hog command, the events will show how the deploymentconfig returns to a single replica:
+
+[subs=+quotes]
+----
+$ *oc get events -w*
+LASTSEEN                        FIRSTSEEN                       COUNT     NAME      KIND                      SUBOBJECT   TYPE      REASON                    SOURCE                         MESSAGE
+2017-07-13 13:34:05 +0000 UTC   2017-07-13 13:34:05 +0000 UTC   1         ruby-ex   HorizontalPodAutoscaler             Normal    SuccessfulRescale   {horizontal-pod-autoscaler }   New size: 1; reason: All metrics below target
+2017-07-13 13:34:05 +0000 UTC   2017-07-13 13:34:05 +0000 UTC   1         ruby-ex   DeploymentConfig             Normal    ReplicationControllerScaled   {deploymentconfig-controller }   Scaled replication controller "ruby-ex-1" from 2 to 1
+2017-07-13 13:34:05 +0000 UTC   2017-07-13 13:34:05 +0000 UTC   1         ruby-ex-1   ReplicationController             Normal    SuccessfulDelete   {replication-controller }   Deleted pod: ruby-ex-1-zwmxd
+----
+
+=== Logging exploration
+
+*{rhocp} aggregated logging* components enable additional features in the *{rhocp}* web interface. If the environment has been deployed choosing to deploy logging, there will be a new link in the pod logs section named "View Archive" that will redirect to the Kibana web interface for the user to see the pods logs, create queries, filters, etc.
+
+image::images/loggingexample.png[Logging example]
+
+
+NOTE: For more information about Kibana, see https://www.elastic.co/guide/en/kibana/4.5/discover.html[Kibana documentation]
+
+In case the "opslogging" cluster has been deployed, there will be a route "kibana-ops" in the "logging" project where cluster-admin users can browse infrastructure logs.
+
+image::images/opsloggingexample.png[OPS logging example]
+
 // vim: set syntax=asciidoc:
