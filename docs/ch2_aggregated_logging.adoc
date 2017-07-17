@@ -1,0 +1,42 @@
+=== *{rhocp}* Aggregated Logging
+
+One of the *{rhocp}* optional components named *{rhocp} aggregated logging* collects and aggregates logs for a range of *{rhocp}* services enabling *{rhocp}* users view the logs of projects which they have view access using a web interface.
+
+*{rhocp}* aggregated logging component it is a modified version of the `ELK` stack composed by a few pods running on the *{rhocp}* environment:
+
+* Elasticsearch: An object store where all logs are stored.
+* Fluentd: Gathers logs from nodes and feeds them to Elasticsearch.
+* Kibana: A web UI for Elasticsearch.
+* Curator: Elasticsearch maintenance operations performed automatically on a per-project basis.
+
+Once deployed in a cluster, the stack aggregates logs from all nodes and projects into Elasticsearch, and provides a Kibana UI to view any logs. Cluster administrators can view all logs, but application developers can only view logs for projects they have permission to view. To avoid users to see logs from pods in other projects, the https://github.com/floragunncom/search-guard[Search guard] plugin for Elasticsearch is used.
+
+A separate Elasticsearch cluster, a separate Kibana, and a separate Curator components can be deployed to form the *OPS cluster* where logs for the `default`, `openshift`, and `openshift-infra` projects as well as `/var/log/messages` on nodes are automatically aggregated and grouped into the `.operations` item in the Kibana interface.
+
+*{rhocp}* aggregated logging components can be customized for longer data persistence, pods limits, replicas of individual components, custom certificates, etc.
+
+NOTE: For more information about different customization parameters, see https://docs.openshift.com/container-platform/3.5/install_config/aggregate_logging.html[Aggregating Container Logs] documentation.
+
+Within this reference environment, aggregated logging components are deployed optionally on the infrastructure nodes depending on the "logging" parameter of the `ARM template`. When "true" is selected, it deploys on the infrastructure nodes (to avoid using resources on the application nodes) the following elements:
+
+* 3 Elasticsearch replicas for HA using dedicated persistent volumes each one
+* Fluentd as a `daemonset` on all the nodes that includes the "logging=true" selector (all nodes and masters by default)
+* Kibana
+* Curator
+
+Also, there is an "opslogging" parameter that can optionally deploy the same architecture but for operational logs:
+
+* 3 Elasticsearch replicas for HA using dedicated persistent volumes each one
+* Kibana
+* Curator
+
+NOTE: Fluentd pods are configured automatically to split the logs for the two Elasticsearch clusters in case the ops cluster is deployed.
+
+.*{rhocp}* aggregated logging components
+|====
+^|Parameter | Deploy by default |Fluentd ^| Elasticsearch ^| Kibana ^| Curator
+
+| logging | true | Daemonset ("logging=true" selector) | 3 replicas | 1 | 1
+| opslogging | false | Shared | 3 replicas | 1 | 1
+|====
+// vim: set syntax=asciidoc:

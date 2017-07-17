@@ -15,8 +15,8 @@ are created automatically per cluster. The following table shows the name of eve
 | `sanod<resourcegroup>` | Application nodes storage
 | `sainf<resourcegroup>` | Infrastructure nodes storage
 | `sareg<resourcegroup>` | Registry persistent volume storage
-| `sapv1<resourcegroup>` | The `generic` storage class
-| `sapv2<resourcegroup>` | A non default storage class
+| `sapv<resourcegroup>` | The `generic` storage class
+| `sapvlm<resourcegroup>` | Storage account where the metrics and logging volumes will be stored
 |====
 
 NOTE: For more information about the *{ma}* identity management and storage accounts, see

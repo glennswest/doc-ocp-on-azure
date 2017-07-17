@@ -65,8 +65,8 @@ NOTE: This reference architecture creates automatically two different `storage a
 
 There are two *{ma}* `storage accounts` created as part of the installation process using the `ARM` template:
 
-* `sapv1<resourcegroup>` - For the `generic` storage class (using premium storage)
-* `sapv2<resourcegroup>` - For a non default storage class (using standard storage)
+* `sapv<resourcegroup>` - For the `generic` storage class (using premium storage)
+* `sapvlm<resourcegroup>` - To store metrics and logging volumes (using premium storage)
 
 To create more storage accounts, the azure-cli can be used as:
 
