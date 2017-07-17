@@ -831,7 +831,7 @@ Follow the procedures above to ensure a Docker image can still be pushed to the 
 
 *{rhocp} metrics* components enable additional features in the *{rhocp}* web interface. If the environment has been deployed choosing to deploy metrics, there will be a new tab in the pod section named "Metrics" where it shows usage data of CPU, memory and network resources for a period of time:
 
-image::images/metricsdetailspod.png[Metrics detail]
+image::images/metricsdetailspod.png[Metrics details]
 
 NOTE: If metrics don't show, check if the hawkular certificate has been trusted. Visit the metrics route using the browser and accept the self signed certificate warning and refresh the metrics tab to check if metrics are shown. Future revisions of this reference architecture document will include how to create proper certificates to avoid trusting self signed certificates.
 
@@ -941,6 +941,7 @@ LASTSEEN                        FIRSTSEEN                       COUNT     NAME  
 *{rhocp} aggregated logging* components enable additional features in the *{rhocp}* web interface. If the environment has been deployed choosing to deploy logging, there will be a new link in the pod logs section named "View Archive" that will redirect to the Kibana web interface for the user to see the pods logs, create queries, filters, etc.
 
 image::images/loggingexample.png[Logging example]
+
 
 NOTE: For more information about Kibana, see https://www.elastic.co/guide/en/kibana/4.5/discover.html[Kibana documentation]
 
