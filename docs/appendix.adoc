@@ -9,8 +9,6 @@ Scott Collier, content provider
 
 Jason DeTiberus, content provider
 
-Eduardo Minguez, content provider
-
 Matt Woodson, content reviewer
 
 Harold Wong, content reviewer
