@@ -7,9 +7,15 @@ The registry stores container images and metadata. For production environment,
 persistent storage is recommended to be used by the registry, otherwise any images
 built or pushed into the registry would disappear if the pod were to restart.
 
+The registry is scaled to 3 pods/instances to allow for HA, and load balancing. The default
+load balancing settings use the source ip address to enforce session stickiness. Failure of a
+pod may result in a pull or push operation to fail, but the operation may be restarted. The failed registry
+pod will be automatically restarted.
+
 Using the installation methods described in this document the registry is
 deployed using `Azure Blob Storage`, an *{ma}* service that provides object storage.
-In order to use `Azure Blob Storage` the registry configuration should be extended. The procedure is detailed in the https://docs.openshift.com/container-platform/3.5/install_config/registry/extended_registry_configuration.html#docker-registry-configuration-reference-storage[OpenShift] and https://docs.docker.com/registry/storage-drivers/azure/[Docker] documentation, and it is to modify the registry `deploymentconfig` to add the `Azure Blob Storage` service details as:
+In order to use `Azure Blob Storage` the registry configuration has been extended.
+The procedure used is detailed in the https://docs.openshift.com/container-platform/3.5/install_config/registry/extended_registry_configuration.html#docker-registry-configuration-reference-storage[OpenShift] and https://docs.docker.com/registry/storage-drivers/azure/[Docker] documentation, and it is to modify the registry `deploymentconfig` to add the `Azure Blob Storage` service details as:
 
 [subs=+quotes]
 ----
