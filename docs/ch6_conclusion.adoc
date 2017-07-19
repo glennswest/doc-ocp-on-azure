@@ -5,7 +5,7 @@ Red Hat solutions involving the *{ocp}* are created to deliver a production-read
 This reference architecture covered the following topics:
 
 * A completely provisioned infrastructure in *{ma}* public cloud
-* *{ocp}* router and registry deployed in dedicated infrastructure nodes
+* *{ocp}* three routers and three registry services deployed in dedicated infrastructure nodes
 * Native integration with *{ma}* services as:
 ** `Azure Load Balancer` for load balancing the API and console and for the applications running in *{ocp}*
 ** `Azure VHD` storage for persistent storage of container images

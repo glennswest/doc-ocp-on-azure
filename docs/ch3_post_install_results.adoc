@@ -11,6 +11,8 @@ At this point the infrastructure and *{rhocp}* have been deployed. Log into the 
 * 5 storage accounts
 * 2 load balancer profiles
 * 2 load balancer DNS entries
+* 3 routers
+* 3 registries
 
 After the `Azure Resource Manager` template is submitted, and the `ARM` deployment
 succeeds, the ansible install is started automatically.
