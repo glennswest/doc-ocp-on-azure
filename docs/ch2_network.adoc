@@ -38,7 +38,7 @@ There are three different plug-ins available in *{ocp}* 3.5 for configuring the 
 * The `redhat/ovs-multitenant` plug-in which provides *{ocp}* project level isolation for pods and services. Each project receives a unique Virtual Network ID (`VNID`) that identifies traffic from pods assigned to the project. Pods from different projects cannot send packets to or receive packets from pods and services of a different project.
 * The `redhat/ovs-networkpolicy` plug-in (currently in Tech Preview) allows project administrators to configure their own isolation policies using `NetworkPolicy` objects.
 
-The plugin used in this reference architecture is the `redhat/ovs-multitenant` that allows multitenant isolation for pods per project.
+The plugin used in this reference architecture can be specified among the supported ones at deployment time using the `ARM` template. The default value is `redhat/ovs-multitenant` that allows multitenant isolation for pods per project.
 
 For more information about *{ocp}* networking, see https://docs.openshift.com/container-platform/3.5/architecture/additional_concepts/sdn.html[OpenShift SDN] documentation.
 
