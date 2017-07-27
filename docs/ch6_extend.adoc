@@ -33,8 +33,7 @@ NOTE: The VM name follows the reference architecture naming convention, so in ca
 
 IMPORTANT: The script scales up the cluster one host per run but it can be ran as many times as needed.
 
-==== Parameters
-
+.Parameters
 |====
 ^|Flag ^|Required ^|Description ^| Default value
 
@@ -123,7 +122,6 @@ node03       Ready                      5h
 *node05       Ready                      2h*
 ----
 
-==== Deploying pods on the Newly Provisioned Host
 The following procedure creates a new project and forces the pods of that project to run on the new host. This procedure validates the host is properly configured to run *{rhocp}* pods:
 
 Create a new project to test:
