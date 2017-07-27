@@ -31,16 +31,14 @@ The script creates the required *{ma}* components such as `nic`, `vm`, `nsg`, at
 
 NOTE: The VM name follows the reference architecture naming convention, so in case a new application node is added, its name is going to be the next nodeXY available (node04, node05,...)
 
-IMPORTANT: The script creates scales up the cluster one host per run but it can be ran as many times as needed.
+IMPORTANT: The script scales up the cluster one host per run but it can be ran as many times as needed.
 
 ==== Parameters
 
 |====
 ^|Flag ^|Required ^|Description ^| Default value
 
-| `-g\|--resourcegroup` | Yes | The *{ma}* resource group where the new host is going to be deployed | N/A
 | `-t\|--type` | No | Host type (node, master or infranode) | node
-| `-l\|--location` | No | *{ma}* region. If not specified, the script uses the same as the bastion host | same as bastion
 | `-u\|--user` | No | Regular user to be created on the host | Current user
 | `-p\|--sshpub` | No | Path to the public `ssh` key to be injected in the host | `~/.ssh/id_rsa.pub`
 | `-s\|--size` | No | VM size | Standard_DS12_v2 for node, Standard_DS12_v2 for infra node, Standard_DS3_v2 for master
@@ -53,14 +51,14 @@ Once the instance is launched, the installation of *{rhocp}* will automatically 
 
 [subs=+quotes]
 ----
-$ *./add_host.sh -g <my_resourcegroup>*
+$ *./add_host.sh*
 ----
 
 If some parameters need to be customized, use the proper flags. The example below adds a new Application Node with a different VM size, different user and `ssh` public key:
 
 [subs=+quotes]
 ----
-$ *./add_host.sh -g <my_resourcegroup> -s Standard_DS3_v2 -u user123 -p /my/other/ssh-id.pub*
+$ *./add_host.sh -s Standard_DS3_v2 -u user123 -p /my/other/ssh-id.pub*
 ----
 
 === Adding an Infrastructure Node
@@ -71,14 +69,14 @@ below to add a new Infrastructure Node using the default values:
 
 [subs=+quotes]
 ----
-$ *./add_host.sh -g <my_resourcegroup> -t infranode*
+$ *./add_host.sh -t infranode*
 ----
 
 If some parameters need to be customized, use the proper flags. The example below adds a new Infrastructure Node with different disk sizes:
 
 [subs=+quotes]
 ----
-$ *./add_host.sh -g <my_resourcegroup> -t infranode -d 20 -d 200*
+$ *./add_host.sh -t infranode -d 20 -d 200*
 ----
 
 === Adding a Master host
@@ -89,14 +87,14 @@ below to add a new Master host using the default values:
 
 [subs=+quotes]
 ----
-$ *./add_host.sh -g <my_resourcegroup> -t master*
+$ *./add_host.sh -t master*
 ----
 
 If some parameters need to be customized, use the proper flags. The example below adds a new Master Host with different disk sizes and different user:
 
 [subs=+quotes]
 ----
-$ *./add_host.sh -g <my_resourcegroup> -t master -d 50 -d 20 -u adminxyz*
+$ *./add_host.sh -t master -d 50 -d 20 -u adminxyz*
 ----
 
 IMPORTANT: The current procedures for scaling up masters doesn't scale the etcd database if the masters contains etcd in the current environment. For a manual procedure on scale etcd, see https://docs.openshift.com/container-platform/3.5/admin_guide/backup_restore.html#backup-restore-adding-etcd-hosts[adding new etcd hosts] documentation.
