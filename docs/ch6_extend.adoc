@@ -39,7 +39,6 @@ IMPORTANT: The script scales up the cluster one host per run but it can be ran a
 ^|Flag ^|Required ^|Description ^| Default value
 
 | `-t\|--type` | No | Host type (node, master or infranode) | node
-| `-l\|--location` | No | *{ma}* region. If not specified, the script uses the same as the bastion host | same as bastion
 | `-u\|--user` | No | Regular user to be created on the host | Current user
 | `-p\|--sshpub` | No | Path to the public `ssh` key to be injected in the host | `~/.ssh/id_rsa.pub`
 | `-s\|--size` | No | VM size | Standard_DS12_v2 for node, Standard_DS12_v2 for infra node, Standard_DS3_v2 for master
