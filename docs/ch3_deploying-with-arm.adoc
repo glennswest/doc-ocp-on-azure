@@ -273,6 +273,7 @@ In order to provision the *{ocp}* environment using the `ARM` template, the foll
 * *Subscription Pool ID* - This is a number sequence that uniquely identifies the subscriptions that are to be used for the *{ocp}* installation.
 * *AAD Client Id* - This gives *{ocp}* the `Active Directory ID`, needed to be able to create, move and delete persistent volumes.
 * *AAD Client Secret* - The `Active Directory Password` to match the AAD Client ID. Required to create persistent volumes.
+* *OpenShiftSDN* - The SDN plugin to be used in the environment (ovs-multitenant by default)
 * *Metrics* - Deploy *{rhocp}* metrics components (true by default)
 * *Logging* - Deploy *{rhocp}* aggregated logging components (true by default)
 * *OPS Logging* - Deploy *{rhocp}* ops aggregated logging components (false by default)
@@ -403,13 +404,14 @@ $ *vim vars.yaml*
 
 Optional (default values are set in `playbooks/roles/azure-deploy/default/main.yaml`)
 
-* `templatelink` The ARM template that will be deployed
-* `numberofnodes` From 3 to 30 nodes
-* `image` The operating system image that will be used to create the instances
-* `mastervmsize` Master nodes VM size
-* `infranodesize` Infrastructure nodes VM size
-* `nodevmsize` Application nodes VM size
-* `location` westus by default
+* `templatelink` - The ARM template that will be deployed
+* `numberofnodes` - From 3 to 30 nodes
+* `image` - The operating system image that will be used to create the instances
+* `mastervmsize` - Master nodes VM size
+* `infranodesize` - Infrastructure nodes VM size
+* `nodevmsize` - Application nodes VM size
+* `location` - westus by default
+* `openshiftsdn` - "redhat/openshift-ovs-multitenant" by default
 * `metrics` - Deploy *{rhocp}* metrics components (true by default)
 * `logging` - Deploy *{rhocp}* aggregated logging components (true by default)
 * `opslogging` - Deploy *{rhocp}* ops aggregated logging components (false by default)
@@ -434,7 +436,6 @@ changed: [localhost]
 PLAY RECAP **********************************************************************************************************************************************
 localhost                  : ok=3    changed=2    unreachable=0    failed=0
 ----
-
 
 === Post Deployment
 Once the playbooks have successfully completed the next steps will be to perform the steps defined in <<Operational-Management>>.

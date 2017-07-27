@@ -30,7 +30,6 @@ openshift_hosted_registry_replicas=3
 openshift_master_api_port="{{ console_port }}"
 openshift_master_console_port="{{ console_port }}"
 openshift_override_hostname_check=true
-os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
 osm_use_cockpit=false
 openshift_release=v3.5
 openshift_cloudprovider_kind=azure
@@ -41,6 +40,8 @@ openshift_install_examples=true
 deployment_type=openshift-enterprise
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
 openshift_master_manage_htpasswd=false
+
+os_sdn_network_plugin_name=${OPENSHIFTSDN}
 
 # default selectors for router and registry services
 openshift_router_selector='role=infra'
@@ -61,21 +62,19 @@ openshift_master_cluster_method=native
 openshift_master_cluster_hostname=${RESOURCEGROUP}.${FULLDOMAIN}
 openshift_master_cluster_public_hostname=${RESOURCEGROUP}.${FULLDOMAIN}
 
-# Do not install metrics but post install
 openshift_metrics_install_metrics=false
 openshift_metrics_cassandra_storage_type=pv
-openshift_metrics_cassandra_pvc_size="10G"
-openshift_metrics_cassandra_replicas="1"
+openshift_metrics_cassandra_pvc_size="${METRICS_CASSANDRASIZE}G"
+openshift_metrics_cassandra_replicas="${METRICS_INSTANCES}"
 openshift_metrics_hawkular_nodeselector={"role":"infra"}
 openshift_metrics_cassandra_nodeselector={"role":"infra"}
 openshift_metrics_heapster_nodeselector={"role":"infra"}
 
-# Do not install logging but post install
 openshift_logging_install_logging=false
 openshift_logging_es_pv_selector={"usage":"elasticsearch"}
 openshift_logging_es_pvc_dynamic="false"
-openshift_logging_es_pvc_size="10G"
-openshift_logging_es_cluster_size=3
+openshift_logging_es_pvc_size="${LOGGING_ES_SIZE}G"
+openshift_logging_es_cluster_size=${LOGGING_ES_INSTANCES}
 openshift_logging_fluentd_nodeselector={"logging":"true"}
 openshift_logging_es_nodeselector={"role":"infra"}
 openshift_logging_kibana_nodeselector={"role":"infra"}
@@ -84,8 +83,8 @@ openshift_logging_curator_nodeselector={"role":"infra"}
 openshift_logging_use_ops=false
 openshift_logging_es_ops_pv_selector={"usage":"opselasticsearch"}
 openshift_logging_es_ops_pvc_dynamic="false"
-openshift_logging_es_ops_pvc_size="10G"
-openshift_logging_es_ops_cluster_size=3
+openshift_logging_es_ops_pvc_size="${OPSLOGGING_ES_SIZE}G"
+openshift_logging_es_ops_cluster_size=${OPSLOGGING_ES_INSTANCES}
 openshift_logging_es_ops_nodeselector={"role":"infra"}
 openshift_logging_kibana_ops_nodeselector={"role":"infra"}
 openshift_logging_curator_ops_nodeselector={"role":"infra"}

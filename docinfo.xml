@@ -8,6 +8,18 @@
 
 <revhistory>
   <revision>
+    <revnumber>1.0.5</revnumber>
+    <date>2017-07-24</date>
+    <authorinitials>Eduardo Minguez (edu@redhat.com)</authorinitials>
+    <revremark>
+      <itemizedlist mark=''>
+        <listitem>
+          Added extend cluster section and SDN option
+        </listitem>
+      </itemizedlist>
+    </revremark>
+  </revision>
+  <revision>
     <revnumber>1.0.4</revnumber>
     <date>2017-07-14</date>
     <authorinitials>Eduardo Minguez (edu@redhat.com)</authorinitials>

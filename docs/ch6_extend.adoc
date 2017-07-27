@@ -1,0 +1,203 @@
+== Extending the Cluster
+By default, this reference architecture deploys 3 master, 3 infrastructure nodes, and 3 to 30 application nodes. This cluster size provides enough resources to get started with deploying a few test applications or a Continuous Integration Workflow example. However, as the cluster begins to be utilized by more teams and projects, it will be become necessary to provision more application or infrastructure nodes to support the expanding environment. To facilitate easily growing the cluster, the `add_host.sh` script is provided in the `openshift-ansible-contrib` repository. It will allow for provisioning either an application node, infrastructure node or master host per run and can be ran as many times as needed.
+
+NOTE: The scale up procedure for masters includes the scale up procedure for nodes as the master hosts need to be part of the SDN.
+
+=== Prerequisites for Adding a new host
+Verify the quantity and type of the nodes in the cluster by using the `oc get nodes` command. The output below is an example of a complete *{rhocp}* environment after the deployment of the reference architecture environment.
+
+[subs=+quotes]
+----
+$ *oc get nodes*
+NAME         STATUS                     AGE
+infranode1   Ready                      3m
+infranode2   Ready                      3m
+infranode3   Ready                      3m
+master1      Ready,SchedulingDisabled   3m
+master2      Ready,SchedulingDisabled   3m
+master3      Ready,SchedulingDisabled   3m
+node01       Ready                      3m
+node02       Ready                      3m
+node03       Ready                      3m
+----
+
+The script should be executed as the regular user created as part of the *{rhocp}* reference architecture deployment on the bastion host.
+
+IMPORTANT: If manual changes in the *{rhocp}* environment exist, ensure the inventory file reflects those changes prior to the scale up procedure. This includes changes to the *{rhocp}* configuration files, for example, modifying the *{rhocp}* masters configuration file to customize the *{rhocp}* authentication provider as they may be overwritten.
+
+=== add_host.sh
+The bash script `add_host.sh` adds new hosts to the *{rhocp}* cluster where it accepts a few parameters to customize the new host that is going to be created in *{ma}* as part of the process.
+The script creates the required *{ma}* components such as `nic`, `vm`, `nsg`, attaches the new host to the load balancer if needed, deploys the `vm` as part of the same `availabilityset`, etc., run the prerrequisites playbooks to prepare the host, modifies the ansible inventory to fit the requirements and then runs the proper scale up playbook provided by the `atomic-openshift-utils` package.
+
+NOTE: The VM name follows the reference architecture naming convention, so in case a new application node is added, its name is going to be the next nodeXY available (node04, node05,...)
+
+IMPORTANT: The script scales up the cluster one host per run but it can be ran as many times as needed.
+
+==== Parameters
+
+|====
+^|Flag ^|Required ^|Description ^| Default value
+
+| `-t\|--type` | No | Host type (node, master or infranode) | node
+| `-u\|--user` | No | Regular user to be created on the host | Current user
+| `-p\|--sshpub` | No | Path to the public `ssh` key to be injected in the host | `~/.ssh/id_rsa.pub`
+| `-s\|--size` | No | VM size | Standard_DS12_v2 for node, Standard_DS12_v2 for infra node, Standard_DS3_v2 for master
+| `-d\|--disk` | No | Extra disk size in GB (it can be repeated a few times) | 2x128GB
+|====
+
+=== Adding an Application Node
+To add an Application Node with the default values, run the `add_host.sh` script following the example below.
+Once the instance is launched, the installation of *{rhocp}* will automatically begin.
+
+[subs=+quotes]
+----
+$ *./add_host.sh*
+----
+
+If some parameters need to be customized, use the proper flags. The example below adds a new Application Node with a different VM size, different user and `ssh` public key:
+
+[subs=+quotes]
+----
+$ *./add_host.sh -s Standard_DS3_v2 -u user123 -p /my/other/ssh-id.pub*
+----
+
+=== Adding an Infrastructure Node
+The process for adding an Infrastructure Node is nearly identical to adding an
+Application Node. The only difference in adding an Infrastructure node is the
+type flag need to be set to "infranode". Follow the example steps
+below to add a new Infrastructure Node using the default values:
+
+[subs=+quotes]
+----
+$ *./add_host.sh -t infranode*
+----
+
+If some parameters need to be customized, use the proper flags. The example below adds a new Infrastructure Node with different disk sizes:
+
+[subs=+quotes]
+----
+$ *./add_host.sh -t infranode -d 20 -d 200*
+----
+
+=== Adding a Master host
+The process for adding a Master host is nearly identical to adding an
+Application Node. The only difference in adding a Master host is the
+type flag need to be set to "master". Follow the example steps
+below to add a new Master host using the default values:
+
+[subs=+quotes]
+----
+$ *./add_host.sh -t master*
+----
+
+If some parameters need to be customized, use the proper flags. The example below adds a new Master Host with different disk sizes and different user:
+
+[subs=+quotes]
+----
+$ *./add_host.sh -t master -d 50 -d 20 -u adminxyz*
+----
+
+IMPORTANT: The current procedures for scaling up masters doesn't scale the etcd database if the masters contains etcd in the current environment. For a manual procedure on scale etcd, see https://docs.openshift.com/container-platform/3.5/admin_guide/backup_restore.html#backup-restore-adding-etcd-hosts[adding new etcd hosts] documentation.
+
+=== Validating a Newly Provisioned Host
+To verify a newly provisioned host has been added to the existing environment, use the `oc get nodes` command. In this example, 2 new Infrastructure nodes, 2 new Master hosts and 2 new Application Nodes have been added using the `add_host.sh` script by executing it a few times.
+
+[subs=+quotes]
+----
+$ *oc get nodes*
+NAME         STATUS                     AGE
+infranode1   Ready                      5h
+infranode2   Ready                      5h
+infranode3   Ready                      5h
+*infranode4   Ready                      1h*
+*infranode5   Ready                      4m*
+master1      Ready,SchedulingDisabled   5h
+master2      Ready,SchedulingDisabled   5h
+master3      Ready,SchedulingDisabled   5h
+*master4      Ready,SchedulingDisabled   2h*
+*master5      Ready,SchedulingDisabled   1h*
+node01       Ready                      5h
+node02       Ready                      5h
+node03       Ready                      5h
+*node04       Ready                      3h*
+*node05       Ready                      2h*
+----
+
+==== Deploying pods on the Newly Provisioned Host
+The following procedure creates a new project and forces the pods of that project to run on the new host. This procedure validates the host is properly configured to run *{rhocp}* pods:
+
+Create a new project to test:
+
+[subs=+quotes]
+----
+$ *oc new-project scaleuptest*
+Now using project "scaleuptest" on server "https://myocpdeployment.eastus2.cloudapp.azure.com:8443".
+... [OUTPUT ABBREVIATED] ...
+----
+
+Patch the node-selector to only run pods on the new node:
+
+[subs=+quotes]
+----
+$ *oc patch namespace scaleuptest -p "{\"metadata\":{\"annotations\":{\"openshift.io/node-selector\":\"kubernetes.io/hostname=node04\"}}}"*
+"scaleuptest" patched
+----
+
+Deploy an example app:
+
+[subs=+quotes]
+----
+$ *oc new-app openshift/hello-openshift*
+--> Found Docker image 8146af6 (About an hour old) from Docker Hub for "openshift/hello-openshift"
+... [OUTPUT ABBREVIATED] ...
+----
+
+Scale the number of pods to ensure they are running on the same host:
+
+[subs=+quotes]
+----
+$ *oc scale dc/hello-openshift --replicas=8*
+deploymentconfig "hello-openshift" scaled
+----
+
+Observe where the pods run:
+
+[subs=+quotes]
+----
+$ *oc get pods -o wide*
+hello-openshift-1-1ffl6   1/1       Running   0          3m        10.128.4.10   *node04*
+hello-openshift-1-1kgpf   1/1       Running   0          3m        10.128.4.3    *node04*
+hello-openshift-1-4lk85   1/1       Running   0          3m        10.128.4.4    *node04*
+hello-openshift-1-4pfkk   1/1       Running   0          3m        10.128.4.7    *node04*
+hello-openshift-1-56pqg   1/1       Running   0          3m        10.128.4.6    *node04*
+hello-openshift-1-r3sjz   1/1       Running   0          3m        10.128.4.8    *node04*
+hello-openshift-1-t0fmm   1/1       Running   0          3m        10.128.4.5    *node04*
+hello-openshift-1-v659g   1/1       Running   0          3m        10.128.4.9    *node04*
+----
+
+Clean the environment:
+[subs=+quotes]
+----
+$ *oc delete project scaleuptest*
+----
+
+In case the checks are mandatory before adding the host to the cluster, the labels can be set to avoid the default node-selector, run the checks then relabel the node:
+
+[subs=+quotes]
+----
+... [OUTPUT ABBREVIATED] ...
+[new_nodes]
+*node04.example.com openshift_node_labels="{\'role': \'test',\'test':\'true'}"*
+----
+
+Perform the scale up procedure, run the required tests, then relabel the node:
+
+[subs=+quotes]
+----
+$ *oc label node node04 "role=app" "zone=X" --overwrite*
+node "node04" labeled
+$ *oc label node node04 test-*
+node "node04" labeled
+----
+
+// vim: set syntax=asciidoc:
