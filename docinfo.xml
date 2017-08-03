@@ -8,7 +8,7 @@
 
 <revhistory>
   <revision>
-    <revnumber>1.0.5</revnumber>
+    <revnumber>3.5.5</revnumber>
     <date>2017-07-24</date>
     <authorinitials>Eduardo Minguez (edu@redhat.com)</authorinitials>
     <revremark>
@@ -20,7 +20,7 @@
     </revremark>
   </revision>
   <revision>
-    <revnumber>1.0.4</revnumber>
+    <revnumber>3.5.4</revnumber>
     <date>2017-07-14</date>
     <authorinitials>Eduardo Minguez (edu@redhat.com)</authorinitials>
     <revremark>
@@ -32,7 +32,7 @@
     </revremark>
   </revision>
   <revision>
-    <revnumber>1.0.3</revnumber>
+    <revnumber>3.5.3</revnumber>
     <date>2017-07-10</date>
     <authorinitials>Glenn West (gwest@redhat.com)</authorinitials>
     <revremark>
@@ -44,7 +44,7 @@
     </revremark>
   </revision>
   <revision>
-    <revnumber>1.0.2</revnumber>
+    <revnumber>3.5.2</revnumber>
     <date>2017-06-23</date>
     <authorinitials>Eduardo Minguez (edu@redhat.com)</authorinitials>
     <revremark>
@@ -56,7 +56,7 @@
     </revremark>
   </revision>
   <revision>
-    <revnumber>1.0.1</revnumber>
+    <revnumber>3.5.1</revnumber>
     <date>2017-06-01</date>
     <authorinitials>Eduardo Minguez (edu@redhat.com)</authorinitials>
     <revremark>
@@ -68,7 +68,7 @@
     </revremark>
   </revision>
   <revision>
-    <revnumber>1.0</revnumber>
+    <revnumber>3.5.0</revnumber>
     <date>2017-01-25</date>
     <authorinitials>Glenn West (gwest@redhat.com)</authorinitials>
     <revremark>
