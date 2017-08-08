@@ -252,6 +252,13 @@ The `ARM` template for each type, automatically starts a bash shell script that 
 The main shell script is the `reference-architecture/azure-ansible/bastion.sh` that handles the generation
 of the ansible host inventory, as well as the setup and running of ansible across all the hosts. The bastion host also provides isolation of all the hosts in the resource group from the public internet for the purpose of `SSH` access.
 
+=== Alternative Single VM *{ma}* Template
+In addition to the production template of `azuredeploy.json`, a single virtual machine version is also available.
+This template is located at: `reference-architecture/azure-ansible/allinone.json` This provides for early prototypes and tests of applications
+in a ocp environment. Note that the single VM does not support the high-availability and load-balancing features of the
+full `azuredeploy.json` template. The single virtual machine template only allows you to choose the vm size, and uses a
+single public ip for console and applications. The *Number of Nodes* and *Wildcard Zone* are removed.
+
 === Parameters Required
 In order to provision the *{ocp}* environment using the `ARM` template, the following information is required:
 
