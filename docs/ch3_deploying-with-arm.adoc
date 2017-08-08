@@ -255,7 +255,7 @@ of the ansible host inventory, as well as the setup and running of ansible acros
 === Alternative Single VM *{ma}* Template
 In addition to the production template of `azuredeploy.json`, a single virtual machine version is also available.
 This template is located at: `reference-architecture/azure-ansible/allinone.json` This provides for early prototypes and tests of applications
-in a ocp environment. Note that the single VM does not support the high-availability and load-balancing features of the
+in a *{rhocp}* environment. Note that the single VM does not support the high-availability and load-balancing features of the
 full `azuredeploy.json` template. The single virtual machine template only allows you to choose the vm size, and uses a
 single public ip for console and applications. The *Number of Nodes* and *Wildcard Zone* are removed.
 
