@@ -71,7 +71,7 @@ This architecture is emerging and will be described in future reference architec
 ==== *{ma}* Cloud Instance Storage Details
 Linux VMs in *{ma}* are created by default with two virtual disks attached, where the first one is the `operating system disk` and the second one is a `temporary disk` where the data persistence is not guaranteed and it is used by default to store a swap file created by the https://docs.microsoft.com/en-us/azure/virtual-machines/linux/agent-user-guide[`Azure Linux Agent`].
 
-As a best practice, the instances where can be able to run containers, a dedicated disk (`datadisk`) is configured to store the container images as well as a dedicated disk to store the `emptyDir` volumes in *{ocp}*. The disk setup is provided in the `ARM` template of each virtual machine type like `master.json` in the git repository for *{ocp}* master instances.
+As a best practice, instances deployed to run containers in *{ocp}* include a dedicated disk (`datadisk`) configured to store the container images as well as a dedicated disk configured to store the `emptyDir` volumes. The disk setup is provided in the `ARM` template of each virtual machine type like `master.json` in the git repository for *{ocp}* master instances.
 
 `Data disks` can be created up to 1023 GB where `operating system disk` and `temporary disk` size depend on the size of the virtual machine, where the default `Standard_DS4_v2` used in this reference architecture for masters and nodes is:
 
