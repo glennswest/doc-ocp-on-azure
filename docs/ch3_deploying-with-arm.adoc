@@ -427,7 +427,7 @@ Optional (default values are set in `playbooks/roles/azure-deploy/default/main.y
 
 [subs=+quotes]
 ----
-$ *ansible-playbook -e @vars.yaml playbooks/deploy.yml*
+$ *ansible-playbook -e @vars.yaml playbooks/deploy.yaml*
 
 PLAY [localhost] ****************************************************************************************************************************************
 
