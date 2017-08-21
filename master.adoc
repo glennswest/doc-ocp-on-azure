@@ -1,4 +1,4 @@
-= Deploying Red Hat OpenShift Container Platform 3 on Microsoft Azure
+= Deploying Red Hat OpenShift Container Platform 3.5 on Microsoft Azure
 Glenn West ; Ryan Cook ; Eduardo Minguez <refarch-feedback@redhat.com>
 :doctype: book
 //:title-logo: images/rh-ra-banner.png
